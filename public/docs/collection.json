@@ -1,0 +1,1239 @@
+{
+    "variables": [],
+    "info": {
+        "name": "Laravel API",
+        "_postman_id": "bce381a0-de9d-4631-b0c5-dcefb0a6073f",
+        "description": "",
+        "schema": "https:\/\/schema.getpostman.com\/json\/collection\/v2.0.0\/collection.json"
+    },
+    "item": [
+        {
+            "name": "Cart management",
+            "description": "\nAPIs for managing user cart",
+            "item": [
+                {
+                    "name": "Cart List for customer",
+                    "request": {
+                        "url": {
+                            "protocol": "http",
+                            "host": "{baseUrl}",
+                            "path": "api\/customers\/carts",
+                            "query": []
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {token}"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "[]"
+                        },
+                        "description": "[Insert optional longer description of the API endpoint here.]",
+                        "response": []
+                    }
+                },
+                {
+                    "name": "Add to cart",
+                    "request": {
+                        "url": {
+                            "protocol": "http",
+                            "host": "{baseUrl}",
+                            "path": "api\/customers\/carts",
+                            "query": []
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {token}"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"store_id\": 9,\n    \"prod_id\": 6,\n    \"price\": 7.109,\n    \"qty\": 2\n}"
+                        },
+                        "description": "",
+                        "response": []
+                    }
+                },
+                {
+                    "name": "Edit cart",
+                    "request": {
+                        "url": {
+                            "protocol": "http",
+                            "host": "{baseUrl}",
+                            "path": "api\/customers\/carts\/:id",
+                            "query": []
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {token}"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"qty\": 6\n}"
+                        },
+                        "description": "",
+                        "response": []
+                    }
+                },
+                {
+                    "name": "delete cart",
+                    "request": {
+                        "url": {
+                            "protocol": "http",
+                            "host": "{baseUrl}",
+                            "path": "api\/customers\/carts\/:id",
+                            "query": [],
+                            "variable": [
+                                {
+                                    "id": "id",
+                                    "key": "id",
+                                    "value": "et",
+                                    "description": "int required the cart id is required of the post"
+                                }
+                            ]
+                        },
+                        "method": "DELETE",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {token}"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "[]"
+                        },
+                        "description": "",
+                        "response": []
+                    }
+                }
+            ]
+        },
+        {
+            "name": "Customer Management",
+            "description": "Api for managing customers",
+            "item": [
+                {
+                    "name": "Customer signup\/ Customer Registration",
+                    "request": {
+                        "url": {
+                            "protocol": "http",
+                            "host": "{baseUrl}",
+                            "path": "api\/customers\/signup",
+                            "query": []
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {token}"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"name\": \"ullam\",\n    \"phone\": 42609.9291,\n    \"email\": \"optio\",\n    \"address\": \"saepe\",\n    \"password\": \"veritatis\"\n}"
+                        },
+                        "description": "",
+                        "response": []
+                    }
+                },
+                {
+                    "name": "Customer Login",
+                    "request": {
+                        "url": {
+                            "protocol": "http",
+                            "host": "{baseUrl}",
+                            "path": "api\/customers\/login",
+                            "query": []
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {token}"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"username\": \"soluta\",\n    \"password\": \"molestiae\"\n}"
+                        },
+                        "description": "",
+                        "response": []
+                    }
+                },
+                {
+                    "name": "api\/customers\/forgot-password",
+                    "request": {
+                        "url": {
+                            "protocol": "http",
+                            "host": "{baseUrl}",
+                            "path": "api\/customers\/forgot-password",
+                            "query": []
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {token}"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "[]"
+                        },
+                        "description": "",
+                        "response": []
+                    }
+                },
+                {
+                    "name": "api\/customers\/reset-password",
+                    "request": {
+                        "url": {
+                            "protocol": "http",
+                            "host": "{baseUrl}",
+                            "path": "api\/customers\/reset-password",
+                            "query": []
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {token}"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "[]"
+                        },
+                        "description": "",
+                        "response": []
+                    }
+                },
+                {
+                    "name": "Customer OTP verified",
+                    "request": {
+                        "url": {
+                            "protocol": "http",
+                            "host": "{baseUrl}",
+                            "path": "api\/customers\/otp-verified",
+                            "query": []
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {token}"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"otp\": \"labore\"\n}"
+                        },
+                        "description": "",
+                        "response": []
+                    }
+                },
+                {
+                    "name": "api\/customers\/resent-otp",
+                    "request": {
+                        "url": {
+                            "protocol": "http",
+                            "host": "{baseUrl}",
+                            "path": "api\/customers\/resent-otp",
+                            "query": []
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {token}"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "[]"
+                        },
+                        "description": "",
+                        "response": []
+                    }
+                }
+            ]
+        },
+        {
+            "name": "Order Management",
+            "description": "This is order managent api for customer , agent and store",
+            "item": [
+                {
+                    "name": "Order Create by customer",
+                    "request": {
+                        "url": {
+                            "protocol": "http",
+                            "host": "{baseUrl}",
+                            "path": "api\/customers\/orders",
+                            "query": []
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {token}"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "[]"
+                        },
+                        "description": "",
+                        "response": []
+                    }
+                }
+            ]
+        },
+        {
+            "name": "Product Category management",
+            "description": "\nAPIs for managing store product category",
+            "item": [
+                {
+                    "name": "Product Category list for store",
+                    "request": {
+                        "url": {
+                            "protocol": "http",
+                            "host": "{baseUrl}",
+                            "path": "api\/stores\/product-categories",
+                            "query": []
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {token}"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "[]"
+                        },
+                        "description": "",
+                        "response": []
+                    }
+                },
+                {
+                    "name": "Create Product Category for store",
+                    "request": {
+                        "url": {
+                            "protocol": "http",
+                            "host": "{baseUrl}",
+                            "path": "api\/stores\/product-categories",
+                            "query": []
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {token}"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"cat_name\": \"et\",\n    \"cat_img\": \"id\",\n    \"cat_desc\": \"enim\"\n}"
+                        },
+                        "description": "",
+                        "response": []
+                    }
+                },
+                {
+                    "name": "Edit Product Category for store",
+                    "request": {
+                        "url": {
+                            "protocol": "http",
+                            "host": "{baseUrl}",
+                            "path": "api\/stores\/product-categories\/:id",
+                            "query": [],
+                            "variable": [
+                                {
+                                    "id": "id",
+                                    "key": "id",
+                                    "value": "dolorem",
+                                    "description": "int required Product category id required for this api"
+                                }
+                            ]
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {token}"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"cat_name\": \"aut\",\n    \"cat_img\": \"odit\",\n    \"cat_desc\": \"omnis\"\n}"
+                        },
+                        "description": "",
+                        "response": []
+                    }
+                },
+                {
+                    "name": "Delete Product Category for store",
+                    "request": {
+                        "url": {
+                            "protocol": "http",
+                            "host": "{baseUrl}",
+                            "path": "api\/stores\/product-categories\/:id",
+                            "query": [],
+                            "variable": [
+                                {
+                                    "id": "id",
+                                    "key": "id",
+                                    "value": "enim",
+                                    "description": "int required Product category id required for this post"
+                                }
+                            ]
+                        },
+                        "method": "DELETE",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {token}"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "[]"
+                        },
+                        "description": "",
+                        "response": []
+                    }
+                }
+            ]
+        },
+        {
+            "name": "Store Product Management",
+            "description": "\nThis api for store product management",
+            "item": [
+                {
+                    "name": "Product list",
+                    "request": {
+                        "url": {
+                            "protocol": "http",
+                            "host": "{baseUrl}",
+                            "path": "api\/stores\/products",
+                            "query": []
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {token}"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "[]"
+                        },
+                        "description": "",
+                        "response": []
+                    }
+                },
+                {
+                    "name": "Product add",
+                    "request": {
+                        "url": {
+                            "protocol": "http",
+                            "host": "{baseUrl}",
+                            "path": "api\/stores\/products",
+                            "query": []
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {token}"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"prod_name\": \"nesciunt\",\n    \"prod_cat_id\": 20,\n    \"prod_price\": 2910.552,\n    \"prod_delivery_time\": 7,\n    \"prod_img\": \"quo\"\n}"
+                        },
+                        "description": "",
+                        "response": []
+                    }
+                },
+                {
+                    "name": "api\/stores\/products\/{id}",
+                    "request": {
+                        "url": {
+                            "protocol": "http",
+                            "host": "{baseUrl}",
+                            "path": "api\/stores\/products\/:id",
+                            "query": []
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {token}"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "[]"
+                        },
+                        "description": "",
+                        "response": []
+                    }
+                },
+                {
+                    "name": "api\/stores\/products\/{id}",
+                    "request": {
+                        "url": {
+                            "protocol": "http",
+                            "host": "{baseUrl}",
+                            "path": "api\/stores\/products\/:id",
+                            "query": []
+                        },
+                        "method": "DELETE",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {token}"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "[]"
+                        },
+                        "description": "",
+                        "response": []
+                    }
+                },
+                {
+                    "name": "Product list",
+                    "request": {
+                        "url": {
+                            "protocol": "http",
+                            "host": "{baseUrl}",
+                            "path": "api\/customers\/products",
+                            "query": []
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {token}"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "[]"
+                        },
+                        "description": "",
+                        "response": []
+                    }
+                }
+            ]
+        },
+        {
+            "name": "Store management",
+            "description": "\nAPIs for managing Store user",
+            "item": [
+                {
+                    "name": "Signup new store",
+                    "request": {
+                        "url": {
+                            "protocol": "http",
+                            "host": "{baseUrl}",
+                            "path": "api\/stores\/signup",
+                            "query": []
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {token}"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"name\": \"omnis\",\n    \"phone\": 17,\n    \"email\": \"placeat\",\n    \"address\": \"voluptas\",\n    \"lat\": \"delectus\",\n    \"lng\": \"veniam\",\n    \"password\": \"et\"\n}"
+                        },
+                        "description": "",
+                        "response": []
+                    }
+                },
+                {
+                    "name": "SignIn store",
+                    "request": {
+                        "url": {
+                            "protocol": "http",
+                            "host": "{baseUrl}",
+                            "path": "api\/stores\/login",
+                            "query": []
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {token}"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"phone\": 13,\n    \"password\": \"id\"\n}"
+                        },
+                        "description": "",
+                        "response": []
+                    }
+                },
+                {
+                    "name": "Forgot password for store",
+                    "request": {
+                        "url": {
+                            "protocol": "http",
+                            "host": "{baseUrl}",
+                            "path": "api\/stores\/forgot-password",
+                            "query": []
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {token}"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"phone\": \"sunt\"\n}"
+                        },
+                        "description": "",
+                        "response": []
+                    }
+                },
+                {
+                    "name": "Legal document upload for store",
+                    "request": {
+                        "url": {
+                            "protocol": "http",
+                            "host": "{baseUrl}",
+                            "path": "api\/stores\/doc-upload",
+                            "query": []
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {token}"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"address_prof\": \"perspiciatis\",\n    \"trade_licence\": \"asperiores\",\n    \"passport\": \"repellendus\"\n}"
+                        },
+                        "description": "",
+                        "response": []
+                    }
+                },
+                {
+                    "name": "Store legal doc fetch api",
+                    "request": {
+                        "url": {
+                            "protocol": "http",
+                            "host": "{baseUrl}",
+                            "path": "api\/stores\/docs",
+                            "query": []
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {token}"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "[]"
+                        },
+                        "description": "",
+                        "response": []
+                    }
+                },
+                {
+                    "name": "Resent OTP  for store",
+                    "request": {
+                        "url": {
+                            "protocol": "http",
+                            "host": "{baseUrl}",
+                            "path": "api\/stores\/resent-otp",
+                            "query": []
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {token}"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "[]"
+                        },
+                        "description": "",
+                        "response": []
+                    }
+                },
+                {
+                    "name": "Reset password for store",
+                    "request": {
+                        "url": {
+                            "protocol": "http",
+                            "host": "{baseUrl}",
+                            "path": "api\/stores\/reset-password",
+                            "query": []
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {token}"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"mode\": \"quaerat\",\n    \"otp\": 15,\n    \"new_pass\": \"atque\",\n    \"old_pass\": \"ut\"\n}"
+                        },
+                        "description": "",
+                        "response": []
+                    }
+                },
+                {
+                    "name": "OTP Verified for store",
+                    "request": {
+                        "url": {
+                            "protocol": "http",
+                            "host": "{baseUrl}",
+                            "path": "api\/stores\/otp-verified",
+                            "query": []
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {token}"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"otp\": 3\n}"
+                        },
+                        "description": "",
+                        "response": []
+                    }
+                },
+                {
+                    "name": "Store search of a location",
+                    "request": {
+                        "url": {
+                            "protocol": "http",
+                            "host": "{baseUrl}",
+                            "path": "api\/customers\/stores",
+                            "query": []
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {token}"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"lat\": 39214.172,\n    \"lng\": 49009.927,\n    \"store_id\": 16,\n    \"cat_id\": 20\n}"
+                        },
+                        "description": "",
+                        "response": []
+                    }
+                }
+            ]
+        },
+        {
+            "name": "User address management",
+            "description": "\nAPIs for managing user address",
+            "item": [
+                {
+                    "name": "Get Address List",
+                    "request": {
+                        "url": {
+                            "protocol": "http",
+                            "host": "{baseUrl}",
+                            "path": "api\/customers\/address",
+                            "query": []
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {token}"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "[]"
+                        },
+                        "description": "",
+                        "response": []
+                    }
+                },
+                {
+                    "name": "Add new address",
+                    "request": {
+                        "url": {
+                            "protocol": "http",
+                            "host": "{baseUrl}",
+                            "path": "api\/customers\/address",
+                            "query": []
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {token}"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"title\": \"totam\",\n    \"address\": \"veniam\",\n    \"city\": \"qui\",\n    \"postcode\": 10,\n    \"state\": \"iste\",\n    \"lat\": 24.9124,\n    \"lng\": 42757.13477\n}"
+                        },
+                        "description": "",
+                        "response": []
+                    }
+                },
+                {
+                    "name": "Delete Address",
+                    "request": {
+                        "url": {
+                            "protocol": "http",
+                            "host": "{baseUrl}",
+                            "path": "api\/customers\/address\/:id",
+                            "query": [],
+                            "variable": [
+                                {
+                                    "id": "id",
+                                    "key": "id",
+                                    "value": "nihil",
+                                    "description": "int required for this api"
+                                }
+                            ]
+                        },
+                        "method": "DELETE",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {token}"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "[]"
+                        },
+                        "description": "",
+                        "response": []
+                    }
+                }
+            ]
+        },
+        {
+            "name": "general",
+            "description": "",
+            "item": [
+                {
+                    "name": "api\/agents\/signup",
+                    "request": {
+                        "url": {
+                            "protocol": "http",
+                            "host": "{baseUrl}",
+                            "path": "api\/agents\/signup",
+                            "query": []
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {token}"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "[]"
+                        },
+                        "description": "",
+                        "response": []
+                    }
+                },
+                {
+                    "name": "api\/agents\/login",
+                    "request": {
+                        "url": {
+                            "protocol": "http",
+                            "host": "{baseUrl}",
+                            "path": "api\/agents\/login",
+                            "query": []
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {token}"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "[]"
+                        },
+                        "description": "",
+                        "response": []
+                    }
+                },
+                {
+                    "name": "api\/agents\/forgot-password",
+                    "request": {
+                        "url": {
+                            "protocol": "http",
+                            "host": "{baseUrl}",
+                            "path": "api\/agents\/forgot-password",
+                            "query": []
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {token}"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "[]"
+                        },
+                        "description": "",
+                        "response": []
+                    }
+                },
+                {
+                    "name": "api\/agents\/reset-password",
+                    "request": {
+                        "url": {
+                            "protocol": "http",
+                            "host": "{baseUrl}",
+                            "path": "api\/agents\/reset-password",
+                            "query": []
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {token}"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "[]"
+                        },
+                        "description": "",
+                        "response": []
+                    }
+                },
+                {
+                    "name": "api\/agents\/otp-verified",
+                    "request": {
+                        "url": {
+                            "protocol": "http",
+                            "host": "{baseUrl}",
+                            "path": "api\/agents\/otp-verified",
+                            "query": []
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {token}"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "[]"
+                        },
+                        "description": "",
+                        "response": []
+                    }
+                },
+                {
+                    "name": "api\/agents\/resent-otp",
+                    "request": {
+                        "url": {
+                            "protocol": "http",
+                            "host": "{baseUrl}",
+                            "path": "api\/agents\/resent-otp",
+                            "query": []
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {token}"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "[]"
+                        },
+                        "description": "",
+                        "response": []
+                    }
+                },
+                {
+                    "name": "api\/categories",
+                    "request": {
+                        "url": {
+                            "protocol": "http",
+                            "host": "{baseUrl}",
+                            "path": "api\/categories",
+                            "query": []
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {token}"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "[]"
+                        },
+                        "description": "",
+                        "response": []
+                    }
+                },
+                {
+                    "name": "api\/docs",
+                    "request": {
+                        "url": {
+                            "protocol": "http",
+                            "host": "{baseUrl}",
+                            "path": "api\/docs",
+                            "query": []
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {token}"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "[]"
+                        },
+                        "description": "",
+                        "response": []
+                    }
+                },
+                {
+                    "name": "api\/changePhoneStatus",
+                    "request": {
+                        "url": {
+                            "protocol": "http",
+                            "host": "{baseUrl}",
+                            "path": "api\/changePhoneStatus",
+                            "query": []
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {token}"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "[]"
+                        },
+                        "description": "",
+                        "response": []
+                    }
+                }
+            ]
+        }
+    ]
+}

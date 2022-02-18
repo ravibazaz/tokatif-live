@@ -1,0 +1,2071 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>API Reference</title>
+
+    <link rel="stylesheet" href="css/style.css" />
+    <script src="js/all.js"></script>
+
+
+          <script>
+        $(function() {
+            setupLanguages(["bash","javascript"]);
+        });
+      </script>
+      </head>
+
+  <body class="">
+    <a href="#" id="nav-button">
+      <span>
+        NAV
+        <img src="images/navbar.png" />
+      </span>
+    </a>
+    <div class="tocify-wrapper">
+        <img src="images/logo.png" />
+                    <div class="lang-selector">
+                                  <a href="#" data-language-name="bash">bash</a>
+                                  <a href="#" data-language-name="javascript">javascript</a>
+                            </div>
+                            <div class="search">
+              <input type="text" class="search" id="input-search" placeholder="Search">
+            </div>
+            <ul class="search-results"></ul>
+              <div id="toc">
+      </div>
+                    <ul class="toc-footer">
+                                  <li><a href='http://github.com/mpociot/documentarian'>Documentation Powered by Documentarian</a></li>
+                            </ul>
+            </div>
+    <div class="page-wrapper">
+      <div class="dark-box"></div>
+      <div class="content">
+          <!-- START_INFO -->
+<h1>Info</h1>
+<p>Welcome to the generated API reference.
+<a href="{baseUrl}/docs/collection.json">Get Postman Collection</a></p>
+<!-- END_INFO -->
+<h1>Cart management</h1>
+<p>APIs for managing user cart</p>
+<!-- START_432cff2f8fe7f56638f911bbe734c9d7 -->
+<h2>Cart List for customer</h2>
+<p>[Insert optional longer description of the API endpoint here.]</p>
+<blockquote>
+<p>Example request:</p>
+</blockquote>
+<pre><code class="language-bash">curl -X GET \
+    -G "{baseUrl}/api/customers/carts" \
+    -H "Authorization: Bearer {token}"</code></pre>
+<pre><code class="language-javascript">const url = new URL(
+    "{baseUrl}/api/customers/carts"
+);
+
+let headers = {
+    "Authorization": "Bearer {token}",
+    "Accept": "application/json",
+    "Content-Type": "application/json",
+};
+
+fetch(url, {
+    method: "GET",
+    headers: headers,
+})
+    .then(response =&gt; response.json())
+    .then(json =&gt; console.log(json));</code></pre>
+<blockquote>
+<p>Example response (401):</p>
+</blockquote>
+<pre><code class="language-json">{
+    "status": false,
+    "message": "Invalid Token"
+}</code></pre>
+<h3>HTTP Request</h3>
+<p><code>GET api/customers/carts</code></p>
+<!-- END_432cff2f8fe7f56638f911bbe734c9d7 -->
+<!-- START_aeb2d9ca0ef2f3ce4fa41b12a5782f88 -->
+<h2>Add to cart</h2>
+<blockquote>
+<p>Example request:</p>
+</blockquote>
+<pre><code class="language-bash">curl -X POST \
+    "{baseUrl}/api/customers/carts" \
+    -H "Authorization: Bearer {token}" \
+    -H "Content-Type: application/json" \
+    -d '{"store_id":9,"prod_id":6,"price":7.109,"qty":2}'
+</code></pre>
+<pre><code class="language-javascript">const url = new URL(
+    "{baseUrl}/api/customers/carts"
+);
+
+let headers = {
+    "Authorization": "Bearer {token}",
+    "Content-Type": "application/json",
+    "Accept": "application/json",
+};
+
+let body = {
+    "store_id": 9,
+    "prod_id": 6,
+    "price": 7.109,
+    "qty": 2
+}
+
+fetch(url, {
+    method: "POST",
+    headers: headers,
+    body: body
+})
+    .then(response =&gt; response.json())
+    .then(json =&gt; console.log(json));</code></pre>
+<h3>HTTP Request</h3>
+<p><code>POST api/customers/carts</code></p>
+<h4>Body Parameters</h4>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Status</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>store_id</code></td>
+<td>integer</td>
+<td>required</td>
+<td>the store_id of the post</td>
+</tr>
+<tr>
+<td><code>prod_id</code></td>
+<td>integer</td>
+<td>required</td>
+<td>the product id is required for the post</td>
+</tr>
+<tr>
+<td><code>price</code></td>
+<td>float</td>
+<td>required</td>
+<td>the price is required for the post</td>
+</tr>
+<tr>
+<td><code>qty</code></td>
+<td>integer</td>
+<td>required</td>
+<td>the qty is required for the post</td>
+</tr>
+</tbody>
+</table>
+<!-- END_aeb2d9ca0ef2f3ce4fa41b12a5782f88 -->
+<!-- START_49685a0d55cede5937b36a4714670899 -->
+<h2>Edit cart</h2>
+<blockquote>
+<p>Example request:</p>
+</blockquote>
+<pre><code class="language-bash">curl -X POST \
+    "{baseUrl}/api/customers/carts/1" \
+    -H "Authorization: Bearer {token}" \
+    -H "Content-Type: application/json" \
+    -d '{"qty":6}'
+</code></pre>
+<pre><code class="language-javascript">const url = new URL(
+    "{baseUrl}/api/customers/carts/1"
+);
+
+let headers = {
+    "Authorization": "Bearer {token}",
+    "Content-Type": "application/json",
+    "Accept": "application/json",
+};
+
+let body = {
+    "qty": 6
+}
+
+fetch(url, {
+    method: "POST",
+    headers: headers,
+    body: body
+})
+    .then(response =&gt; response.json())
+    .then(json =&gt; console.log(json));</code></pre>
+<h3>HTTP Request</h3>
+<p><code>POST api/customers/carts/{id}</code></p>
+<h4>Body Parameters</h4>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Status</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>qty</code></td>
+<td>integer</td>
+<td>optional</td>
+<td>float required the qty is required for the post</td>
+</tr>
+</tbody>
+</table>
+<!-- END_49685a0d55cede5937b36a4714670899 -->
+<!-- START_4b931ab4b666f2da01878433c1e08fab -->
+<h2>delete cart</h2>
+<blockquote>
+<p>Example request:</p>
+</blockquote>
+<pre><code class="language-bash">curl -X DELETE \
+    "{baseUrl}/api/customers/carts/et" \
+    -H "Authorization: Bearer {token}"</code></pre>
+<pre><code class="language-javascript">const url = new URL(
+    "{baseUrl}/api/customers/carts/et"
+);
+
+let headers = {
+    "Authorization": "Bearer {token}",
+    "Accept": "application/json",
+    "Content-Type": "application/json",
+};
+
+fetch(url, {
+    method: "DELETE",
+    headers: headers,
+})
+    .then(response =&gt; response.json())
+    .then(json =&gt; console.log(json));</code></pre>
+<h3>HTTP Request</h3>
+<p><code>DELETE api/customers/carts/{id}</code></p>
+<h4>URL Parameters</h4>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Status</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>id</code></td>
+<td>optional</td>
+<td>int required the cart id is required of the post</td>
+</tr>
+</tbody>
+</table>
+<!-- END_4b931ab4b666f2da01878433c1e08fab -->
+<h1>Customer Management</h1>
+<p>Api for managing customers</p>
+<!-- START_25243cbe6690cae84fc14d2359b1b23a -->
+<h2>Customer signup/ Customer Registration</h2>
+<blockquote>
+<p>Example request:</p>
+</blockquote>
+<pre><code class="language-bash">curl -X POST \
+    "{baseUrl}/api/customers/signup" \
+    -H "Authorization: Bearer {token}" \
+    -H "Content-Type: application/json" \
+    -d '{"name":"ullam","phone":42609.9291,"email":"optio","address":"saepe","password":"veritatis"}'
+</code></pre>
+<pre><code class="language-javascript">const url = new URL(
+    "{baseUrl}/api/customers/signup"
+);
+
+let headers = {
+    "Authorization": "Bearer {token}",
+    "Content-Type": "application/json",
+    "Accept": "application/json",
+};
+
+let body = {
+    "name": "ullam",
+    "phone": 42609.9291,
+    "email": "optio",
+    "address": "saepe",
+    "password": "veritatis"
+}
+
+fetch(url, {
+    method: "POST",
+    headers: headers,
+    body: body
+})
+    .then(response =&gt; response.json())
+    .then(json =&gt; console.log(json));</code></pre>
+<h3>HTTP Request</h3>
+<p><code>POST api/customers/signup</code></p>
+<h4>Body Parameters</h4>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Status</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>name</code></td>
+<td>string</td>
+<td>required</td>
+<td>Customer Full name</td>
+</tr>
+<tr>
+<td><code>phone</code></td>
+<td>number</td>
+<td>required</td>
+<td>Phone number for registration, It is unique for everyone</td>
+</tr>
+<tr>
+<td><code>email</code></td>
+<td>string</td>
+<td>required</td>
+<td>Email address of a customer</td>
+</tr>
+<tr>
+<td><code>address</code></td>
+<td>string</td>
+<td>required</td>
+<td>Customer address</td>
+</tr>
+<tr>
+<td><code>password</code></td>
+<td>strting</td>
+<td>required</td>
+<td>customer password for accout access</td>
+</tr>
+</tbody>
+</table>
+<!-- END_25243cbe6690cae84fc14d2359b1b23a -->
+<!-- START_5d222af879941754145c8d95172a8874 -->
+<h2>Customer Login</h2>
+<blockquote>
+<p>Example request:</p>
+</blockquote>
+<pre><code class="language-bash">curl -X POST \
+    "{baseUrl}/api/customers/login" \
+    -H "Authorization: Bearer {token}" \
+    -H "Content-Type: application/json" \
+    -d '{"username":"soluta","password":"molestiae"}'
+</code></pre>
+<pre><code class="language-javascript">const url = new URL(
+    "{baseUrl}/api/customers/login"
+);
+
+let headers = {
+    "Authorization": "Bearer {token}",
+    "Content-Type": "application/json",
+    "Accept": "application/json",
+};
+
+let body = {
+    "username": "soluta",
+    "password": "molestiae"
+}
+
+fetch(url, {
+    method: "POST",
+    headers: headers,
+    body: body
+})
+    .then(response =&gt; response.json())
+    .then(json =&gt; console.log(json));</code></pre>
+<h3>HTTP Request</h3>
+<p><code>POST api/customers/login</code></p>
+<h4>Body Parameters</h4>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Status</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>username</code></td>
+<td>string</td>
+<td>required</td>
+<td>customer account phone number</td>
+</tr>
+<tr>
+<td><code>password</code></td>
+<td>string</td>
+<td>required</td>
+<td>customer account password</td>
+</tr>
+</tbody>
+</table>
+<!-- END_5d222af879941754145c8d95172a8874 -->
+<!-- START_13f628fc987c6068f54ac22aebf5799c -->
+<h2>api/customers/forgot-password</h2>
+<blockquote>
+<p>Example request:</p>
+</blockquote>
+<pre><code class="language-bash">curl -X POST \
+    "{baseUrl}/api/customers/forgot-password" \
+    -H "Authorization: Bearer {token}"</code></pre>
+<pre><code class="language-javascript">const url = new URL(
+    "{baseUrl}/api/customers/forgot-password"
+);
+
+let headers = {
+    "Authorization": "Bearer {token}",
+    "Accept": "application/json",
+    "Content-Type": "application/json",
+};
+
+fetch(url, {
+    method: "POST",
+    headers: headers,
+})
+    .then(response =&gt; response.json())
+    .then(json =&gt; console.log(json));</code></pre>
+<h3>HTTP Request</h3>
+<p><code>POST api/customers/forgot-password</code></p>
+<!-- END_13f628fc987c6068f54ac22aebf5799c -->
+<!-- START_4a71de99f911468b3e411adda609b713 -->
+<h2>api/customers/reset-password</h2>
+<blockquote>
+<p>Example request:</p>
+</blockquote>
+<pre><code class="language-bash">curl -X POST \
+    "{baseUrl}/api/customers/reset-password" \
+    -H "Authorization: Bearer {token}"</code></pre>
+<pre><code class="language-javascript">const url = new URL(
+    "{baseUrl}/api/customers/reset-password"
+);
+
+let headers = {
+    "Authorization": "Bearer {token}",
+    "Accept": "application/json",
+    "Content-Type": "application/json",
+};
+
+fetch(url, {
+    method: "POST",
+    headers: headers,
+})
+    .then(response =&gt; response.json())
+    .then(json =&gt; console.log(json));</code></pre>
+<h3>HTTP Request</h3>
+<p><code>POST api/customers/reset-password</code></p>
+<!-- END_4a71de99f911468b3e411adda609b713 -->
+<!-- START_53d7318c8dae3b2c032b6c692ba966f5 -->
+<h2>Customer OTP verified</h2>
+<blockquote>
+<p>Example request:</p>
+</blockquote>
+<pre><code class="language-bash">curl -X POST \
+    "{baseUrl}/api/customers/otp-verified" \
+    -H "Authorization: Bearer {token}" \
+    -H "Content-Type: application/json" \
+    -d '{"otp":"labore"}'
+</code></pre>
+<pre><code class="language-javascript">const url = new URL(
+    "{baseUrl}/api/customers/otp-verified"
+);
+
+let headers = {
+    "Authorization": "Bearer {token}",
+    "Content-Type": "application/json",
+    "Accept": "application/json",
+};
+
+let body = {
+    "otp": "labore"
+}
+
+fetch(url, {
+    method: "POST",
+    headers: headers,
+    body: body
+})
+    .then(response =&gt; response.json())
+    .then(json =&gt; console.log(json));</code></pre>
+<h3>HTTP Request</h3>
+<p><code>POST api/customers/otp-verified</code></p>
+<h4>Body Parameters</h4>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Status</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>otp</code></td>
+<td>init</td>
+<td>optional</td>
+</tr>
+</tbody>
+</table>
+<!-- END_53d7318c8dae3b2c032b6c692ba966f5 -->
+<!-- START_086f80ba9e5ba5ed623d59cd441c6db2 -->
+<h2>api/customers/resent-otp</h2>
+<blockquote>
+<p>Example request:</p>
+</blockquote>
+<pre><code class="language-bash">curl -X POST \
+    "{baseUrl}/api/customers/resent-otp" \
+    -H "Authorization: Bearer {token}"</code></pre>
+<pre><code class="language-javascript">const url = new URL(
+    "{baseUrl}/api/customers/resent-otp"
+);
+
+let headers = {
+    "Authorization": "Bearer {token}",
+    "Accept": "application/json",
+    "Content-Type": "application/json",
+};
+
+fetch(url, {
+    method: "POST",
+    headers: headers,
+})
+    .then(response =&gt; response.json())
+    .then(json =&gt; console.log(json));</code></pre>
+<h3>HTTP Request</h3>
+<p><code>POST api/customers/resent-otp</code></p>
+<!-- END_086f80ba9e5ba5ed623d59cd441c6db2 -->
+<h1>Order Management</h1>
+<p>This is order managent api for customer , agent and store</p>
+<!-- START_51f3f08cd47760d9815ae49219b37beb -->
+<h2>Order Create by customer</h2>
+<blockquote>
+<p>Example request:</p>
+</blockquote>
+<pre><code class="language-bash">curl -X POST \
+    "{baseUrl}/api/customers/orders" \
+    -H "Authorization: Bearer {token}"</code></pre>
+<pre><code class="language-javascript">const url = new URL(
+    "{baseUrl}/api/customers/orders"
+);
+
+let headers = {
+    "Authorization": "Bearer {token}",
+    "Accept": "application/json",
+    "Content-Type": "application/json",
+};
+
+fetch(url, {
+    method: "POST",
+    headers: headers,
+})
+    .then(response =&gt; response.json())
+    .then(json =&gt; console.log(json));</code></pre>
+<h3>HTTP Request</h3>
+<p><code>POST api/customers/orders</code></p>
+<!-- END_51f3f08cd47760d9815ae49219b37beb -->
+<h1>Product Category management</h1>
+<p>APIs for managing store product category</p>
+<!-- START_c16472605edbbe9fb0979fe24fa2f11c -->
+<h2>Product Category list for store</h2>
+<blockquote>
+<p>Example request:</p>
+</blockquote>
+<pre><code class="language-bash">curl -X GET \
+    -G "{baseUrl}/api/stores/product-categories" \
+    -H "Authorization: Bearer {token}"</code></pre>
+<pre><code class="language-javascript">const url = new URL(
+    "{baseUrl}/api/stores/product-categories"
+);
+
+let headers = {
+    "Authorization": "Bearer {token}",
+    "Accept": "application/json",
+    "Content-Type": "application/json",
+};
+
+fetch(url, {
+    method: "GET",
+    headers: headers,
+})
+    .then(response =&gt; response.json())
+    .then(json =&gt; console.log(json));</code></pre>
+<blockquote>
+<p>Example response (401):</p>
+</blockquote>
+<pre><code class="language-json">{
+    "status": false,
+    "message": "Invalid Token"
+}</code></pre>
+<h3>HTTP Request</h3>
+<p><code>GET api/stores/product-categories</code></p>
+<!-- END_c16472605edbbe9fb0979fe24fa2f11c -->
+<!-- START_7f114412a5b9d6c696844a961745d576 -->
+<h2>Create Product Category for store</h2>
+<blockquote>
+<p>Example request:</p>
+</blockquote>
+<pre><code class="language-bash">curl -X POST \
+    "{baseUrl}/api/stores/product-categories" \
+    -H "Authorization: Bearer {token}" \
+    -H "Content-Type: application/json" \
+    -d '{"cat_name":"et","cat_img":"id","cat_desc":"enim"}'
+</code></pre>
+<pre><code class="language-javascript">const url = new URL(
+    "{baseUrl}/api/stores/product-categories"
+);
+
+let headers = {
+    "Authorization": "Bearer {token}",
+    "Content-Type": "application/json",
+    "Accept": "application/json",
+};
+
+let body = {
+    "cat_name": "et",
+    "cat_img": "id",
+    "cat_desc": "enim"
+}
+
+fetch(url, {
+    method: "POST",
+    headers: headers,
+    body: body
+})
+    .then(response =&gt; response.json())
+    .then(json =&gt; console.log(json));</code></pre>
+<h3>HTTP Request</h3>
+<p><code>POST api/stores/product-categories</code></p>
+<h4>Body Parameters</h4>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Status</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>cat_name</code></td>
+<td>string</td>
+<td>required</td>
+<td>Cat name required for this post</td>
+</tr>
+<tr>
+<td><code>cat_img</code></td>
+<td>file</td>
+<td>required</td>
+<td>Cat image required for this post</td>
+</tr>
+<tr>
+<td><code>cat_desc</code></td>
+<td>string</td>
+<td>optional</td>
+<td>Category description</td>
+</tr>
+</tbody>
+</table>
+<!-- END_7f114412a5b9d6c696844a961745d576 -->
+<!-- START_24445a3ac312309c11b9869d6ee209bc -->
+<h2>Edit Product Category for store</h2>
+<blockquote>
+<p>Example request:</p>
+</blockquote>
+<pre><code class="language-bash">curl -X POST \
+    "{baseUrl}/api/stores/product-categories/dolorem" \
+    -H "Authorization: Bearer {token}" \
+    -H "Content-Type: application/json" \
+    -d '{"cat_name":"aut","cat_img":"odit","cat_desc":"omnis"}'
+</code></pre>
+<pre><code class="language-javascript">const url = new URL(
+    "{baseUrl}/api/stores/product-categories/dolorem"
+);
+
+let headers = {
+    "Authorization": "Bearer {token}",
+    "Content-Type": "application/json",
+    "Accept": "application/json",
+};
+
+let body = {
+    "cat_name": "aut",
+    "cat_img": "odit",
+    "cat_desc": "omnis"
+}
+
+fetch(url, {
+    method: "POST",
+    headers: headers,
+    body: body
+})
+    .then(response =&gt; response.json())
+    .then(json =&gt; console.log(json));</code></pre>
+<h3>HTTP Request</h3>
+<p><code>POST api/stores/product-categories/{id}</code></p>
+<h4>URL Parameters</h4>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Status</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>id</code></td>
+<td>optional</td>
+<td>int required Product category id required for this api</td>
+</tr>
+</tbody>
+</table>
+<h4>Body Parameters</h4>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Status</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>cat_name</code></td>
+<td>string</td>
+<td>required</td>
+<td>Cat name required for this post</td>
+</tr>
+<tr>
+<td><code>cat_img</code></td>
+<td>file</td>
+<td>optional</td>
+<td>optinal Cat image required for this post</td>
+</tr>
+<tr>
+<td><code>cat_desc</code></td>
+<td>string</td>
+<td>optional</td>
+<td>optional Category description</td>
+</tr>
+</tbody>
+</table>
+<!-- END_24445a3ac312309c11b9869d6ee209bc -->
+<!-- START_154fdedb7f3703c6bf2e9138c7c4b327 -->
+<h2>Delete Product Category for store</h2>
+<blockquote>
+<p>Example request:</p>
+</blockquote>
+<pre><code class="language-bash">curl -X DELETE \
+    "{baseUrl}/api/stores/product-categories/enim" \
+    -H "Authorization: Bearer {token}"</code></pre>
+<pre><code class="language-javascript">const url = new URL(
+    "{baseUrl}/api/stores/product-categories/enim"
+);
+
+let headers = {
+    "Authorization": "Bearer {token}",
+    "Accept": "application/json",
+    "Content-Type": "application/json",
+};
+
+fetch(url, {
+    method: "DELETE",
+    headers: headers,
+})
+    .then(response =&gt; response.json())
+    .then(json =&gt; console.log(json));</code></pre>
+<h3>HTTP Request</h3>
+<p><code>DELETE api/stores/product-categories/{id}</code></p>
+<h4>URL Parameters</h4>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Status</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>id</code></td>
+<td>optional</td>
+<td>int required Product category id required for this post</td>
+</tr>
+</tbody>
+</table>
+<!-- END_154fdedb7f3703c6bf2e9138c7c4b327 -->
+<h1>Store Product Management</h1>
+<p>This api for store product management</p>
+<!-- START_4f60e6914375b0c6c3775d16fe64d9f2 -->
+<h2>Product list</h2>
+<blockquote>
+<p>Example request:</p>
+</blockquote>
+<pre><code class="language-bash">curl -X GET \
+    -G "{baseUrl}/api/stores/products" \
+    -H "Authorization: Bearer {token}"</code></pre>
+<pre><code class="language-javascript">const url = new URL(
+    "{baseUrl}/api/stores/products"
+);
+
+let headers = {
+    "Authorization": "Bearer {token}",
+    "Accept": "application/json",
+    "Content-Type": "application/json",
+};
+
+fetch(url, {
+    method: "GET",
+    headers: headers,
+})
+    .then(response =&gt; response.json())
+    .then(json =&gt; console.log(json));</code></pre>
+<blockquote>
+<p>Example response (401):</p>
+</blockquote>
+<pre><code class="language-json">{
+    "status": false,
+    "message": "Invalid Token"
+}</code></pre>
+<h3>HTTP Request</h3>
+<p><code>GET api/stores/products</code></p>
+<!-- END_4f60e6914375b0c6c3775d16fe64d9f2 -->
+<!-- START_ada9a748b0762a43faedc77b80cce3e7 -->
+<h2>Product add</h2>
+<blockquote>
+<p>Example request:</p>
+</blockquote>
+<pre><code class="language-bash">curl -X POST \
+    "{baseUrl}/api/stores/products" \
+    -H "Authorization: Bearer {token}" \
+    -H "Content-Type: application/json" \
+    -d '{"prod_name":"nesciunt","prod_cat_id":20,"prod_price":2910.552,"prod_delivery_time":7,"prod_img":"quo"}'
+</code></pre>
+<pre><code class="language-javascript">const url = new URL(
+    "{baseUrl}/api/stores/products"
+);
+
+let headers = {
+    "Authorization": "Bearer {token}",
+    "Content-Type": "application/json",
+    "Accept": "application/json",
+};
+
+let body = {
+    "prod_name": "nesciunt",
+    "prod_cat_id": 20,
+    "prod_price": 2910.552,
+    "prod_delivery_time": 7,
+    "prod_img": "quo"
+}
+
+fetch(url, {
+    method: "POST",
+    headers: headers,
+    body: body
+})
+    .then(response =&gt; response.json())
+    .then(json =&gt; console.log(json));</code></pre>
+<h3>HTTP Request</h3>
+<p><code>POST api/stores/products</code></p>
+<h4>Body Parameters</h4>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Status</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>prod_name</code></td>
+<td>string</td>
+<td>required</td>
+<td>Product name</td>
+</tr>
+<tr>
+<td><code>prod_cat_id</code></td>
+<td>integer</td>
+<td>required</td>
+<td>Product category name</td>
+</tr>
+<tr>
+<td><code>prod_price</code></td>
+<td>float</td>
+<td>required</td>
+<td>Product price</td>
+</tr>
+<tr>
+<td><code>prod_delivery_time</code></td>
+<td>integer</td>
+<td>required</td>
+<td>Product delivery time</td>
+</tr>
+<tr>
+<td><code>prod_img</code></td>
+<td>file</td>
+<td>optional</td>
+<td>Product image</td>
+</tr>
+</tbody>
+</table>
+<!-- END_ada9a748b0762a43faedc77b80cce3e7 -->
+<!-- START_dfecf853489faf2117897a93b0de6f45 -->
+<h2>api/stores/products/{id}</h2>
+<blockquote>
+<p>Example request:</p>
+</blockquote>
+<pre><code class="language-bash">curl -X POST \
+    "{baseUrl}/api/stores/products/1" \
+    -H "Authorization: Bearer {token}"</code></pre>
+<pre><code class="language-javascript">const url = new URL(
+    "{baseUrl}/api/stores/products/1"
+);
+
+let headers = {
+    "Authorization": "Bearer {token}",
+    "Accept": "application/json",
+    "Content-Type": "application/json",
+};
+
+fetch(url, {
+    method: "POST",
+    headers: headers,
+})
+    .then(response =&gt; response.json())
+    .then(json =&gt; console.log(json));</code></pre>
+<h3>HTTP Request</h3>
+<p><code>POST api/stores/products/{id}</code></p>
+<!-- END_dfecf853489faf2117897a93b0de6f45 -->
+<!-- START_0c2b1fce02ce0e0834cf1dfb934c0e24 -->
+<h2>api/stores/products/{id}</h2>
+<blockquote>
+<p>Example request:</p>
+</blockquote>
+<pre><code class="language-bash">curl -X DELETE \
+    "{baseUrl}/api/stores/products/1" \
+    -H "Authorization: Bearer {token}"</code></pre>
+<pre><code class="language-javascript">const url = new URL(
+    "{baseUrl}/api/stores/products/1"
+);
+
+let headers = {
+    "Authorization": "Bearer {token}",
+    "Accept": "application/json",
+    "Content-Type": "application/json",
+};
+
+fetch(url, {
+    method: "DELETE",
+    headers: headers,
+})
+    .then(response =&gt; response.json())
+    .then(json =&gt; console.log(json));</code></pre>
+<h3>HTTP Request</h3>
+<p><code>DELETE api/stores/products/{id}</code></p>
+<!-- END_0c2b1fce02ce0e0834cf1dfb934c0e24 -->
+<!-- START_b4b25ca0445c29242911687367f7b798 -->
+<h2>Product list</h2>
+<blockquote>
+<p>Example request:</p>
+</blockquote>
+<pre><code class="language-bash">curl -X GET \
+    -G "{baseUrl}/api/customers/products" \
+    -H "Authorization: Bearer {token}"</code></pre>
+<pre><code class="language-javascript">const url = new URL(
+    "{baseUrl}/api/customers/products"
+);
+
+let headers = {
+    "Authorization": "Bearer {token}",
+    "Accept": "application/json",
+    "Content-Type": "application/json",
+};
+
+fetch(url, {
+    method: "GET",
+    headers: headers,
+})
+    .then(response =&gt; response.json())
+    .then(json =&gt; console.log(json));</code></pre>
+<blockquote>
+<p>Example response (401):</p>
+</blockquote>
+<pre><code class="language-json">{
+    "status": false,
+    "message": "Invalid Token"
+}</code></pre>
+<h3>HTTP Request</h3>
+<p><code>GET api/customers/products</code></p>
+<!-- END_b4b25ca0445c29242911687367f7b798 -->
+<h1>Store management</h1>
+<p>APIs for managing Store user</p>
+<!-- START_0c950d5f818a38db5751c081896cf760 -->
+<h2>Signup new store</h2>
+<blockquote>
+<p>Example request:</p>
+</blockquote>
+<pre><code class="language-bash">curl -X POST \
+    "{baseUrl}/api/stores/signup" \
+    -H "Authorization: Bearer {token}" \
+    -H "Content-Type: application/json" \
+    -d '{"name":"omnis","phone":17,"email":"placeat","address":"voluptas","lat":"delectus","lng":"veniam","password":"et"}'
+</code></pre>
+<pre><code class="language-javascript">const url = new URL(
+    "{baseUrl}/api/stores/signup"
+);
+
+let headers = {
+    "Authorization": "Bearer {token}",
+    "Content-Type": "application/json",
+    "Accept": "application/json",
+};
+
+let body = {
+    "name": "omnis",
+    "phone": 17,
+    "email": "placeat",
+    "address": "voluptas",
+    "lat": "delectus",
+    "lng": "veniam",
+    "password": "et"
+}
+
+fetch(url, {
+    method: "POST",
+    headers: headers,
+    body: body
+})
+    .then(response =&gt; response.json())
+    .then(json =&gt; console.log(json));</code></pre>
+<h3>HTTP Request</h3>
+<p><code>POST api/stores/signup</code></p>
+<h4>Body Parameters</h4>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Status</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>name</code></td>
+<td>string</td>
+<td>required</td>
+<td>Name is required for store name</td>
+</tr>
+<tr>
+<td><code>phone</code></td>
+<td>integer</td>
+<td>required</td>
+<td>Phone number is required for this api</td>
+</tr>
+<tr>
+<td><code>email</code></td>
+<td>string</td>
+<td>required</td>
+<td>Email address is required for this api</td>
+</tr>
+<tr>
+<td><code>address</code></td>
+<td>string</td>
+<td>required</td>
+<td>address is required for this api</td>
+</tr>
+<tr>
+<td><code>lat</code></td>
+<td>string</td>
+<td>required</td>
+<td>Latitude is required for this api</td>
+</tr>
+<tr>
+<td><code>lng</code></td>
+<td>string</td>
+<td>required</td>
+<td>Longitude is required for this api</td>
+</tr>
+<tr>
+<td><code>password</code></td>
+<td>string</td>
+<td>required</td>
+<td>Password is required for this api</td>
+</tr>
+</tbody>
+</table>
+<!-- END_0c950d5f818a38db5751c081896cf760 -->
+<!-- START_47c247fd69f528956ede09ae72e4abb7 -->
+<h2>SignIn store</h2>
+<blockquote>
+<p>Example request:</p>
+</blockquote>
+<pre><code class="language-bash">curl -X POST \
+    "{baseUrl}/api/stores/login" \
+    -H "Authorization: Bearer {token}" \
+    -H "Content-Type: application/json" \
+    -d '{"phone":13,"password":"id"}'
+</code></pre>
+<pre><code class="language-javascript">const url = new URL(
+    "{baseUrl}/api/stores/login"
+);
+
+let headers = {
+    "Authorization": "Bearer {token}",
+    "Content-Type": "application/json",
+    "Accept": "application/json",
+};
+
+let body = {
+    "phone": 13,
+    "password": "id"
+}
+
+fetch(url, {
+    method: "POST",
+    headers: headers,
+    body: body
+})
+    .then(response =&gt; response.json())
+    .then(json =&gt; console.log(json));</code></pre>
+<h3>HTTP Request</h3>
+<p><code>POST api/stores/login</code></p>
+<h4>Body Parameters</h4>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Status</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>phone</code></td>
+<td>integer</td>
+<td>required</td>
+<td>Phone number is required for this api</td>
+</tr>
+<tr>
+<td><code>password</code></td>
+<td>string</td>
+<td>required</td>
+<td>Password is required for this api</td>
+</tr>
+</tbody>
+</table>
+<!-- END_47c247fd69f528956ede09ae72e4abb7 -->
+<!-- START_854696d7c5c79609d8ca70ad11e4b3d3 -->
+<h2>Forgot password for store</h2>
+<blockquote>
+<p>Example request:</p>
+</blockquote>
+<pre><code class="language-bash">curl -X POST \
+    "{baseUrl}/api/stores/forgot-password" \
+    -H "Authorization: Bearer {token}" \
+    -H "Content-Type: application/json" \
+    -d '{"phone":"sunt"}'
+</code></pre>
+<pre><code class="language-javascript">const url = new URL(
+    "{baseUrl}/api/stores/forgot-password"
+);
+
+let headers = {
+    "Authorization": "Bearer {token}",
+    "Content-Type": "application/json",
+    "Accept": "application/json",
+};
+
+let body = {
+    "phone": "sunt"
+}
+
+fetch(url, {
+    method: "POST",
+    headers: headers,
+    body: body
+})
+    .then(response =&gt; response.json())
+    .then(json =&gt; console.log(json));</code></pre>
+<h3>HTTP Request</h3>
+<p><code>POST api/stores/forgot-password</code></p>
+<h4>Body Parameters</h4>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Status</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>phone</code></td>
+<td>string</td>
+<td>required</td>
+<td>Phone number is required for this api</td>
+</tr>
+</tbody>
+</table>
+<!-- END_854696d7c5c79609d8ca70ad11e4b3d3 -->
+<!-- START_eb60989480288c14a9834f44887143d1 -->
+<h2>Legal document upload for store</h2>
+<blockquote>
+<p>Example request:</p>
+</blockquote>
+<pre><code class="language-bash">curl -X POST \
+    "{baseUrl}/api/stores/doc-upload" \
+    -H "Authorization: Bearer {token}" \
+    -H "Content-Type: application/json" \
+    -d '{"address_prof":"perspiciatis","trade_licence":"asperiores","passport":"repellendus"}'
+</code></pre>
+<pre><code class="language-javascript">const url = new URL(
+    "{baseUrl}/api/stores/doc-upload"
+);
+
+let headers = {
+    "Authorization": "Bearer {token}",
+    "Content-Type": "application/json",
+    "Accept": "application/json",
+};
+
+let body = {
+    "address_prof": "perspiciatis",
+    "trade_licence": "asperiores",
+    "passport": "repellendus"
+}
+
+fetch(url, {
+    method: "POST",
+    headers: headers,
+    body: body
+})
+    .then(response =&gt; response.json())
+    .then(json =&gt; console.log(json));</code></pre>
+<h3>HTTP Request</h3>
+<p><code>POST api/stores/doc-upload</code></p>
+<h4>Body Parameters</h4>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Status</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>address_prof</code></td>
+<td>image</td>
+<td>optional</td>
+<td>Address prof for store</td>
+</tr>
+<tr>
+<td><code>trade_licence</code></td>
+<td>image</td>
+<td>optional</td>
+<td>Trade licence for store</td>
+</tr>
+<tr>
+<td><code>passport</code></td>
+<td>image</td>
+<td>optional</td>
+<td>Passport</td>
+</tr>
+</tbody>
+</table>
+<!-- END_eb60989480288c14a9834f44887143d1 -->
+<!-- START_990c6d24585f0252c01cabeae523f227 -->
+<h2>Store legal doc fetch api</h2>
+<blockquote>
+<p>Example request:</p>
+</blockquote>
+<pre><code class="language-bash">curl -X GET \
+    -G "{baseUrl}/api/stores/docs" \
+    -H "Authorization: Bearer {token}"</code></pre>
+<pre><code class="language-javascript">const url = new URL(
+    "{baseUrl}/api/stores/docs"
+);
+
+let headers = {
+    "Authorization": "Bearer {token}",
+    "Accept": "application/json",
+    "Content-Type": "application/json",
+};
+
+fetch(url, {
+    method: "GET",
+    headers: headers,
+})
+    .then(response =&gt; response.json())
+    .then(json =&gt; console.log(json));</code></pre>
+<blockquote>
+<p>Example response (401):</p>
+</blockquote>
+<pre><code class="language-json">{
+    "status": false,
+    "message": "Invalid Token"
+}</code></pre>
+<h3>HTTP Request</h3>
+<p><code>GET api/stores/docs</code></p>
+<!-- END_990c6d24585f0252c01cabeae523f227 -->
+<!-- START_f84972890ff041008cae6365e8d4c49a -->
+<h2>Resent OTP  for store</h2>
+<blockquote>
+<p>Example request:</p>
+</blockquote>
+<pre><code class="language-bash">curl -X POST \
+    "{baseUrl}/api/stores/resent-otp" \
+    -H "Authorization: Bearer {token}"</code></pre>
+<pre><code class="language-javascript">const url = new URL(
+    "{baseUrl}/api/stores/resent-otp"
+);
+
+let headers = {
+    "Authorization": "Bearer {token}",
+    "Accept": "application/json",
+    "Content-Type": "application/json",
+};
+
+fetch(url, {
+    method: "POST",
+    headers: headers,
+})
+    .then(response =&gt; response.json())
+    .then(json =&gt; console.log(json));</code></pre>
+<h3>HTTP Request</h3>
+<p><code>POST api/stores/resent-otp</code></p>
+<!-- END_f84972890ff041008cae6365e8d4c49a -->
+<!-- START_0621f0a32a2d5e39899218d691351eb4 -->
+<h2>Reset password for store</h2>
+<blockquote>
+<p>Example request:</p>
+</blockquote>
+<pre><code class="language-bash">curl -X POST \
+    "{baseUrl}/api/stores/reset-password" \
+    -H "Authorization: Bearer {token}" \
+    -H "Content-Type: application/json" \
+    -d '{"mode":"quaerat","otp":15,"new_pass":"atque","old_pass":"ut"}'
+</code></pre>
+<pre><code class="language-javascript">const url = new URL(
+    "{baseUrl}/api/stores/reset-password"
+);
+
+let headers = {
+    "Authorization": "Bearer {token}",
+    "Content-Type": "application/json",
+    "Accept": "application/json",
+};
+
+let body = {
+    "mode": "quaerat",
+    "otp": 15,
+    "new_pass": "atque",
+    "old_pass": "ut"
+}
+
+fetch(url, {
+    method: "POST",
+    headers: headers,
+    body: body
+})
+    .then(response =&gt; response.json())
+    .then(json =&gt; console.log(json));</code></pre>
+<h3>HTTP Request</h3>
+<p><code>POST api/stores/reset-password</code></p>
+<h4>Body Parameters</h4>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Status</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>mode</code></td>
+<td>enum(reset_pass,change_pass)</td>
+<td>required</td>
+</tr>
+<tr>
+<td><code>otp</code></td>
+<td>integer</td>
+<td>required</td>
+<td>(if:mode=reset_pass)</td>
+</tr>
+<tr>
+<td><code>new_pass</code></td>
+<td>string</td>
+<td>required</td>
+</tr>
+<tr>
+<td><code>old_pass</code></td>
+<td>string</td>
+<td>required</td>
+<td>(if:mode=change_pass)</td>
+</tr>
+</tbody>
+</table>
+<!-- END_0621f0a32a2d5e39899218d691351eb4 -->
+<!-- START_0d32427b5a91f18957faebd398978c30 -->
+<h2>OTP Verified for store</h2>
+<blockquote>
+<p>Example request:</p>
+</blockquote>
+<pre><code class="language-bash">curl -X POST \
+    "{baseUrl}/api/stores/otp-verified" \
+    -H "Authorization: Bearer {token}" \
+    -H "Content-Type: application/json" \
+    -d '{"otp":3}'
+</code></pre>
+<pre><code class="language-javascript">const url = new URL(
+    "{baseUrl}/api/stores/otp-verified"
+);
+
+let headers = {
+    "Authorization": "Bearer {token}",
+    "Content-Type": "application/json",
+    "Accept": "application/json",
+};
+
+let body = {
+    "otp": 3
+}
+
+fetch(url, {
+    method: "POST",
+    headers: headers,
+    body: body
+})
+    .then(response =&gt; response.json())
+    .then(json =&gt; console.log(json));</code></pre>
+<h3>HTTP Request</h3>
+<p><code>POST api/stores/otp-verified</code></p>
+<h4>Body Parameters</h4>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Status</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>otp</code></td>
+<td>integer</td>
+<td>required</td>
+<td>OTP is required for this api</td>
+</tr>
+</tbody>
+</table>
+<!-- END_0d32427b5a91f18957faebd398978c30 -->
+<!-- START_e32428e8f228608a6f371279d7ebc435 -->
+<h2>Store search of a location</h2>
+<blockquote>
+<p>Example request:</p>
+</blockquote>
+<pre><code class="language-bash">curl -X GET \
+    -G "{baseUrl}/api/customers/stores" \
+    -H "Authorization: Bearer {token}" \
+    -H "Content-Type: application/json" \
+    -d '{"lat":39214.172,"lng":49009.927,"store_id":16,"cat_id":20}'
+</code></pre>
+<pre><code class="language-javascript">const url = new URL(
+    "{baseUrl}/api/customers/stores"
+);
+
+let headers = {
+    "Authorization": "Bearer {token}",
+    "Content-Type": "application/json",
+    "Accept": "application/json",
+};
+
+let body = {
+    "lat": 39214.172,
+    "lng": 49009.927,
+    "store_id": 16,
+    "cat_id": 20
+}
+
+fetch(url, {
+    method: "GET",
+    headers: headers,
+    body: body
+})
+    .then(response =&gt; response.json())
+    .then(json =&gt; console.log(json));</code></pre>
+<blockquote>
+<p>Example response (200):</p>
+</blockquote>
+<pre><code class="language-json">{
+    "status": false,
+    "error": {
+        "lat": [
+            "The lat field is required."
+        ],
+        "lng": [
+            "The lng field is required."
+        ]
+    }
+}</code></pre>
+<h3>HTTP Request</h3>
+<p><code>GET api/customers/stores</code></p>
+<h4>Body Parameters</h4>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Status</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>lat</code></td>
+<td>float</td>
+<td>required</td>
+<td>Latitude required</td>
+</tr>
+<tr>
+<td><code>lng</code></td>
+<td>float</td>
+<td>required</td>
+<td>Longitude required</td>
+</tr>
+<tr>
+<td><code>store_id</code></td>
+<td>integer</td>
+<td>optional</td>
+<td>For specific store search</td>
+</tr>
+<tr>
+<td><code>cat_id</code></td>
+<td>integer</td>
+<td>optional</td>
+<td>For category wise store search</td>
+</tr>
+</tbody>
+</table>
+<!-- END_e32428e8f228608a6f371279d7ebc435 -->
+<h1>User address management</h1>
+<p>APIs for managing user address</p>
+<!-- START_77e0058d7c92c52607dc92e8587a4a39 -->
+<h2>Get Address List</h2>
+<blockquote>
+<p>Example request:</p>
+</blockquote>
+<pre><code class="language-bash">curl -X GET \
+    -G "{baseUrl}/api/customers/address" \
+    -H "Authorization: Bearer {token}"</code></pre>
+<pre><code class="language-javascript">const url = new URL(
+    "{baseUrl}/api/customers/address"
+);
+
+let headers = {
+    "Authorization": "Bearer {token}",
+    "Accept": "application/json",
+    "Content-Type": "application/json",
+};
+
+fetch(url, {
+    method: "GET",
+    headers: headers,
+})
+    .then(response =&gt; response.json())
+    .then(json =&gt; console.log(json));</code></pre>
+<blockquote>
+<p>Example response (401):</p>
+</blockquote>
+<pre><code class="language-json">{
+    "status": false,
+    "message": "Invalid Token"
+}</code></pre>
+<h3>HTTP Request</h3>
+<p><code>GET api/customers/address</code></p>
+<!-- END_77e0058d7c92c52607dc92e8587a4a39 -->
+<!-- START_ff51a765f04b9150ae1130b9586f5ec1 -->
+<h2>Add new address</h2>
+<blockquote>
+<p>Example request:</p>
+</blockquote>
+<pre><code class="language-bash">curl -X POST \
+    "{baseUrl}/api/customers/address" \
+    -H "Authorization: Bearer {token}" \
+    -H "Content-Type: application/json" \
+    -d '{"title":"totam","address":"veniam","city":"qui","postcode":10,"state":"iste","lat":24.9124,"lng":42757.13477}'
+</code></pre>
+<pre><code class="language-javascript">const url = new URL(
+    "{baseUrl}/api/customers/address"
+);
+
+let headers = {
+    "Authorization": "Bearer {token}",
+    "Content-Type": "application/json",
+    "Accept": "application/json",
+};
+
+let body = {
+    "title": "totam",
+    "address": "veniam",
+    "city": "qui",
+    "postcode": 10,
+    "state": "iste",
+    "lat": 24.9124,
+    "lng": 42757.13477
+}
+
+fetch(url, {
+    method: "POST",
+    headers: headers,
+    body: body
+})
+    .then(response =&gt; response.json())
+    .then(json =&gt; console.log(json));</code></pre>
+<h3>HTTP Request</h3>
+<p><code>POST api/customers/address</code></p>
+<h4>Body Parameters</h4>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Status</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>title</code></td>
+<td>string</td>
+<td>required</td>
+<td>the title of the post</td>
+</tr>
+<tr>
+<td><code>address</code></td>
+<td>string</td>
+<td>required</td>
+<td>the address is required for the post</td>
+</tr>
+<tr>
+<td><code>city</code></td>
+<td>string</td>
+<td>required</td>
+<td>the city is required for the post</td>
+</tr>
+<tr>
+<td><code>postcode</code></td>
+<td>integer</td>
+<td>required</td>
+<td>the postcode is required for the post</td>
+</tr>
+<tr>
+<td><code>state</code></td>
+<td>string</td>
+<td>required</td>
+<td>the state is required for the post</td>
+</tr>
+<tr>
+<td><code>lat</code></td>
+<td>float</td>
+<td>required</td>
+<td>the lat is required for the post</td>
+</tr>
+<tr>
+<td><code>lng</code></td>
+<td>float</td>
+<td>required</td>
+<td>the lng is required for the post</td>
+</tr>
+</tbody>
+</table>
+<!-- END_ff51a765f04b9150ae1130b9586f5ec1 -->
+<!-- START_000f58c9c4a99572b69a3f82663b8779 -->
+<h2>Delete Address</h2>
+<blockquote>
+<p>Example request:</p>
+</blockquote>
+<pre><code class="language-bash">curl -X DELETE \
+    "{baseUrl}/api/customers/address/nihil" \
+    -H "Authorization: Bearer {token}"</code></pre>
+<pre><code class="language-javascript">const url = new URL(
+    "{baseUrl}/api/customers/address/nihil"
+);
+
+let headers = {
+    "Authorization": "Bearer {token}",
+    "Accept": "application/json",
+    "Content-Type": "application/json",
+};
+
+fetch(url, {
+    method: "DELETE",
+    headers: headers,
+})
+    .then(response =&gt; response.json())
+    .then(json =&gt; console.log(json));</code></pre>
+<h3>HTTP Request</h3>
+<p><code>DELETE api/customers/address/{id}</code></p>
+<h4>URL Parameters</h4>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Status</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>id</code></td>
+<td>optional</td>
+<td>int required for this api</td>
+</tr>
+</tbody>
+</table>
+<!-- END_000f58c9c4a99572b69a3f82663b8779 -->
+<h1>general</h1>
+<!-- START_86380c1b417f7083901e35f319bb6095 -->
+<h2>api/agents/signup</h2>
+<blockquote>
+<p>Example request:</p>
+</blockquote>
+<pre><code class="language-bash">curl -X POST \
+    "{baseUrl}/api/agents/signup" \
+    -H "Authorization: Bearer {token}"</code></pre>
+<pre><code class="language-javascript">const url = new URL(
+    "{baseUrl}/api/agents/signup"
+);
+
+let headers = {
+    "Authorization": "Bearer {token}",
+    "Accept": "application/json",
+    "Content-Type": "application/json",
+};
+
+fetch(url, {
+    method: "POST",
+    headers: headers,
+})
+    .then(response =&gt; response.json())
+    .then(json =&gt; console.log(json));</code></pre>
+<h3>HTTP Request</h3>
+<p><code>POST api/agents/signup</code></p>
+<!-- END_86380c1b417f7083901e35f319bb6095 -->
+<!-- START_7dffd1aad79e450d0553ad409c9d9fbb -->
+<h2>api/agents/login</h2>
+<blockquote>
+<p>Example request:</p>
+</blockquote>
+<pre><code class="language-bash">curl -X POST \
+    "{baseUrl}/api/agents/login" \
+    -H "Authorization: Bearer {token}"</code></pre>
+<pre><code class="language-javascript">const url = new URL(
+    "{baseUrl}/api/agents/login"
+);
+
+let headers = {
+    "Authorization": "Bearer {token}",
+    "Accept": "application/json",
+    "Content-Type": "application/json",
+};
+
+fetch(url, {
+    method: "POST",
+    headers: headers,
+})
+    .then(response =&gt; response.json())
+    .then(json =&gt; console.log(json));</code></pre>
+<h3>HTTP Request</h3>
+<p><code>POST api/agents/login</code></p>
+<!-- END_7dffd1aad79e450d0553ad409c9d9fbb -->
+<!-- START_2946272066c703bc4e625a45be728bf6 -->
+<h2>api/agents/forgot-password</h2>
+<blockquote>
+<p>Example request:</p>
+</blockquote>
+<pre><code class="language-bash">curl -X POST \
+    "{baseUrl}/api/agents/forgot-password" \
+    -H "Authorization: Bearer {token}"</code></pre>
+<pre><code class="language-javascript">const url = new URL(
+    "{baseUrl}/api/agents/forgot-password"
+);
+
+let headers = {
+    "Authorization": "Bearer {token}",
+    "Accept": "application/json",
+    "Content-Type": "application/json",
+};
+
+fetch(url, {
+    method: "POST",
+    headers: headers,
+})
+    .then(response =&gt; response.json())
+    .then(json =&gt; console.log(json));</code></pre>
+<h3>HTTP Request</h3>
+<p><code>POST api/agents/forgot-password</code></p>
+<!-- END_2946272066c703bc4e625a45be728bf6 -->
+<!-- START_e842771de661172dc31d9f3632093aba -->
+<h2>api/agents/reset-password</h2>
+<blockquote>
+<p>Example request:</p>
+</blockquote>
+<pre><code class="language-bash">curl -X POST \
+    "{baseUrl}/api/agents/reset-password" \
+    -H "Authorization: Bearer {token}"</code></pre>
+<pre><code class="language-javascript">const url = new URL(
+    "{baseUrl}/api/agents/reset-password"
+);
+
+let headers = {
+    "Authorization": "Bearer {token}",
+    "Accept": "application/json",
+    "Content-Type": "application/json",
+};
+
+fetch(url, {
+    method: "POST",
+    headers: headers,
+})
+    .then(response =&gt; response.json())
+    .then(json =&gt; console.log(json));</code></pre>
+<h3>HTTP Request</h3>
+<p><code>POST api/agents/reset-password</code></p>
+<!-- END_e842771de661172dc31d9f3632093aba -->
+<!-- START_0f6606d395e1898170a881a1a49ca7f1 -->
+<h2>api/agents/otp-verified</h2>
+<blockquote>
+<p>Example request:</p>
+</blockquote>
+<pre><code class="language-bash">curl -X POST \
+    "{baseUrl}/api/agents/otp-verified" \
+    -H "Authorization: Bearer {token}"</code></pre>
+<pre><code class="language-javascript">const url = new URL(
+    "{baseUrl}/api/agents/otp-verified"
+);
+
+let headers = {
+    "Authorization": "Bearer {token}",
+    "Accept": "application/json",
+    "Content-Type": "application/json",
+};
+
+fetch(url, {
+    method: "POST",
+    headers: headers,
+})
+    .then(response =&gt; response.json())
+    .then(json =&gt; console.log(json));</code></pre>
+<h3>HTTP Request</h3>
+<p><code>POST api/agents/otp-verified</code></p>
+<!-- END_0f6606d395e1898170a881a1a49ca7f1 -->
+<!-- START_377396358296c79d4dddd7e953200e64 -->
+<h2>api/agents/resent-otp</h2>
+<blockquote>
+<p>Example request:</p>
+</blockquote>
+<pre><code class="language-bash">curl -X POST \
+    "{baseUrl}/api/agents/resent-otp" \
+    -H "Authorization: Bearer {token}"</code></pre>
+<pre><code class="language-javascript">const url = new URL(
+    "{baseUrl}/api/agents/resent-otp"
+);
+
+let headers = {
+    "Authorization": "Bearer {token}",
+    "Accept": "application/json",
+    "Content-Type": "application/json",
+};
+
+fetch(url, {
+    method: "POST",
+    headers: headers,
+})
+    .then(response =&gt; response.json())
+    .then(json =&gt; console.log(json));</code></pre>
+<h3>HTTP Request</h3>
+<p><code>POST api/agents/resent-otp</code></p>
+<!-- END_377396358296c79d4dddd7e953200e64 -->
+<!-- START_109013899e0bc43247b0f00b67f889cf -->
+<h2>api/categories</h2>
+<blockquote>
+<p>Example request:</p>
+</blockquote>
+<pre><code class="language-bash">curl -X GET \
+    -G "{baseUrl}/api/categories" \
+    -H "Authorization: Bearer {token}"</code></pre>
+<pre><code class="language-javascript">const url = new URL(
+    "{baseUrl}/api/categories"
+);
+
+let headers = {
+    "Authorization": "Bearer {token}",
+    "Accept": "application/json",
+    "Content-Type": "application/json",
+};
+
+fetch(url, {
+    method: "GET",
+    headers: headers,
+})
+    .then(response =&gt; response.json())
+    .then(json =&gt; console.log(json));</code></pre>
+<blockquote>
+<p>Example response (200):</p>
+</blockquote>
+<pre><code class="language-json">{
+    "status": true,
+    "data": [
+        {
+            "id": 1,
+            "category_name": "Grocery Shop",
+            "category_desc": "Grocery Shop",
+            "cover_photo": null
+        },
+        {
+            "id": 2,
+            "category_name": "Restaurant",
+            "category_desc": "Restaurant",
+            "cover_photo": null
+        },
+        {
+            "id": 3,
+            "category_name": "Wine Shop",
+            "category_desc": "Wine Shop",
+            "cover_photo": null
+        }
+    ]
+}</code></pre>
+<h3>HTTP Request</h3>
+<p><code>GET api/categories</code></p>
+<!-- END_109013899e0bc43247b0f00b67f889cf -->
+<!-- START_7e3072a9c6d43c05123a799823b02c6d -->
+<h2>api/docs</h2>
+<blockquote>
+<p>Example request:</p>
+</blockquote>
+<pre><code class="language-bash">curl -X GET \
+    -G "{baseUrl}/api/docs" \
+    -H "Authorization: Bearer {token}"</code></pre>
+<pre><code class="language-javascript">const url = new URL(
+    "{baseUrl}/api/docs"
+);
+
+let headers = {
+    "Authorization": "Bearer {token}",
+    "Accept": "application/json",
+    "Content-Type": "application/json",
+};
+
+fetch(url, {
+    method: "GET",
+    headers: headers,
+})
+    .then(response =&gt; response.json())
+    .then(json =&gt; console.log(json));</code></pre>
+<blockquote>
+<p>Example response (200):</p>
+</blockquote>
+<pre><code class="language-json">{
+    "status": true,
+    "data": [
+        {
+            "id": 1,
+            "title": "Address Prof",
+            "slug": "address_prof",
+            "desc": "Address Prof",
+            "user_type": "both"
+        },
+        {
+            "id": 2,
+            "title": "Trade Licence",
+            "slug": "trade_licence",
+            "desc": "Trade Licence",
+            "user_type": "shop"
+        },
+        {
+            "id": 3,
+            "title": "Driving licence (front)",
+            "slug": "driving_licence_front",
+            "desc": "Driving licence ",
+            "user_type": "agent"
+        },
+        {
+            "id": 4,
+            "title": "Driving licence (back)",
+            "slug": "driving_licence_back",
+            "desc": "Driving licence ",
+            "user_type": "agent"
+        },
+        {
+            "id": 5,
+            "title": "Passport",
+            "slug": "passport",
+            "desc": "Passport",
+            "user_type": "both"
+        }
+    ]
+}</code></pre>
+<h3>HTTP Request</h3>
+<p><code>GET api/docs</code></p>
+<!-- END_7e3072a9c6d43c05123a799823b02c6d -->
+<!-- START_182076825f5ecffd9a788b75e97f8002 -->
+<h2>api/changePhoneStatus</h2>
+<blockquote>
+<p>Example request:</p>
+</blockquote>
+<pre><code class="language-bash">curl -X GET \
+    -G "{baseUrl}/api/changePhoneStatus" \
+    -H "Authorization: Bearer {token}"</code></pre>
+<pre><code class="language-javascript">const url = new URL(
+    "{baseUrl}/api/changePhoneStatus"
+);
+
+let headers = {
+    "Authorization": "Bearer {token}",
+    "Accept": "application/json",
+    "Content-Type": "application/json",
+};
+
+fetch(url, {
+    method: "GET",
+    headers: headers,
+})
+    .then(response =&gt; response.json())
+    .then(json =&gt; console.log(json));</code></pre>
+<blockquote>
+<p>Example response (200):</p>
+</blockquote>
+<pre><code class="language-json">{
+    "status": true,
+    "message": "Phone verification status has been changed successfully"
+}</code></pre>
+<h3>HTTP Request</h3>
+<p><code>GET api/changePhoneStatus</code></p>
+<!-- END_182076825f5ecffd9a788b75e97f8002 -->
+      </div>
+      <div class="dark-box">
+                        <div class="lang-selector">
+                                    <a href="#" data-language-name="bash">bash</a>
+                                    <a href="#" data-language-name="javascript">javascript</a>
+                              </div>
+                </div>
+    </div>
+  </body>
+</html>

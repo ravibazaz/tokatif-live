@@ -1,0 +1,104 @@
+.table .actionLink {
+    padding: 10px !important;
+}
+.login-logo img {
+    width: 100px;
+}
+#map.map-map {
+    position: relative;
+    overflow: hidden;
+    top: auto;
+	left: 0;
+	bottom: 0;
+}
+
+#map input#pac-input {
+	min-width: 400px;
+	min-height: 40px;
+}
+
+
+.rightdetails-profile .user- {
+    width: 100%;
+    clear: both;
+}
+
+.text-muted {
+    width: 100%;
+    clear: both;
+}
+
+.rightdetails-profile .user- img {
+    width:100px;
+    display: block;
+    float: left;
+    border-radius: 50%;
+    height: 100px;
+    object-fit:contain;
+	margin-right: 15px;
+}
+
+
+.rightdetails-profile .user- h3 { padding-top: 15px;}
+.user- p.text-muted { clear:none !important;}
+
+.leftdetails-profile {
+    background-color: #f2f2f2;
+    padding: 30px 0;
+}
+
+.leftdetails-profile p {
+    line-height: 30px;
+}
+
+.leftdetails-profile h4 {
+    font-weight: 500;
+    padding: 5px 15px;
+}
+
+.rightdetails-profile {
+    background-color: #f7f5f5;
+    padding: 30px 30px;
+}
+
+a.download-arrow {
+    display: block;
+    float: left;
+    width: auto;
+    padding: 6px 10px;
+    background-color: #007bff;
+    color: #fff;
+    text-align: center;
+    border-radius: 4px;
+    margin-top: 10px;
+}
+
+.info-box.bg-light {
+    background-color: #8b9197 !important;
+    color: #fff !important;
+}
+
+.info-box.bg-light .text-muted {
+    color: #fff !important;
+}
+
+.Video-conferencing, .account-id, 
+.country-origin, .country-Living, 
+.teacher-dob, .teacher-Gender,
+.teacher-language, .teacher-languagestaught,
+.teacher-about, .teacher-lessons {
+    width: 100%;
+    float: left;
+    clear: both;
+    padding: 15px 15px;
+    background-color: #f9f8cb;
+    color: #333;
+	margin-bottom:10px;
+}
+
+.leftdetails-profile .user-block {
+    padding: 0 15px;
+    margin-bottom: 15px;
+}
+
+
