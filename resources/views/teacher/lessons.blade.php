@@ -85,6 +85,7 @@
                         <div class="form-group col-md-2">
                             <div class="edite-delite">
                                 <a href="javascript:void(0);" data-LessonID="{{$val->id}}" class="lessonDetailModal" ><i class="fa fa-eye" aria-hidden="true"></i></a>
+                                <a href="{{route('lesson-edit',['id'=>$val->id])}}"><i class="fa fa-pencil" aria-hidden="true"></i></a>
                                 <a href="{{ route('teacher-lesson-delete',['id'=>$val->id]) }}" onclick="return confirm('Do you want to delete the lesson ?')" class="actionLink"><i class="fa fa-trash-o"></i></a> 
                             </div>
                         </div>     

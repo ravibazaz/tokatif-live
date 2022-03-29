@@ -26,8 +26,8 @@ class RegistrationController extends Controller
     
     public function index()
     {
-
-        Session::put('email_verify_stat', 0);
+        
+        //Session::put('email_verify_stat', 0);
         Session::put('phone_verify_stat', 0);
         
         if(session('role')=='1'){
@@ -359,7 +359,7 @@ class RegistrationController extends Controller
 
                     Mail::to($request->email)->send(new Register($details));
                     
-                    return redirect('teacher-registration')->with('success','Thank you for submitting your application. A Tokatif team member will be in touch with you shortly.');
+                    return redirect('teacher-registration')->with('success','Thank you for submitting your application. A Tokatif team member will be in touch with you shortly. Please also check your inbox/spam for email.');
                 }else{
                     return redirect('teacher-registration')->with('error','Please try again!'); 
                 }
@@ -387,7 +387,8 @@ class RegistrationController extends Controller
     {
         //register user by mail
 
-        $status_of_mail = Session::get('email_verify_stat');
+        //$status_of_mail = Session::get('email_verify_stat');
+        $status_of_mail = $req->session()->get('email_verify_stat');
         
         $rowCount = $this->registrationModel->select(DB::raw('count(*) as count'))->where('email', '=', $req->user_email)->where('deleted_at', '=', null)->count();
         
@@ -407,7 +408,25 @@ class RegistrationController extends Controller
                 $data =  $registration->save();
                 
                 if($data){
-                    Session::put('email_verify_stat', 0);
+                    //Session::put('email_verify_stat', 0);
+                    $req->session()->put('email_verify_stat', 0);
+                    
+                    // Send Email =========================================================
+                    
+                    $subject = 'We received your application!';
+                    $message = 'Thank you for registering to be a student with Tokatif.';
+                    
+                    $details = [
+                        'to' => $registration->email,
+                        'from' => env('MAIL_FROM_ADDRESS'),
+                        'subject' => $subject,
+                        'receiver' => ucfirst($registration->name),
+                        'sender' => env('MAIL_FROM_NAME'), 
+                        'msg'=>$message
+                    ];
+                    
+                    Mail::to($registration->email)->send(new Register($details));
+                    
                     $res = array("status"=>200,"message"=>"Registered Successfully");
                 }else{
                     $res = array("status"=>201,"message"=>"Some Other Data"); 
@@ -419,7 +438,7 @@ class RegistrationController extends Controller
             
             
         }else{
-                $res = array("status"=>202,"message"=>"Your email is not verified.Please verify your Email."); 
+                $res = array("status"=>202,"message"=>"Your email is not verified. Please check your inbox/spam for email. Please verify your Email."); 
         }
 
         return json_encode($res);
@@ -436,24 +455,32 @@ class RegistrationController extends Controller
       
         if($user_present == null)
         {
-        $rand_number=rand(0000,9999);
-        
-        $message = "<p>Your authorization code For Registration is :- ".$rand_number."</p>";
-        
-        //$to  = $user_email;
+            $rand_number=rand(0000,9999);
+            
+            $message = "<p>Your authorization code For Registration is :- ".$rand_number."</p>";
+            
+            //$to  = $user_email;
+    
+            //$emailres = emailsend($user_email,$message);
+            
+            Mail::send('email', [
+                    'name' => 'pp',
+                    'email' => 'parna.pal@gmail.com',
+                    'comment' => $message ],
+                    function ($message) {
+                            $message->from('letstalk@clikdigital.com.au');
+                            $message->to('parna.pal@gmail.com', 'Parna')
+                            ->subject('Your Website Contact Form');
+            });
 
-        $emailres = emailsend($user_email,$message);
-
-        if($emailres['Stat'] == 1)
-        {
-            Session::put('authorization_code', $rand_number);
-            Session::put('email_mail_sent', $user_email);
-            $res = array("status"=>200,"message"=>"Code Has Been Sent.Please Verify Your Email.");
-        }
+            if($emailres['Stat'] == 1)
+            {
+                Session::put('authorization_code', $rand_number);
+                Session::put('email_mail_sent', $user_email);
+                $res = array("status"=>200,"message"=>"Code Has Been Sent.Please Verify Your Email. Also please check your inbox/spam for email."); 
+            }
         
-         }
-         else if($user_present)
-         {
+         } else if($user_present) {
             $res = array("status"=>201,"message"=>"Your Email Already Exists.Try with another Email");
          }
         
@@ -472,7 +499,8 @@ class RegistrationController extends Controller
         $code = Session::get('authorization_code');
         if(Session::get('authorization_code') == $authorization_code)
         {
-            Session::put('email_verify_stat', 1);
+            //Session::put('email_verify_stat', 1);
+            $req->session()->put('email_verify_stat', 1);
             $res = array("status"=>200,"message"=>"Authorization Code Verified Successfully"); 
         }
         else

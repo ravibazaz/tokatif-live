@@ -1,6 +1,14 @@
 <?php echo $__env->make('include/head', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
 <?php echo $__env->make('include/header', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
 
+
+<?php
+ $websitedata = getwebsite_data();
+ $getLoggedIndata = getLoggedinData();
+?>
+
+
+
 <style>
 a.disabled {
   pointer-events: none;
@@ -63,14 +71,16 @@ a.disabled {
                         </div>
                   
                         <div class="bts">
-                          <a href="#" class="fblogin social"><i class="fa fa-facebook"></i></a>
-                           <a href="#" class="twlogin social"><i class="fa fa-twitter"></i></a>
-                          <a href="#" class="gplogin social"><i class="fa fa-google-plus"></i></a>
-                          <a href="#" class="alogin social"><i class="fa fa-apple" aria-hidden="true"></i></a>              
+                          <a href="<?php echo e($websitedata[0]->facebook_link); ?>" class="fblogin social"><i class="fa fa-facebook"></i></a>
+                           <a href="<?php echo e($websitedata[0]->twitter_link); ?>" class="twlogin social"><i class="fa fa-twitter"></i></a>
+                          <!--<a href="#" class="gplogin social"><i class="fa fa-google-plus"></i></a>
+                          <a href="#" class="alogin social"><i class="fa fa-apple" aria-hidden="true"></i></a>  -->            
                         </div>
                         
                         
-						<p><small>By logging in or creating an account, you agree to italki's<br/> <a href="#">Terms of Service</a> and  <a href="#">Privacy Policy.</a></small></p>
+						<p><small>By logging in or creating an account, you agree to Tokatif's<br/> 
+						<a href="<?php echo e(route('terms')); ?>">Terms of Service</a> and  
+						<a href="<?php echo e(route('privacy-policy')); ?>">Privacy Policy.</a></small></p>
                     </form>
                     </div>
                     
@@ -124,14 +134,14 @@ a.disabled {
                         </div>
                   
                         <div class="bts">
-                          <a href="#" class="fblogin social"><i class="fa fa-facebook"></i></a>
-                           <a href="#" class="twlogin social"><i class="fa fa-twitter"></i></a>
-                          <a href="#" class="gplogin social"><i class="fa fa-google-plus"></i></a>
-                          <a href="#" class="alogin social"><i class="fa fa-apple" aria-hidden="true"></i></a>              
+                            <a href="<?php echo e($websitedata[0]->facebook_link); ?>" class="fblogin social"><i class="fa fa-facebook"></i></a>
+                           <a href="<?php echo e($websitedata[0]->twitter_link); ?>" class="twlogin social"><i class="fa fa-twitter"></i></a>
                         </div>
                         
                         
-						<p><small>By logging in or creating an account, you agree to Tokatif's<br/> <a href="#">Terms of Service</a> and  <a href="#">Privacy Policy.</a></small></p>
+						<p><small>By logging in or creating an account, you agree to Tokatif's<br/> 
+						<a href="<?php echo e(route('terms')); ?>">Terms of Service</a> and  
+						<a href="<?php echo e(route('privacy-policy')); ?>">Privacy Policy.</a></small></p>
                     </form>
                     </div>
                    

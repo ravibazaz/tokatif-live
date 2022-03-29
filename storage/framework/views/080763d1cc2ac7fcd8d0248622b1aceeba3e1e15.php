@@ -333,7 +333,7 @@
 
                                                                         <?php $__currentLoopData = $countries; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $val): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
 
-                                                                         <option value="<?php echo e($val->name); ?>" <?php echo e((Request::old('country') == $val->name) ? 'selected' : ''); ?>><?php echo e($val->name); ?></option>               
+                                                                         <option value="<?php echo e($val->name); ?>" <?php echo e((Request::old('country_of_origin') == $val->name) ? 'selected' : ''); ?>><?php echo e($val->name); ?></option>               
 
                                                                         <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?> 
 
@@ -361,7 +361,7 @@
 
                                                                         <?php $__currentLoopData = $countries; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $val): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
 
-                                                                         <option value="<?php echo e($val->name); ?>" <?php echo e((Request::old('country') == $val->name) ? 'selected' : ''); ?>><?php echo e($val->name); ?></option>               
+                                                                         <option value="<?php echo e($val->name); ?>" <?php echo e((Request::old('country_living_in') == $val->name) ? 'selected' : ''); ?>><?php echo e($val->name); ?></option>               
 
                                                                         <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?> 
 
@@ -642,9 +642,7 @@
                                                                         <option value="">--Please select--</option>
 
                                                                         <?php $__currentLoopData = $languages; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $val): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-
                                                                          <option value="<?php echo e($val->name); ?>" <?php echo e((Request::old('language') == $val->name) ? 'selected' : ''); ?>><?php echo e($val->name); ?></option>               
-
                                                                         <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?> 
 
                                                                       </select>
@@ -653,22 +651,14 @@
 
                                                                     <div class="form-group col-md-4 p-0">
 
-                                                                      <select name="lang_level[]" class="form-control custom-select">
-
-                                                                        <option value="Native">Native</option>
-
-                                                                        <option value="Beginner">Beginner</option>
-
-                                                                        <option value="Elementary">Elementary</option>
-
-                                                                        <option value="Intermediate">Intermediate</option>
-
-                                                                        <option value="Upper Intermediate">Upper Intermediate</option> 
-
-                                                                        <option value="Advanced">Advanced</option>
-
-                                                                        <option value="Proficient">Proficient</option>
-
+                                                                      <select name="lang_level[]" class="form-control custom-select"> 
+                                                                        <option value="Native" <?php echo e((Request::old('lang_level') == 'Native') ? 'selected' : ''); ?>>Native</option>
+                                                                        <option value="Beginner" <?php echo e((Request::old('lang_level') == 'Beginner') ? 'selected' : ''); ?>>Beginner</option>
+                                                                        <option value="Elementary" <?php echo e((Request::old('lang_level') == 'Elementary') ? 'selected' : ''); ?>>Elementary</option>
+                                                                        <option value="Intermediate" <?php echo e((Request::old('lang_level') == 'Intermediate') ? 'selected' : ''); ?>>Intermediate</option>
+                                                                        <option value="Upper Intermediate" <?php echo e((Request::old('lang_level') == 'Upper Intermediate') ? 'selected' : ''); ?>>Upper Intermediate</option> 
+                                                                        <option value="Advanced" <?php echo e((Request::old('lang_level') == 'Advanced') ? 'selected' : ''); ?>>Advanced</option>
+                                                                        <option value="Proficient" <?php echo e((Request::old('lang_level') == 'Proficient') ? 'selected' : ''); ?>>Proficient</option>
                                                                       </select>
 
                                                                     </div>
@@ -728,9 +718,7 @@
                                                                             <option value="">--Please select--</option>
 
                                                                             <?php $__currentLoopData = $languages; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $val): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-
                                                                              <option value="<?php echo e($val->name); ?>" <?php echo e((Request::old('language') == $val->name) ? 'selected' : ''); ?>><?php echo e($val->name); ?></option>               
-
                                                                             <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?> 
 
                                                                           </select>
@@ -738,11 +726,8 @@
                                                                         </div>
 
                                                                         <div class="form-group col-md-2 pl-0 len-delite text-center">
-
                                                                           <label for="">Delete</label>
-
                                                                           <div class="input-group-text remove-taught-lang-row form-control"><i class="fa fa-trash-o" aria-hidden="true"></i></div>
-
                                                                         </div>
 
                                                                     </div>
@@ -1375,7 +1360,7 @@
 
                                                 <!--<a href="#" class="video-upload">Upload Your Video</a>-->
 
-                                                <input type="file" name="video" value="<?php echo e(Request::old('video')); ?>" class="video-upload" accept="video/*"> Upload Your Video
+                                                <!--<input type="file" name="video" value="<?php echo e(Request::old('video')); ?>" class="video-upload" accept="video/*"> Upload Your Video
 
                                                 <?php if($errors->has('video')): ?>
 
@@ -1387,7 +1372,7 @@
 
                                                 
 
-                                                <br>OR<br>
+                                                <br>OR<br>-->
 
                                                 <div>
 
@@ -1475,7 +1460,7 @@
 
                                                     <div class="form-group col-md-6 upload-custom">
 
-                                                       <label for="">Click or Drage here to upload Photo</label>
+                                                       <label for="">Click or Drag here to upload Photo</label>
 
     												   <input type="file" name="scanned_id_proof" id="upload-photo" value="<?php echo e(Request::old('scanned_id_proof')); ?>" accept="image/*" >
 
@@ -1495,7 +1480,7 @@
 
                                                     <div class="form-group col-md-6 upload-custom-1">
 
-                                                       <label for="">Click or Drage here to upload Photo</label>
+                                                       <label for="">Click or Drag here to upload Photo</label>
 
     												   <input type="file" name="applicant_with_scanned_id_proof" id="upload-photo-1" value="<?php echo e(Request::old('applicant_with_scanned_id_proof')); ?>" accept="image/*" >
 

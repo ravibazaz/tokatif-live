@@ -8,7 +8,7 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
 
-class MaintaskCreation extends Mailable
+class StudentRegistration extends Mailable
 {
     use Queueable, SerializesModels;
     
@@ -30,18 +30,12 @@ class MaintaskCreation extends Mailable
      */
     public function build()
     {
-        
-        return $this->view('admin.emails.maintask')
+        return $this->view('emails.student-registration')
                     ->from($this->details['from'], $this->details['sender'])
                     ->subject($this->details['subject'])
-                    ->with($this->details);
-
+                    ->with([ 'msg' => $this->details['msg'] ]);
     }
 }
-
-
-
-
 
 
 

@@ -130,6 +130,24 @@ Route::namespace('Admin')->prefix('admin')->group(function () {
         Route::get('/support/delete/{id}', 'SupportController@delete')->name('admin-support-delete');
         Route::get('/support', 'SupportController@list')->name('admin-support-list');
         Route::post('/support', 'SupportController@list')->name('admin-support-search');
+        
+        
+        Route::get('/terms/add', 'TermsController@add')->name('admin-terms-add');
+        Route::post('/terms/add', 'TermsController@add')->name('admin-terms-insert'); 
+        Route::get('/terms/{id}', 'TermsController@edit')->name('admin-terms-edit');
+        Route::post('/terms/{id}', 'TermsController@edit')->name('admin-terms-update');
+        Route::get('/terms/delete/{id}', 'TermsController@delete')->name('admin-terms-delete');
+        Route::get('/terms', 'TermsController@list')->name('admin-terms-list');
+        Route::post('/terms', 'TermsController@list')->name('admin-terms-search');
+        
+        
+        Route::get('/privacy/add', 'PrivacyController@add')->name('admin-privacy-add');
+        Route::post('/privacy/add', 'PrivacyController@add')->name('admin-privacy-insert'); 
+        Route::get('/privacy/{id}', 'PrivacyController@edit')->name('admin-privacy-edit');
+        Route::post('/privacy/{id}', 'PrivacyController@edit')->name('admin-privacy-update');
+        Route::get('/privacy/delete/{id}', 'PrivacyController@delete')->name('admin-privacy-delete');
+        Route::get('/privacy', 'PrivacyController@list')->name('admin-privacy-list');
+        Route::post('/privacy', 'PrivacyController@list')->name('admin-privacy-search');
 
         
         Route::get('/logout','AuthController@logout')->name('admin-logout');
@@ -178,8 +196,8 @@ Route::get('/add-community', 'CommunityController@add')->name('add-community');
 Route::post('/community/insert', 'CommunityController@add')->name('post-community-data');
 
 Route::get('/support','SupportController@index')->name('support');
-
-
+Route::get('/privacy-policy','PrivacyPolicyController@index')->name('privacy-policy');
+Route::get('/terms','TermsController@index')->name('terms');
 
 // Chat message & post comments
 Route::middleware(['isUserAuthenticated', 'cors'])->group(function(){
@@ -275,6 +293,8 @@ Route::middleware(['isTeacherAuthenticated', 'cors'])->group(function(){
     Route::get('/add-lesson', 'LessonController@add_lesson')->name('add-lesson');
     Route::post('/post-lesson-data', 'LessonController@add_lesson')->name('post-lesson-data');
     Route::get('/add-lesson/ajax/{category}',array('as'=>'add_lesson.ajax','uses'=>'LessonController@categoryWiseTagAjax')); 
+    Route::get('/edit-lesson/{id}', 'LessonController@edit_lesson')->name('lesson-edit');
+    Route::post('/edit-lesson/{id}', 'LessonController@edit_lesson')->name('lesson-update');
     Route::post('/send-lesson-invitation', 'LessonController@send_lesson_invitation')->name('send-lesson-invitation');
     //Route::get('/fetch-communication-tool/{id}', 'LessonController@fetch_communication_tool')->name('fetch-communication-tool'); 
     //Route::get('/fetch-communication-tool-id/{id}', 'LessonController@fetch_communication_tool_id')->name('fetch-communication-tool-id');

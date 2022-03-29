@@ -32,7 +32,7 @@ class HomeController extends Controller
         //echo "test ======================== "; exit();
         
         $alldata['banner_data'] = DB::table('banners')->get()->toArray();
-        $alldata['languages_data'] = DB::table('languages')->get()->toArray();
+        $alldata['languages_data'] = DB::table('languages')->limit(9)->get()->toArray();
         $alldata['whylearns_data'] = DB::table('whylearns')->get()->toArray();
         $alldata['whyteches_data'] = DB::table('whyteches')->get()->toArray();
         $alldata['howitworks_data'] = DB::table('howitworks')->get()->toArray();

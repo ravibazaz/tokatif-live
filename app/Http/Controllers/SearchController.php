@@ -107,7 +107,7 @@ class SearchController extends Controller
                     
                     $query = Registration::query();
                     $query->where('role', '2')->where('status', '1')->where('deleted_at', null);
-                    foreach( $request->search as $lang) {
+                    foreach($request->search as $lang) {
                         $query->orWhereJsonContains('languages_taught', [['language' => '".$lang."']]); 
                     }
                     $user = $query->orderBy('name')->get();
@@ -141,15 +141,24 @@ class SearchController extends Controller
             }
             
             
-            if($request->type=='lessonType'){ //print_r($request->search); exit();
+            if($request->type=='lessonType'){ 
+                //$elements = implode('","', $request->search);
+                //print_r($request->search);
+                
+                $arr = array();
+                foreach($request->search as $val){
+                    $arr[] = "'".$val."'";
+                }
+                //print_r($arr);  exit();
+                
                 $data['user'] = $this->registrationModel
                                                 ->leftJoin('lessons','lessons.user_id','=','registrations.id')
                                                 ->select(DB::raw('registrations.*'))
                                                 ->where('registrations.role', '2')->where('registrations.status', '1')
                                                 ->where('registrations.deleted_at', null)
-                                                ->whereIn('lessons.lesson_category', $request->search)
-                                                ->groupBy('registrations.id')
-                                                ->orderBy('registrations.name', 'asc')->get();
+                                                ->whereIn('lessons.lesson_category', $arr)
+                                                ->groupBy('registrations.id')->get();
+                                                //->orderBy('registrations.name', 'asc')->get();
                                                         
                 return view('user.ajax-teachers',$data); 
             }

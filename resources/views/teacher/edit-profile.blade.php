@@ -224,11 +224,14 @@
                       <div class="form-row part-title align-items-center">
                          <div class="form-group col-md-12"><h3>Languages I taught</h3></div>
                       </div>
-                      @php
-                        $languagesTaughtArr = json_decode($getLoggedIndata->languages_taught, true);
-                      @endphp
                       
-                      @if(count($languagesTaughtArr)>0)
+                      
+                      @if($getLoggedIndata->languages_taught!='')
+                        
+                        @php
+                            $languagesTaughtArr = json_decode($getLoggedIndata->languages_taught, true);
+                        @endphp
+                      
                         <div class="form-row taughtLangDiv" id="taught-boxes-wrap">
                           
                             @foreach ($languagesTaughtArr as $v)
@@ -288,12 +291,14 @@
                             <div class="form-group col-md-12"><label for="inputEmail4">Native Language</label></div>
                         </div>
                         
-                        @php
-                            $languagesSpokenArr = json_decode($getLoggedIndata->languages_spoken, true);
-                        @endphp
                         
                         
-                        @if(count($languagesSpokenArr)>0)
+                        
+                        @if($getLoggedIndata->languages_spoken!='')
+                        
+                            @php
+                                $languagesSpokenArr = json_decode($getLoggedIndata->languages_spoken, true);
+                            @endphp
                         <div class="form-row language-row align-items-center regLangDiv" id="reg-boxes-wrap">
                             @foreach ($languagesSpokenArr as $v)
                             <div style="display:flex;width:100%; margin:0 -15px;">

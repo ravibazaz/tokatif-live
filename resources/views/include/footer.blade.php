@@ -217,19 +217,11 @@
             <h2>Link</h2>
 
             <ul>
-
-                <!--<li><a href="#">Company</a></li>-->
-
+                <li><a href="{{route('community')}}">Community</a></li>
                 <li><a href="{{route('support')}}">Support</a></li>
 
-                <!--<li><a href="#">Legal</a></li>
-
-                <li><a href="#">Privacy</a></li>
-
-                <li><a href="#">Contact</a></li>-->
-
-                <li><a href="{{route('community')}}">Community</a></li>
-
+                <li><a href="{{route('privacy-policy')}}">Privacy Policy </a></li>
+                <li><a href="{{route('terms')}}">Terms of Use</a></li>
             </ul>
 
         </div>

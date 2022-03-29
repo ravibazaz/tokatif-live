@@ -226,11 +226,14 @@
                       <div class="form-row part-title align-items-center">
                          <div class="form-group col-md-12"><h3>Languages I taught</h3></div>
                       </div>
-                      <?php
-                        $languagesTaughtArr = json_decode($getLoggedIndata->languages_taught, true);
-                      ?>
                       
-                      <?php if(count($languagesTaughtArr)>0): ?>
+                      
+                      <?php if($getLoggedIndata->languages_taught!=''): ?>
+                        
+                        <?php
+                            $languagesTaughtArr = json_decode($getLoggedIndata->languages_taught, true);
+                        ?>
+                      
                         <div class="form-row taughtLangDiv" id="taught-boxes-wrap">
                           
                             <?php $__currentLoopData = $languagesTaughtArr; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $v): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
@@ -290,12 +293,14 @@
                             <div class="form-group col-md-12"><label for="inputEmail4">Native Language</label></div>
                         </div>
                         
-                        <?php
-                            $languagesSpokenArr = json_decode($getLoggedIndata->languages_spoken, true);
-                        ?>
                         
                         
-                        <?php if(count($languagesSpokenArr)>0): ?>
+                        
+                        <?php if($getLoggedIndata->languages_spoken!=''): ?>
+                        
+                            <?php
+                                $languagesSpokenArr = json_decode($getLoggedIndata->languages_spoken, true);
+                            ?>
                         <div class="form-row language-row align-items-center regLangDiv" id="reg-boxes-wrap">
                             <?php $__currentLoopData = $languagesSpokenArr; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $v): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                             <div style="display:flex;width:100%; margin:0 -15px;">

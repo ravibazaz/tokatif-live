@@ -271,83 +271,82 @@
               <div class="col-lg-12 col-12">
 
                <h3>Languages I know</h3>
-
-                <?php
-
-                  $skillLanguageArr = json_decode($getLoggedIndata->languages_spoken, true);  //dd($skillLanguageArr); 
-
-                ?>
-
                 
+                <?php if($getLoggedIndata->languages_spoken!=''): ?>
+                    <?php
+                      $skillLanguageArr = json_decode($getLoggedIndata->languages_spoken, true);  //dd($skillLanguageArr); 
+                    ?>
 
-                <?php if(count($skillLanguageArr)>0): ?>
-
-                <ul>
-
-                   
-
-                    <?php $__currentLoopData = $skillLanguageArr; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key=>$val): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-
-                        <?php
-
-                          if($val['level']=='Native')
-
-                            $l_img = 'meter4.png';
-
-                          elseif($val['level']=='Beginner')
-
-                            $l_img = 'meter4.png';
-
-                          elseif($val['level']=='Elementary')
-
-                            $l_img = 'meter3.png';
-
-                          elseif($val['level']=='Intermediate')
-
-                            $l_img = 'meter2.png';
-
-                          elseif($val['level']=='Upper Intermediate')
-
-                            $l_img = 'meter1.png';
-
-                          elseif($val['level']=='Advanced')
-
-                            $l_img = 'meter1.png';
-
-                          elseif($val['level']=='Proficient')
-
-                            $l_img = 'meter1.png';
-
-                          elseif($val['level']=='')
-
-                            $l_img = 'meter4.png';
-
-                        ?>
-
-                        <li> 
-
-                            <a href="javascript:void(0);">   
-
-                            <?php echo e($val['language']); ?> <img src="<?php echo e(asset('public/frontendassets/images/'.$l_img)); ?>" class="img-fluid"/> 
-
-                            </a>
-
-                        </li>
-
-                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-
-                   
-
-                 <!--<li><a href="#">English <img src="<?php echo e(asset('public/frontendassets/images/meter1.png')); ?>" class="img-fluid"/></a></li>
-
-                 <li><a href="#">German <img src="<?php echo e(asset('public/frontendassets/images/meter2.png')); ?>" class="img-fluid"/></a></li>
-
-                 <li><a href="#">Japanese <img src="<?php echo e(asset('public/frontendassets/images/meter3.png')); ?>" class="img-fluid"/></a></li>
-
-                 <li><a href="#">Chinese <img src="<?php echo e(asset('public/frontendassets/images/meter4.png')); ?>" class="img-fluid"/></a></li>-->
-
-                </ul>
-
+                    <?php if(count($skillLanguageArr)>0): ?>
+    
+                    <ul>
+    
+                       
+    
+                        <?php $__currentLoopData = $skillLanguageArr; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key=>$val): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+    
+                            <?php
+    
+                              if($val['level']=='Native')
+    
+                                $l_img = 'meter4.png';
+    
+                              elseif($val['level']=='Beginner')
+    
+                                $l_img = 'meter4.png';
+    
+                              elseif($val['level']=='Elementary')
+    
+                                $l_img = 'meter3.png';
+    
+                              elseif($val['level']=='Intermediate')
+    
+                                $l_img = 'meter2.png';
+    
+                              elseif($val['level']=='Upper Intermediate')
+    
+                                $l_img = 'meter1.png';
+    
+                              elseif($val['level']=='Advanced')
+    
+                                $l_img = 'meter1.png';
+    
+                              elseif($val['level']=='Proficient')
+    
+                                $l_img = 'meter1.png';
+    
+                              elseif($val['level']=='')
+    
+                                $l_img = 'meter4.png';
+    
+                            ?>
+    
+                            <li> 
+    
+                                <a href="javascript:void(0);">   
+    
+                                <?php echo e($val['language']); ?> <img src="<?php echo e(asset('public/frontendassets/images/'.$l_img)); ?>" class="img-fluid"/> 
+    
+                                </a>
+    
+                            </li>
+    
+                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+    
+                       
+    
+                     <!--<li><a href="#">English <img src="<?php echo e(asset('public/frontendassets/images/meter1.png')); ?>" class="img-fluid"/></a></li>
+    
+                     <li><a href="#">German <img src="<?php echo e(asset('public/frontendassets/images/meter2.png')); ?>" class="img-fluid"/></a></li>
+    
+                     <li><a href="#">Japanese <img src="<?php echo e(asset('public/frontendassets/images/meter3.png')); ?>" class="img-fluid"/></a></li>
+    
+                     <li><a href="#">Chinese <img src="<?php echo e(asset('public/frontendassets/images/meter4.png')); ?>" class="img-fluid"/></a></li>-->
+    
+                    </ul>
+    
+                    <?php endif; ?>
+                
                 <?php endif; ?>
 
                </div>
@@ -362,38 +361,36 @@
 
                <h3>Languages I'm learning</h3>
 
-               <?php
-
-                  $taughtLanguageArr = json_decode($getLoggedIndata->languages_taught, true);  //dd($taughtLanguageArr); 
-
-                ?>
-
+                <?php if($getLoggedIndata->languages_taught!=''): ?>
                 
+                    <?php
+                      $taughtLanguageArr = json_decode($getLoggedIndata->languages_taught, true);  //dd($taughtLanguageArr); 
+                    ?>
 
-                <?php if(count($taughtLanguageArr)>0): ?>
-
-                <ul>
-
-                   
-
-                    <?php $__currentLoopData = $taughtLanguageArr; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key=>$value): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-
-                        <li> 
-
-                            <a href="javascript:void(0);">   
-
-                            <?php echo e($value['language']); ?> <img src="<?php echo e(asset('public/frontendassets/images/meter1.png')); ?>" class="img-fluid"/> 
-
-                            </a>
-
-                        </li>
-
-                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-
-                
-
-                </ul>
-
+                    <?php if(count($taughtLanguageArr)>0): ?>
+                    <ul>
+    
+                       
+    
+                        <?php $__currentLoopData = $taughtLanguageArr; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key=>$value): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+    
+                            <li> 
+    
+                                <a href="javascript:void(0);">   
+    
+                                <?php echo e($value['language']); ?> <img src="<?php echo e(asset('public/frontendassets/images/meter1.png')); ?>" class="img-fluid"/> 
+    
+                                </a>
+    
+                            </li>
+    
+                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+    
+                    
+    
+                    </ul>
+                    <?php endif; ?>
+                    
                 <?php endif; ?>
 
                </div>

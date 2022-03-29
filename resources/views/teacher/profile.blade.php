@@ -130,44 +130,49 @@
             <div class="row">
               <div class="col-lg-12 col-12">
                <h3>Languages I know</h3>
-                @php
-                  $skillLanguageArr = json_decode($getLoggedIndata->languages_spoken, true);  //dd($skillLanguageArr); 
-                @endphp
+               
+                @if($getLoggedIndata->languages_spoken!='')
+               
+                    @php
+                      $skillLanguageArr = json_decode($getLoggedIndata->languages_spoken, true);  //dd($skillLanguageArr); 
+                    @endphp
                 
-                @if(count($skillLanguageArr)>0)
-                <ul>
-                   
-                    @foreach($skillLanguageArr as $key=>$val)
-                        @php
-                          if($val['level']=='Native')
-                            $l_img = 'meter4.png';
-                          elseif($val['level']=='Beginner')
-                            $l_img = 'meter4.png';
-                          elseif($val['level']=='Elementary')
-                            $l_img = 'meter3.png';
-                          elseif($val['level']=='Intermediate')
-                            $l_img = 'meter2.png';
-                          elseif($val['level']=='Upper Intermediate')
-                            $l_img = 'meter1.png';
-                          elseif($val['level']=='Advanced')
-                            $l_img = 'meter1.png';
-                          elseif($val['level']=='Proficient')
-                            $l_img = 'meter1.png';
-                          elseif($val['level']=='')
-                            $l_img = 'meter4.png';
-                        @endphp
-                        <li> 
-                            <a href="javascript:void(0);">   
-                            {{ $val['language'] }} <img src="{{ asset('public/frontendassets/images/'.$l_img) }}" class="img-fluid"/> 
-                            </a>
-                        </li>
-                    @endforeach
-                   
-                 <!--<li><a href="#">English <img src="{{ asset('public/frontendassets/images/meter1.png') }}" class="img-fluid"/></a></li>
-                 <li><a href="#">German <img src="{{ asset('public/frontendassets/images/meter2.png') }}" class="img-fluid"/></a></li>
-                 <li><a href="#">Japanese <img src="{{ asset('public/frontendassets/images/meter3.png') }}" class="img-fluid"/></a></li>
-                 <li><a href="#">Chinese <img src="{{ asset('public/frontendassets/images/meter4.png') }}" class="img-fluid"/></a></li>-->
-                </ul>
+                    @if(count($skillLanguageArr)>0)
+                    <ul>
+                       
+                        @foreach($skillLanguageArr as $key=>$val)
+                            @php
+                              if($val['level']=='Native')
+                                $l_img = 'meter4.png';
+                              elseif($val['level']=='Beginner')
+                                $l_img = 'meter4.png';
+                              elseif($val['level']=='Elementary')
+                                $l_img = 'meter3.png';
+                              elseif($val['level']=='Intermediate')
+                                $l_img = 'meter2.png';
+                              elseif($val['level']=='Upper Intermediate')
+                                $l_img = 'meter1.png';
+                              elseif($val['level']=='Advanced')
+                                $l_img = 'meter1.png';
+                              elseif($val['level']=='Proficient')
+                                $l_img = 'meter1.png';
+                              elseif($val['level']=='')
+                                $l_img = 'meter4.png';
+                            @endphp
+                            <li> 
+                                <a href="javascript:void(0);">   
+                                {{ $val['language'] }} <img src="{{ asset('public/frontendassets/images/'.$l_img) }}" class="img-fluid"/> 
+                                </a>
+                            </li>
+                        @endforeach
+                       
+                     <!--<li><a href="#">English <img src="{{ asset('public/frontendassets/images/meter1.png') }}" class="img-fluid"/></a></li>
+                     <li><a href="#">German <img src="{{ asset('public/frontendassets/images/meter2.png') }}" class="img-fluid"/></a></li>
+                     <li><a href="#">Japanese <img src="{{ asset('public/frontendassets/images/meter3.png') }}" class="img-fluid"/></a></li>
+                     <li><a href="#">Chinese <img src="{{ asset('public/frontendassets/images/meter4.png') }}" class="img-fluid"/></a></li>-->
+                    </ul>
+                    @endif
+                    
                 @endif
                </div>
              </div> 
@@ -175,22 +180,27 @@
             <div class="row">
               <div class="col-lg-12 col-12">
                <h3>Languages I taught </h3>
-               @php
-                  $taughtLanguageArr = json_decode($getLoggedIndata->languages_taught, true);  //dd($taughtLanguageArr); 
-                @endphp
                 
-                @if(count($taughtLanguageArr)>0)
-                <ul>
-                   
-                    @foreach($taughtLanguageArr as $key=>$value)
-                        <li> 
-                            <a href="javascript:void(0);">   
-                            {{ $value['language'] }} <img src="{{ asset('public/frontendassets/images/meter1.png') }}" class="img-fluid"/> 
-                            </a>
-                        </li>
-                    @endforeach
+                @if($getLoggedIndata->languages_taught!='')
                 
-                </ul>
+                    @php
+                      $taughtLanguageArr = json_decode($getLoggedIndata->languages_taught, true);  //dd($taughtLanguageArr); 
+                    @endphp
+                
+                    @if(count($taughtLanguageArr)>0)
+                    <ul>
+                       
+                        @foreach($taughtLanguageArr as $key=>$value)
+                            <li> 
+                                <a href="javascript:void(0);">   
+                                {{ $value['language'] }} <img src="{{ asset('public/frontendassets/images/meter1.png') }}" class="img-fluid"/> 
+                                </a>
+                            </li>
+                        @endforeach
+                    
+                    </ul>
+                    @endif
+                    
                 @endif
                </div>
              </div> 

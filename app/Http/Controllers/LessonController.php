@@ -416,6 +416,152 @@ class LessonController extends Controller
     
     
     
+    
+    
+    public function edit_lesson(Request $request, $id){
+        $data['title']="Edit Lesson";
+        $data['breadcrumb']="Edit Lesson";
+
+        $data['lesson'] = $this->lessonsModel->where(['id'=>$id])->first(); 
+        $data['lesson_packages'] = $this->lessonPackagesModel->where(['lesson_id'=>$id])->get();
+        
+        $data['user'] = $this->registrationModel->where('deleted_at', '=', null)->where(['id'=>session('id')])->first(); 
+        $data['lessonCategory'] = DB::table('lesson_category')->where('deleted_at', '=', null)->get()->unique('name');  
+        
+
+        if(count($request->all()) > 0) { 
+            
+            $validator = Validator::make($request->all(), [
+                                'id' => 'required',
+                                'role' => 'required',
+                                'lesson_type' => 'required',
+                                'lesson_name' => 'required',
+                                'language_taught' => 'required',
+                                'lesson_category' => 'required',
+                            ]);
+
+
+            if ($validator->fails()) { 
+                
+                if($data['user']->role=='2'){
+                    return redirect('edit-lesson/'.$id)->withErrors($validator)->withInput();
+                }else{
+                    return view('student.dashboard',$data);
+                }
+                
+            }else{ 
+
+               
+                $lessonData = $this->lessonsModel->where(['name'=>$request->lesson_name])->get();
+                if(count($lessonData)>0 && $request->lesson_name != $data['lesson']->name){
+                    return redirect('edit-lesson/'.$id)->with('error','Lesson name already exists!');
+                }else{
+                    
+                    $lessonTagArr = array();
+                    for ($i=0; $i < count($request->lesson_tag); $i++ )
+                    {
+                        if(!empty($request->lesson_tag)){
+                            $lessonTagArr[] = $request->lesson_tag[$i];
+                        }
+                    }
+                    
+                    $lessonTags = implode(",",$lessonTagArr);
+                    
+
+                    $updateData=[];
+    
+                    $updateData['updated_at'] = date('Y-m-d H:i:s'); 
+    
+    
+                    if($request->has('lesson_type')){
+                        $updateData['type'] = $request->lesson_type; 
+                    }
+                    if($request->has('lesson_name')){
+                        $updateData['name'] = ucfirst($request->lesson_name); 
+                    }
+                    if($request->has('lesson_description')){
+                        $updateData['description'] = ucfirst($request->lesson_description); 
+                    }
+                    if($request->has('lesson_category')){
+                        $updateData['lesson_category'] = $request->lesson_category; 
+                    }
+                    if($request->has('lesson_tag')){
+                        $updateData['lesson_tag'] = $lessonTags; 
+                    }
+                    if($request->has('language_taught')){
+                        $updateData['language_taught'] = $request->language_taught; 
+                    }
+                    if($request->has('student_languages_level_from')){
+                        $updateData['student_languages_level_from'] = $request->student_languages_level_from; 
+                    }
+                    if($request->has('student_languages_level_to')){
+                        $updateData['student_languages_level_to'] = $request->student_languages_level_to; 
+                    }
+                    
+                                  
+                    try{
+                        $this->lessonsModel->where('id',$id)->update($updateData);
+                        
+                        $DeleteExistingPackages = $this->lessonPackagesModel->where(['lesson_id'=>$id])->delete(); 
+                        
+                        for ($i=0; $i < count($request->package); $i++ )
+                        {
+                            if($request->individual_lesson[$i]!='' && $request->package[$i]!='' && $request->total[$i]!=''){ 
+                                
+                                $packageArr = [
+                                                    'lesson_id' => $id,
+                                                    'individual_lesson' => $request->individual_lesson[$i],
+                                                    'time' => $request->time[$i],
+                                                    'package' => $request->package[$i],
+                                                    'total' => $request->total[$i],
+                                                    'created_at'=>date('Y-m-d H:i:s')
+                                                ];
+                                                
+                                
+                                $this->lessonPackagesModel->insertGetId($packageArr);
+                            }
+                        }
+    
+                        
+                        if($data['user']->role=='2'){
+                            return redirect('edit-lesson/'.$id)->with('success','Lesson has been updated successfully.');
+                        }else{
+                            return redirect('student-dashboard')->with('error','You are not authorized!'); 
+                        }
+                        
+                    }catch(Exception $e){
+                        
+                        if($data['user']->role=='2'){
+                            return redirect('edit-lesson/'.$id)->with('error','Please try again!');
+                        }else{
+                            return redirect('student-dashboard')->with('error','You are not authorized! Please try again!');
+                        }
+                    
+                    }
+                    
+                    
+                }
+
+                
+            }
+        }else{
+            
+            if($data['user']->role=='2'){
+                return view('teacher.edit-lesson',$data);
+            }else{
+                return view('student.dashboard',$data);
+            }
+        }
+
+    }
+    
+    
+    
+    
+    
+    
+    
+    
     public function lesson_detail(Request $request){
         $data['title']="Lesson Detail";
         $data['breadcrumb']="lesson detail";

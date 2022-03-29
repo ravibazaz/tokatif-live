@@ -293,7 +293,11 @@
 
             </div>
 
-           
+    <?php 
+    /*if(Request::old('individual_lesson')){
+        echo "<pre>"; print_r(Request::old('individual_lesson')); echo Request::old('individual_lesson')[0]; 
+    }*/ 
+    ?>      
 
             <div class="form-row mb-2 align-items-center">
 
@@ -327,7 +331,7 @@
 
                    <span class="individual-doller-sign">$</span>
 
-                  <input type="text" class="form-control individual-price" name="individual_lesson[]" id="individual_lesson_30" aria-describedby="emailHelp" placeholder=""> 
+                  <input type="text" class="form-control individual-price" name="individual_lesson[]" value="<?php echo e(Request::old('individual_lesson')[0]); ?>" id="individual_lesson_30" aria-describedby="emailHelp" placeholder=""> 
 
                    <span class="individual-usd">USD</span>
 
@@ -336,29 +340,19 @@
                         
 
                 <div class="form-group col-md-2"> 
-
                     <label for="">&nbsp;</label> 
-
                     <p>/ 30 min </p> <input type="hidden" value="30 mins" name="time[]">
-
                 </div>
 
                         
 
                 <div class="form-group col-md-3">                     
-
                     <select class="custom-select mr-sm-2" name="package[]" id="package_lesson_30">  
-
                         <option value="">N/A</option>
-
-                        <option value="5 lessons">5 lessons</option>
-
-                        <option value="10 lessons">10 lessons</option>
-
-                        <option value="20 lessons">20 lessons</option>
-
+                        <option value="5 lessons" <?php echo e((Request::old('package')[0] == '5 lessons') ? 'selected' : ''); ?> >5 lessons</option>
+                        <option value="10 lessons" <?php echo e((Request::old('package')[0] == '10 lessons') ? 'selected' : ''); ?> >10 lessons</option>
+                        <option value="20 lessons" <?php echo e((Request::old('package')[0] == '20 lessons') ? 'selected' : ''); ?> >20 lessons</option>
                     </select>
-
                 </div>
 
                         
@@ -367,7 +361,7 @@
 
                     <span class="individual-doller-sign">$</span>
 
-                    <input type="text" class="form-control individual-price" name="total[]" id="package_total_30">
+                    <input type="text" class="form-control individual-price" name="total[]" value="<?php echo e(Request::old('total')[0]); ?>" id="package_total_30">
 
                     <span class="individual-usd">USD</span>
 
@@ -401,7 +395,7 @@
 
                     <span class="individual-doller-sign">$</span>
 
-                    <input type="text" class="form-control individual-price" name="individual_lesson[]" id="individual_lesson_45" aria-describedby="emailHelp" placeholder=""> 
+                    <input type="text" class="form-control individual-price" name="individual_lesson[]" value="<?php echo e(Request::old('individual_lesson')[1]); ?>" id="individual_lesson_45" aria-describedby="emailHelp" placeholder=""> 
 
                     <span class="individual-usd">USD</span>
 
@@ -420,19 +414,12 @@
                         
 
                 <div class="form-group col-md-3">                     
-
                   <select class="custom-select mr-sm-2" name="package[]" id="package_lesson_45">
-
                     <option value="">N/A</option>
-
-                    <option value="5 lessons">5 lessons</option>
-
-                    <option value="10 lessons">10 lessons</option>
-
-                    <option value="20 lessons">20 lessons</option>
-
+                    <option value="5 lessons" <?php echo e((Request::old('package')[1] == '5 lessons') ? 'selected' : ''); ?> >5 lessons</option>
+                    <option value="10 lessons" <?php echo e((Request::old('package')[1] == '10 lessons') ? 'selected' : ''); ?> >10 lessons</option>
+                    <option value="20 lessons" <?php echo e((Request::old('package')[1] == '20 lessons') ? 'selected' : ''); ?> >20 lessons</option>
                   </select>
-
                 </div>
 
                         
@@ -441,7 +428,7 @@
 
                     <span class="individual-doller-sign">$</span>
 
-                    <input type="text" class="form-control individual-price" name="total[]" id="package_total_45">
+                    <input type="text" class="form-control individual-price" name="total[]" value="<?php echo e(Request::old('total')[1]); ?>" id="package_total_45">
 
                     <span class="individual-usd">USD</span>
 
@@ -475,7 +462,7 @@
 
                     <span class="individual-doller-sign">$</span>
 
-                    <input type="text" class="form-control individual-price" name="individual_lesson[]" id="individual_lesson_60" aria-describedby="emailHelp" placeholder=""> 
+                    <input type="text" class="form-control individual-price" name="individual_lesson[]" value="<?php echo e(Request::old('individual_lesson')[2]); ?>" id="individual_lesson_60" aria-describedby="emailHelp" placeholder=""> 
 
                     <span class="individual-usd">USD</span>
 
@@ -494,19 +481,12 @@
                         
 
                 <div class="form-group col-md-3">                     
-
                     <select class="custom-select mr-sm-2" name="package[]" id="package_lesson_60">
-
                         <option value="">N/A</option>
-
-                        <option value="5 lessons">5 lessons</option>
-
-                        <option value="10 lessons">10 lessons</option>
-
-                        <option value="20 lessons">20 lessons</option>
-
+                        <option value="5 lessons" <?php echo e((Request::old('package')[2] == '5 lessons') ? 'selected' : ''); ?> >5 lessons</option>
+                        <option value="10 lessons" <?php echo e((Request::old('package')[2] == '10 lessons') ? 'selected' : ''); ?> >10 lessons</option>
+                        <option value="20 lessons" <?php echo e((Request::old('package')[2] == '20 lessons') ? 'selected' : ''); ?> >20 lessons</option>
                     </select>
-
                 </div>
 
                         
@@ -515,7 +495,7 @@
 
                     <span class="individual-doller-sign">$</span>
 
-                    <input type="text" class="form-control individual-price" name="total[]" id="package_total_60">
+                    <input type="text" class="form-control individual-price" name="total[]" value="<?php echo e(Request::old('total')[2]); ?>" id="package_total_60"> 
 
                     <span class="individual-usd">USD</span>
 
@@ -549,7 +529,7 @@
 
                     <span class="individual-doller-sign">$</span>
 
-                    <input type="text" class="form-control individual-price" name="individual_lesson[]" id="individual_lesson_75" aria-describedby="emailHelp" placeholder=""> 
+                    <input type="text" class="form-control individual-price" name="individual_lesson[]" value="<?php echo e(Request::old('individual_lesson')[3]); ?>" id="individual_lesson_75" aria-describedby="emailHelp" placeholder=""> 
 
                     <span class="individual-usd">USD</span>
 
@@ -568,19 +548,12 @@
                         
 
                 <div class="form-group col-md-3">                     
-
                     <select class="custom-select mr-sm-2" name="package[]" id="package_lesson_75">
-
                         <option value="">N/A</option>
-
-                        <option value="5 lessons">5 lessons</option>
-
-                        <option value="10 lessons">10 lessons</option>
-
-                        <option value="20 lessons">20 lessons</option>
-
+                        <option value="5 lessons" <?php echo e((Request::old('package')[3] == '5 lessons') ? 'selected' : ''); ?> >5 lessons</option>
+                        <option value="10 lessons" <?php echo e((Request::old('package')[3] == '10 lessons') ? 'selected' : ''); ?> >10 lessons</option>
+                        <option value="20 lessons" <?php echo e((Request::old('package')[3] == '20 lessons') ? 'selected' : ''); ?> >20 lessons</option>
                     </select>
-
                 </div>
 
                         
@@ -589,7 +562,7 @@
 
                     <span class="individual-doller-sign">$</span>
 
-                    <input type="text" class="form-control individual-price" name="total[]" id="package_total_75">
+                    <input type="text" class="form-control individual-price" name="total[]" value="<?php echo e(Request::old('total')[3]); ?>" id="package_total_75">
 
                     <span class="individual-usd">USD</span>
 
@@ -623,7 +596,7 @@
 
                     <span class="individual-doller-sign">$</span>
 
-                    <input type="text" class="form-control individual-price" name="individual_lesson[]" id="individual_lesson_90" aria-describedby="emailHelp" placeholder=""> 
+                    <input type="text" class="form-control individual-price" name="individual_lesson[]" value="<?php echo e(Request::old('individual_lesson')[4]); ?>" id="individual_lesson_90" aria-describedby="emailHelp" placeholder=""> 
 
                     <span class="individual-usd">USD</span>
 
@@ -642,19 +615,12 @@
                         
 
                 <div class="form-group col-md-3">                     
-
                     <select class="custom-select mr-sm-2" name="package[]" id="package_lesson_90">
-
                         <option value="">N/A</option>
-
-                        <option value="5 lessons">5 lessons</option>
-
-                        <option value="10 lessons">10 lessons</option>
-
-                        <option value="20 lessons">20 lessons</option>
-
+                        <option value="5 lessons" <?php echo e((Request::old('package')[4] == '5 lessons') ? 'selected' : ''); ?> >5 lessons</option>
+                        <option value="10 lessons" <?php echo e((Request::old('package')[4] == '10 lessons') ? 'selected' : ''); ?> >10 lessons</option>
+                        <option value="20 lessons" <?php echo e((Request::old('package')[4] == '20 lessons') ? 'selected' : ''); ?> >20 lessons</option>
                     </select>
-
                 </div>
 
                         
@@ -663,7 +629,7 @@
 
                     <span class="individual-doller-sign">$</span>
 
-                    <input type="text" class="form-control individual-price" name="total[]" id="package_total_90">
+                    <input type="text" class="form-control individual-price" name="total[]" value="<?php echo e(Request::old('total')[4]); ?>" id="package_total_90">
 
                     <span class="individual-usd">USD</span>
 

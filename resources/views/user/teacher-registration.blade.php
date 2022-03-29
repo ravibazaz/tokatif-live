@@ -332,7 +332,7 @@
 
                                                                         @foreach ($countries as $val)
 
-                                                                         <option value="{{$val->name}}" {{ (Request::old('country') == $val->name) ? 'selected' : '' }}>{{ $val->name }}</option>               
+                                                                         <option value="{{$val->name}}" {{ (Request::old('country_of_origin') == $val->name) ? 'selected' : '' }}>{{ $val->name }}</option>               
 
                                                                         @endforeach 
 
@@ -360,7 +360,7 @@
 
                                                                         @foreach ($countries as $val)
 
-                                                                         <option value="{{$val->name}}" {{ (Request::old('country') == $val->name) ? 'selected' : '' }}>{{ $val->name }}</option>               
+                                                                         <option value="{{$val->name}}" {{ (Request::old('country_living_in') == $val->name) ? 'selected' : '' }}>{{ $val->name }}</option>               
 
                                                                         @endforeach 
 
@@ -641,9 +641,7 @@
                                                                         <option value="">--Please select--</option>
 
                                                                         @foreach ($languages as $val)
-
                                                                          <option value="{{$val->name}}" {{ (Request::old('language') == $val->name) ? 'selected' : '' }}>{{ $val->name }}</option>               
-
                                                                         @endforeach 
 
                                                                       </select>
@@ -652,22 +650,14 @@
 
                                                                     <div class="form-group col-md-4 p-0">
 
-                                                                      <select name="lang_level[]" class="form-control custom-select">
-
-                                                                        <option value="Native">Native</option>
-
-                                                                        <option value="Beginner">Beginner</option>
-
-                                                                        <option value="Elementary">Elementary</option>
-
-                                                                        <option value="Intermediate">Intermediate</option>
-
-                                                                        <option value="Upper Intermediate">Upper Intermediate</option> 
-
-                                                                        <option value="Advanced">Advanced</option>
-
-                                                                        <option value="Proficient">Proficient</option>
-
+                                                                      <select name="lang_level[]" class="form-control custom-select"> 
+                                                                        <option value="Native" {{ (Request::old('lang_level') == 'Native') ? 'selected' : '' }}>Native</option>
+                                                                        <option value="Beginner" {{ (Request::old('lang_level') == 'Beginner') ? 'selected' : '' }}>Beginner</option>
+                                                                        <option value="Elementary" {{ (Request::old('lang_level') == 'Elementary') ? 'selected' : '' }}>Elementary</option>
+                                                                        <option value="Intermediate" {{ (Request::old('lang_level') == 'Intermediate') ? 'selected' : '' }}>Intermediate</option>
+                                                                        <option value="Upper Intermediate" {{ (Request::old('lang_level') == 'Upper Intermediate') ? 'selected' : '' }}>Upper Intermediate</option> 
+                                                                        <option value="Advanced" {{ (Request::old('lang_level') == 'Advanced') ? 'selected' : '' }}>Advanced</option>
+                                                                        <option value="Proficient" {{ (Request::old('lang_level') == 'Proficient') ? 'selected' : '' }}>Proficient</option>
                                                                       </select>
 
                                                                     </div>
@@ -727,9 +717,7 @@
                                                                             <option value="">--Please select--</option>
 
                                                                             @foreach ($languages as $val)
-
                                                                              <option value="{{$val->name}}" {{ (Request::old('language') == $val->name) ? 'selected' : '' }}>{{ $val->name }}</option>               
-
                                                                             @endforeach 
 
                                                                           </select>
@@ -737,11 +725,8 @@
                                                                         </div>
 
                                                                         <div class="form-group col-md-2 pl-0 len-delite text-center">
-
                                                                           <label for="">Delete</label>
-
                                                                           <div class="input-group-text remove-taught-lang-row form-control"><i class="fa fa-trash-o" aria-hidden="true"></i></div>
-
                                                                         </div>
 
                                                                     </div>
@@ -1374,7 +1359,7 @@
 
                                                 <!--<a href="#" class="video-upload">Upload Your Video</a>-->
 
-                                                <input type="file" name="video" value="{{Request::old('video')}}" class="video-upload" accept="video/*"> Upload Your Video
+                                                <!--<input type="file" name="video" value="{{Request::old('video')}}" class="video-upload" accept="video/*"> Upload Your Video
 
                                                 @if ($errors->has('video'))
 
@@ -1386,7 +1371,7 @@
 
                                                 
 
-                                                <br>OR<br>
+                                                <br>OR<br>-->
 
                                                 <div>
 
@@ -1474,7 +1459,7 @@
 
                                                     <div class="form-group col-md-6 upload-custom">
 
-                                                       <label for="">Click or Drage here to upload Photo</label>
+                                                       <label for="">Click or Drag here to upload Photo</label>
 
     												   <input type="file" name="scanned_id_proof" id="upload-photo" value="{{Request::old('scanned_id_proof')}}" accept="image/*" >
 
@@ -1494,7 +1479,7 @@
 
                                                     <div class="form-group col-md-6 upload-custom-1">
 
-                                                       <label for="">Click or Drage here to upload Photo</label>
+                                                       <label for="">Click or Drag here to upload Photo</label>
 
     												   <input type="file" name="applicant_with_scanned_id_proof" id="upload-photo-1" value="{{Request::old('applicant_with_scanned_id_proof')}}" accept="image/*" >
 

@@ -218,19 +218,11 @@
             <h2>Link</h2>
 
             <ul>
-
-                <!--<li><a href="#">Company</a></li>-->
-
+                <li><a href="<?php echo e(route('community')); ?>">Community</a></li>
                 <li><a href="<?php echo e(route('support')); ?>">Support</a></li>
 
-                <!--<li><a href="#">Legal</a></li>
-
-                <li><a href="#">Privacy</a></li>
-
-                <li><a href="#">Contact</a></li>-->
-
-                <li><a href="<?php echo e(route('community')); ?>">Community</a></li>
-
+                <li><a href="<?php echo e(route('privacy-policy')); ?>">Privacy Policy </a></li>
+                <li><a href="<?php echo e(route('terms')); ?>">Terms of Use</a></li>
             </ul>
 
         </div>

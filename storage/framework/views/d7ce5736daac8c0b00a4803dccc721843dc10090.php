@@ -313,19 +313,19 @@ $getVisitorCountry = getVisitorCountry();
      
        <div class="languages-section mb-4">
           <div class="row">
-            <div class="col-12">
+            <div class="col-12 text-center">
                 
                 <?php if($user->youtube_link !=''): ?>
                     <iframe width="100%" height="315" src="<?php echo e($user->youtube_link); ?>" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen class="mb-4"></iframe>
                 <?php elseif($user->video !=''): ?>
-                    <video src="<?php echo e(url('storage/app/video/'.$user->video)); ?>" controls width="280px" height="280px"></video>     
+                    <video src="<?php echo e(url('storage/app/video/'.$user->video)); ?>" controls width="98%" height="280px"></video>     
                 <?php else: ?>
                     
                 <?php endif; ?>
              
               <!--<iframe width="100%" height="315" src="https://www.youtube.com/embed/DLKSVdAZDZU" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen class="mb-4"></iframe>-->
               
-            <h2>About Me</h2>
+            <h2 class="mt-4">About Me</h2>
             <p><?php echo e($user->about_me); ?></p>
             </div>
           </div>
@@ -364,7 +364,8 @@ $getVisitorCountry = getVisitorCountry();
                 </div>-->
             </div>  
             
-            <?php $__currentLoopData = $lessons; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $val): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>                               
+            <?php $__currentLoopData = $lessons; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $val): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>      
+            
             <div class="form-row Approved-row align-items-center">
                 <div class="form-group col-md-8">
                     <p><?php echo e($val->name); ?></p>
@@ -377,6 +378,7 @@ $getVisitorCountry = getVisitorCountry();
                 <div class="form-group col-md-4 text-right">
                    <a href="javascript:void(0);" class="uploaded">USD <?php echo e(number_format($val->total,2)); ?> </a>
                    <p class="mt-2"><small><?php echo e($val->student_languages_level_from); ?> to <?php echo e($val->student_languages_level_to); ?></small></p>
+                   <a href="<?php echo e(route('lesson-booking',['id'=>$user->id])); ?>" class="uploaded" > Book </a>
                 </div>     
 			</div>
 			<?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>

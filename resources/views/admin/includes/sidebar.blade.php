@@ -163,6 +163,20 @@
               <i class="nav-icon fa fa-tasks"></i>
               <p> Support </p>
             </a>
+          </li>  
+          
+          <li class="nav-item has-treeview {{ (request()->is('admin/privacy') || request()->is('admin/privacy/*') ) ? 'menu-open' : '' }}"> 
+            <a href="{{route('admin-privacy-list')}}" class="nav-link {{ (request()->is('admin/privacy') || request()->is('admin/privacy/*') ) ? 'active' : '' }}">
+              <i class="nav-icon fa fa-tasks"></i>
+              <p> Privacy </p>
+            </a>
+          </li>  
+          
+          <li class="nav-item has-treeview {{ (request()->is('admin/terms') || request()->is('admin/terms/*') ) ? 'menu-open' : '' }}"> 
+            <a href="{{route('admin-terms-list')}}" class="nav-link {{ (request()->is('admin/terms') || request()->is('admin/terms/*') ) ? 'active' : '' }}">
+              <i class="nav-icon fa fa-tasks"></i>
+              <p> Terms </p>
+            </a>
           </li>
 
 
