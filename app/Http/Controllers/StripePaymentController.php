@@ -26,6 +26,7 @@ use Stripe;
 
 
 use App\Mail\LessonBooking;
+use App\Mail\PurchaseTokatifTokens;
 use Illuminate\Support\Facades\Mail;
 
    
@@ -79,7 +80,7 @@ class StripePaymentController extends Controller
      */
     public function stripePost(Request $request)
     {
-        //echo "<pre>"; print_r($_POST); exit();
+        // echo "<pre>"; print_r($_POST); exit();
         /*echo "card_no:: ".$_POST['payment_card_no']."<br>"; 
         echo "expiry_month:: ".$_POST['payment_expiry_month']."<br>"; 
         echo "expiry_year:: ".$_POST['payment_expiry_year']."<br>"; 
@@ -333,24 +334,24 @@ class StripePaymentController extends Controller
                             $lessonUrl = url('/lesson-detail/'.$lessonData->id);
                             
 		                    $subject = 'New lesson request from '.$studentName; 
-		                    $message = 'A student has requested to schedule lessons with you. Please click the button below to accept or modify the lesson request.';
-		                    
-		                    $details = [
-		                        'to' => $teacherEmail,
-		                        'from' => env('MAIL_FROM_ADDRESS'),
-		                        'subject' => $subject,
-		                        'receiver' => ucfirst($teacherName),
-		                        'sender' => env('MAIL_FROM_NAME'), 
-		                        'msg'=>$message,
-		                        'student_name'=>$studentName,
-		                        'course_name'=>$lessonName,
-		                        'lesson_id'=>$lessonID,
-		                        'lesson_date'=>$lessonDateTime,
-		                        'lesson_price'=>$lessonPrice,
-		                        'lesson_url'=>$lessonUrl
-		                    ];
+                            $message = 'A student has requested to schedule lessons with you. Please click the button below to accept or modify the lesson request.';
+                            
+                            $details = [
+                                'to' => $teacherEmail,
+                                'from' => env('MAIL_FROM_ADDRESS'),
+                                'subject' => $subject,
+                                'receiver' => ucfirst($teacherName),
+                                'sender' => env('MAIL_FROM_NAME'), 
+                                'msg'=>$message,
+                                'student_name'=>$studentName,
+                                'course_name'=>$lessonName,
+                                'lesson_id'=>$lessonID,
+                                'lesson_date'=>$lessonDateTime,
+                                'lesson_price'=>$lessonPrice,
+                                'lesson_url'=>$lessonUrl
+                            ];
 
-		                    Mail::to($teacherEmail)->send(new LessonBooking($details));
+                            Mail::to($teacherEmail)->send(new LessonBooking($details));
 		                    
 		                    // Update student wallet ========================================================================== 
                             if($user){
@@ -511,6 +512,23 @@ class StripePaymentController extends Controller
                             }
                         }
                     }
+
+                    $user = Registration::where('id', session('id'))->first();
+
+                    $subject = 'Thank you for adding Tokatif Tokens to your wallet'; 
+                    $message = '';
+                    
+                    $details = [
+                        'to' => $user->email,
+                        'from' => env('MAIL_FROM_ADDRESS'),
+                        'subject' => $subject,
+                        'receiver' => ucfirst($user->name),
+                        'sender' => env('MAIL_FROM_NAME'), 
+                        'msg'=>$message,
+                        'receiver'=> $user->name
+                    ];
+
+                    // Mail::to($user->email)->send(new PurchaseTokatifTokens($details));
                     
                     return redirect('add-credit')->with('success','Credit amount has been added successfully.');
                 } else {

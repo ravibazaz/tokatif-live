@@ -20,8 +20,6 @@
 
   <div class="row">
 
-    
-
     <?php $flag = ''; ?>
 
     <?php if($getLoggedIndata->country_living_in!=''): ?>
@@ -40,10 +38,30 @@
 
             $countryFlagData = DB::table('countries')->where('name', '=', $getVisitorCountry)->first(); 
 
-            $flag = strtolower($countryFlagData->sortname);
+            $flag = "";
+            if($countryFlagData)
+            {
+              $flag = strtolower($countryFlagData->sortname);
+            }
 
         ?>
 
+    <?php endif; ?>
+
+    <?php if(session()->has('success')): ?>
+        <div class="col-md-12">
+            <div class="alert alert-success">
+                <?php echo e(session()->get('success')); ?>
+
+            </div>
+        </div>
+    <?php elseif(session()->has('error')): ?>
+        <div class="col-md-12">
+            <div class="alert alert-danger">
+                <?php echo e(session()->get('error')); ?>
+
+            </div>
+        </div>
     <?php endif; ?>
 
      <div class="col-lg-3 col-md-3 col-sm-12 col-12">
@@ -533,8 +551,8 @@
 
                         $teacherType = 'Specialist Teacher';
 
-                    elseif($teacherData->teacher_type=='community_tutor')
-
+                    /* elseif($teacherData->teacher_type=='community_tutor') */
+                    else
                         $teacherType = 'Community Tutor';
 
                 ?>
@@ -623,8 +641,8 @@
 
                         $teacherType = 'Specialist Teacher';
 
-                    elseif($postedByData->teacher_type=='community_tutor')
-
+                    /* elseif($postedByData->teacher_type=='community_tutor')*/
+                    else
                         $teacherType = 'Community Tutor';
 
                 ?>
@@ -783,8 +801,8 @@
 
                         $teacherType = 'Specialist Teacher';
 
-                    elseif($val->teacher_type=='community_tutor')
-
+                    /* elseif($val->teacher_type=='community_tutor') */
+                    else
                         $teacherType = 'Community Tutor';
 
                 ?>
@@ -808,8 +826,7 @@
                     </span>
 
                 </div>
-
-               
+            
 
                 <div class="col-lg-7 col-md-7 col-sm-12 col-7">
 

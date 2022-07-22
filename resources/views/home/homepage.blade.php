@@ -83,22 +83,25 @@
       <input data-cy="ts_pl_input" placeholder="English" class="ant-input" type="text" value="">
       </span></div>
   </div>
-   <ul> 
-   <li> <a class="dropdown-item" href="#">English</a> </li>
-   <li> <a class="dropdown-item" href="#">Chinese (Mandarin)</a></li>
-   <li> <a class="dropdown-item" href="#">French</a></li>
-   <li> <a class="dropdown-item" href="#">English</a> </li>
-   <li> <a class="dropdown-item" href="#">Chinese (Mandarin)</a></li>
-   <li> <a class="dropdown-item" href="#">French</a></li>
-   <li> <a class="dropdown-item" href="#">English</a> </li>
-   <li> <a class="dropdown-item" href="#">Chinese (Mandarin)</a></li>
-   <li> <a class="dropdown-item" href="#">French</a></li>
-   <li> <a class="dropdown-item" href="#">English</a> </li>
-   <li> <a class="dropdown-item" href="#">Chinese (Mandarin)</a></li>
-   <li> <a class="dropdown-item" href="#">French</a></li>
-   <li> <a class="dropdown-item" href="#">English</a> </li>
-   <li> <a class="dropdown-item" href="#">Chinese (Mandarin)</a></li>
-   <li> <a class="dropdown-item" href="#">French</a></li>
+   <ul>
+        @foreach($languages as $language)
+          <li><a class="dropdown-item" href="{{ url('teachers', $language['name']) }}">{{ $language['name'] }}</a> </li>
+        @endforeach
+   <!--<li> <a class="dropdown-item" href="#">English</a> </li>-->
+   <!--<li> <a class="dropdown-item" href="#">Chinese (Mandarin)</a></li>-->
+   <!--<li> <a class="dropdown-item" href="#">French</a></li>-->
+   <!--<li> <a class="dropdown-item" href="#">English</a> </li>-->
+   <!--<li> <a class="dropdown-item" href="#">Chinese (Mandarin)</a></li>-->
+   <!--<li> <a class="dropdown-item" href="#">French</a></li>-->
+   <!--<li> <a class="dropdown-item" href="#">English</a> </li>-->
+   <!--<li> <a class="dropdown-item" href="#">Chinese (Mandarin)</a></li>-->
+   <!--<li> <a class="dropdown-item" href="#">French</a></li>-->
+   <!--<li> <a class="dropdown-item" href="#">English</a> </li>-->
+   <!--<li> <a class="dropdown-item" href="#">Chinese (Mandarin)</a></li>-->
+   <!--<li> <a class="dropdown-item" href="#">French</a></li>-->
+   <!--<li> <a class="dropdown-item" href="#">English</a> </li>-->
+   <!--<li> <a class="dropdown-item" href="#">Chinese (Mandarin)</a></li>-->
+   <!--<li> <a class="dropdown-item" href="#">French</a></li>-->
     
     </ul>
   </div>

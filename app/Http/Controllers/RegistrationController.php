@@ -14,7 +14,9 @@ use App\Models\Registration;
 use Illuminate\Support\Facades\Storage;
 
 use App\Mail\Register;
-use Illuminate\Support\Facades\Mail;
+use App\Mail\OTPMail;
+//use Illuminate\Support\Facades\Mail;
+use Mail;
 
 
 class RegistrationController extends Controller
@@ -42,43 +44,60 @@ class RegistrationController extends Controller
     
     public function teacher_registration(Request $request)
     {
- 
-        if(count($request->all()) > 0) {   
+        //echo "aa"; exit();
+        $student_applied_for_teacher = false;
+        if(count($request->all()) > 0) {
             
         
             $validator = Validator::make($request->all(), [
-                            'display_name' => 'required',
-                            'teacher_type' => 'required',
-                            'video_conferencing_platform' => 'required',
-                            'user_account_id' => 'required',
-                            'dob' => 'required|date_format:Y-m-d',
-                            'email' => 'required',
-                            'phone' => 'required',
-                            'password' => 'required',
-                            'gender' => 'required',
-                            'street_address'=>'required',
-                            'about_me'=>'required',
-                            'about_my_lessons'=>'required',
-                            //'scanned_id_proof'=>'required',
-                        ]);
+                'display_name' => 'required',
+                'teacher_type' => 'required',
+                'video_conferencing_platform' => 'required',
+                'user_account_id' => 'required',
+                'dob' => 'required|date_format:Y-m-d',
+                'email' => 'required',
+                'phone' => 'required',
+                'password' => (session('id') == "") ? 'required' : "",
+                'gender' => 'required',
+                'street_address'=>'required',
+                'about_me'=>'required',
+                'about_my_lessons'=>'required',
+                //'scanned_id_proof'=>'required',
+            ]);
 
 
-            if ($validator->fails()) { 
-                return redirect('teacher-registration')->withErrors($validator)->withInput(); 
+            if ($validator->fails()) {
+                // return redirect('teacher-registration')->withErrors($validator)->withInput();
+                return redirect()->back()->withErrors($validator)->withInput();
             }else{
-                
-                $rowCount = $this->registrationModel->select(DB::raw('count(*) as count'))->where('email', '=', $request->email)->where('deleted_at', '=', null)->count();
-                if($rowCount>0){
-                    return redirect('teacher-registration')->with('error','Email id already exist!')->withInput();
-                }
-                
-                if($request->phone!=''){
-                    $rowCount = $this->registrationModel->select(DB::raw('count(*) as count'))->where('phone_number', '=', $request->phone)->where('deleted_at', '=', null)->count();
-                    if($rowCount>0){
-                        return redirect('teacher-registration')->with('error','Phone number already exist!')->withInput();
+
+                    if(session('id'))
+                    {
+                        $rowCount = $this->registrationModel->select(DB::raw('count(*) as count'))->where('id', '!=', session('id'))->where('email', '=', $request->email)->where('deleted_at', '=', null)->count();
                     }
-                }
-                
+                    else
+                    {
+                        $rowCount = $this->registrationModel->select(DB::raw('count(*) as count'))->where('email', '=', $request->email)->where('deleted_at', '=', null)->count();
+                    }
+                    if($rowCount>0){
+                        return redirect('teacher-registration')->with('error','Email id already exist!')->withInput();
+                    }
+                    
+                    if($request->phone!=''){
+                        if(session('id'))
+                        {
+                            $rowCount = $this->registrationModel->select(DB::raw('count(*) as count'))->where('id', '!=', session('id'))->where('phone_number', '=', $request->phone)->where('deleted_at', '=', null)->count();
+                        }
+                        else
+                        {
+                            $rowCount = $this->registrationModel->select(DB::raw('count(*) as count'))->where('phone_number', '=', $request->phone)->where('deleted_at', '=', null)->count();
+                        }
+
+                        if($rowCount>0){
+                            return redirect('teacher-registration')->with('error','Phone number already exist!')->withInput();
+                        }
+                    }
+
                 $youtubeLink = '';
                 if($request->has('youtube_link')){
                     /*$headers = get_headers('http://www.youtube.com/oembed?url='.$request->youtube_link); 
@@ -182,7 +201,7 @@ class RegistrationController extends Controller
                 
                 $languageJson = json_encode($languageArr);
                 
-                
+
                 
                 $taughtLanguageArr = array();
                 if(($request->taught_lang)){
@@ -300,11 +319,18 @@ class RegistrationController extends Controller
                 }
                 
                 
-                
 
 
-                
-                $password = Hash::make($request->password);
+
+                if(session('id'))
+                {
+                    $user = Registration::where('id', session('id'))->first();
+                    $password = $user->password;
+                }
+                else
+                {
+                    $password = Hash::make($request->password);
+                }
                 
                 $insertData = [
                                 'role'=>'2',
@@ -336,35 +362,56 @@ class RegistrationController extends Controller
                                 'status'=>'0',
                                 'created_at'=>date('Y-m-d H:i:s')
                             ];
-                            
-                $insertId = $this->registrationModel->insertGetId($insertData); 
-                
+
+                if(session('id'))
+                {
+                    $insertData['applied_for_teacher'] = '1';
+                    $insertData['original_mode'] = '1';
+                    $insertData['status'] = '1';
+                    $insertData['role'] = '1';
+
+                    Registration::where('id', session('id'))->update($insertData);
+                    $student_applied_for_teacher = true;
+                    $insertId = "";
+                }
+                else
+                {
+                    $insertId = $this->registrationModel->insertGetId($insertData); 
+                }
+
                 //echo "<pre>"; print_r($insertData); 
                 //exit(); 
                 
                 if($insertId!=''){
                     // Send Email =========================================================
+                    //echo $request['email']; exit();
                     
                     $subject = 'We received your application!';
                     $message = 'Thank you for registering to be a teacher with Tokatif. We will review your application and respond to you within 3 business days.';
-                    
+
                     $details = [
-                        'to' => $request->email,
+                        'to' => $request['email'],
                         'from' => env('MAIL_FROM_ADDRESS'),
                         'subject' => $subject,
                         'receiver' => ucfirst($request->display_name),
                         'sender' => env('MAIL_FROM_NAME'), 
                         'msg'=>$message
                     ];
-
-                    Mail::to($request->email)->send(new Register($details));
                     
+                    //echo "<pre>"; print_r($details);  exit();  
+                    
+                    Mail::to($request['email'])->send(new Register($details));
+
                     return redirect('teacher-registration')->with('success','Thank you for submitting your application. A Tokatif team member will be in touch with you shortly. Please also check your inbox/spam for email.');
                 }else{
+
+                    if($student_applied_for_teacher)
+                    {
+                        return redirect('student-dashboard')->with('success', 'Applied for teacher successfully!');    
+                    }
+
                     return redirect('teacher-registration')->with('error','Please try again!'); 
                 }
-                            
-                            
             }
         }
         
@@ -413,7 +460,7 @@ class RegistrationController extends Controller
                     
                     // Send Email =========================================================
                     
-                    $subject = 'We received your application!';
+                    $subject = 'Welcome to Tokatif: Get ready to be fluent!';
                     $message = 'Thank you for registering to be a student with Tokatif.';
                     
                     $details = [
@@ -457,28 +504,40 @@ class RegistrationController extends Controller
         {
             $rand_number=rand(0000,9999);
             
-            $message = "<p>Your authorization code For Registration is :- ".$rand_number."</p>";
+            $message = "Your authorization code For Registration is :- ".$rand_number;
+            $subject = "OTP";
             
+            $details = [
+                'to' => $user_email,
+                'from' => env('MAIL_FROM_ADDRESS'),
+                'subject' => $subject,
+                'receiver' => $user_email,
+                'sender' => env('MAIL_FROM_NAME'), 
+                'msg'=>$message
+            ];
+
             //$to  = $user_email;
     
             //$emailres = emailsend($user_email,$message);
             
-            Mail::send('email', [
-                    'name' => 'pp',
-                    'email' => 'parna.pal@gmail.com',
-                    'comment' => $message ],
-                    function ($message) {
-                            $message->from('letstalk@clikdigital.com.au');
-                            $message->to('parna.pal@gmail.com', 'Parna')
-                            ->subject('Your Website Contact Form');
-            });
+            // Mail::send('email', [
+            //         'name' => 'pp',
+            //         'email' => 'parna.pal@gmail.com',
+            //         'comment' => $message ],
+            //         function ($message) {
+            //                 $message->from('letstalk@clikdigital.com.au');
+            //                 $message->to('parna.pal@gmail.com', 'Parna')
+            //                 ->subject('Your Website Contact Form');
+            // });
 
-            if($emailres['Stat'] == 1)
-            {
+            // if($emailres['Stat'] == 1)
+            // {
                 Session::put('authorization_code', $rand_number);
                 Session::put('email_mail_sent', $user_email);
                 $res = array("status"=>200,"message"=>"Code Has Been Sent.Please Verify Your Email. Also please check your inbox/spam for email."); 
-            }
+            // }
+
+            Mail::to($user_email)->send(new OTPMail($details));
         
          } else if($user_present) {
             $res = array("status"=>201,"message"=>"Your Email Already Exists.Try with another Email");

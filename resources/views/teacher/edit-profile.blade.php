@@ -529,7 +529,7 @@
                 <div class="tab-pane fade" id="video" role="tabpanel" aria-labelledby="video-tab">
                     
                     
-                    <form role="form" action="{{ route('teacher-video-update') }}" class="vdo" method="POST" enctype="multipart/form-data" > 
+                    <form role="form" action="{{ route('teacher-youtube-link-update') }}" class="vdo" method="POST" enctype="multipart/form-data" > 
                         {{ csrf_field() }}
                         <input type="hidden" class="form-control" name="id" value="{{$getLoggedIndata->id}}" />
                         <input type="hidden" class="form-control" name="role" value="{{$getLoggedIndata->role}}" />
@@ -538,20 +538,30 @@
                       <div class="AccountSettings-box-body ">
                         <div class="Upload-Wrapper">
                           <div>
-                            <div style="text-align: center;">
+                            <!-- <div style="text-align: center;"> -->
+                            <div>
                               <div class="video-box">
                                 <!--<video src="https://v.italki.cn/BE8B29D8-FE5A-4651-8E27-52D312B37762.mp4" class="local-video" loop controls></video>-->
                                 
                                 @if($getLoggedIndata->youtube_link !='')
-                                    <iframe width="100%" height="315" src="{{$getLoggedIndata->youtube_link}}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen class="mb-4"></iframe>
-                                @elseif($getLoggedIndata->video !='')
+                                    <iframe width="100%" height="315" src="{{ str_replace("https://youtu.be", "https://www.youtube.com/embed/", $getLoggedIndata->youtube_link) }}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen class="mb-4"></iframe>
+                                {{-- @elseif($getLoggedIndata->video !='')
                                     <video src="{{url('storage/app/video/'.$getLoggedIndata->video)}}" class="local-video" loop controls></video>     
-                                @else
+                                @else --}}
                                     
                                 @endif
+
+                                <div class="form-row">
+                                  <div class="form-group col-lg-12">
+                                    <label for="inputEmail4">Youtube link</label>
+                                    <input type="text" class="form-control" name="youtube_link" value="{{$getLoggedIndata->youtube_link}}" placeholder="">
+                                    @if ($errors->has('display_name'))
+                                      <span class="text-danger">{{ $errors->first('display_name') }}</span>
+                                    @endif
+                                  </div>
+                                </div>
                                 
-                                
-                                <div class="videobox">
+                                <!-- <div class="videobox">
                                     @if($getLoggedIndata->video!='' || $getLoggedIndata->youtube_link !='')
                                     <span>Change Video</span>
                                     @else
@@ -562,7 +572,7 @@
                                     <input type="file" name="video" class="videoInput" id="" accept="video/*"> 
                                   
                                   
-                                </div>
+                                </div> -->
                               </div>
                             </div>
                           </div>
@@ -877,7 +887,6 @@
     <!--/.Content-->
   </div>
 </div>
-
 
 
 

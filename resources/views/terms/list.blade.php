@@ -44,7 +44,7 @@ $getVisitorCountry = getVisitorCountry();
 					@foreach($terms as $val)
 					<h5 class="h5-xl">{{$val->title}}</h5>
 					
-					<p class="p-lg">{{$val->description}}</p>
+					<p class="p-lg">{!! $val->description !!}</p>
 					@endforeach
 					
 					

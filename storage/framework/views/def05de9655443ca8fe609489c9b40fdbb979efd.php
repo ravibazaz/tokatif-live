@@ -438,14 +438,14 @@
                         </div>
                         <div class="form-group col-md-12">
                             <div class="custom-control custom-checkbox my-1 mr-sm-2">
-                                <input type="checkbox" name="notifications[]" value="Friend Request" class="custom-control-input" id="customControlInline22">
-                                <label class="custom-control-label" for="customControlInline22">Friend Request</label>
+                                <input type="checkbox" name="notifications[]" value="Friend Request" class="custom-control-input" id="customControlInline23">
+                                <label class="custom-control-label" for="customControlInline23">Friend Request</label>
                             </div>
                         </div>
                         <div class="form-group col-md-12">
                             <div class="custom-control custom-checkbox my-1 mr-sm-2">
-                                <input type="checkbox" name="notifications[]" value="Tokatif Newsletters And Updates" class="custom-control-input" id="customControlInline22">
-                                <label class="custom-control-label" for="customControlInline22">Tokatif Newsletters And Updates</label>
+                                <input type="checkbox" name="notifications[]" value="Tokatif Newsletters And Updates" class="custom-control-input" id="customControlInline24">
+                                <label class="custom-control-label" for="customControlInline24">Tokatif Newsletters And Updates</label>
                             </div>
                         </div>
 
@@ -458,8 +458,8 @@
                     
                     <div class="form-group col-md-12">
                         <div class="custom-control custom-checkbox my-1 mr-sm-2">
-                            <input type="checkbox" class="custom-control-input" id="customControlInline14">
-                            <label class="custom-control-label" for="customControlInline14">Allow Tokatif Team To Contact Me For Product Improvement.</label>
+                            <input type="checkbox" class="custom-control-input" id="customControlInline25">
+                            <label class="custom-control-label" for="customControlInline25">Allow Tokatif Team To Contact Me For Product Improvement.</label>
                         </div>
                     </div>  
                  </div> 

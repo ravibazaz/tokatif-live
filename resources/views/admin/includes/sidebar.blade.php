@@ -49,6 +49,13 @@
                           <p> Student </p>
                         </a>
                     </li>
+                    
+                    <li class="nav-item {{ (request()->is('admin/student_applied_for_teacher') || request()->is('admin/student_applied_for_teacher/*')) ? 'menu-open' : '' }}"> 
+                        <a href="{{route('student_applied_for_teacher')}}" class="nav-link {{ (request()->is('admin/student_applied_for_teacher') || request()->is('admin/student_applied_for_teacher/*')) ? 'active' : '' }}">
+                          <i class="far fa-circle nav-icon"></i>
+                          <p> Student Applied For Teacher </p>
+                        </a>
+                    </li>
 
                   
                 </ul>

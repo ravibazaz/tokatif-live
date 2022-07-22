@@ -44,9 +44,12 @@ Route::namespace('Admin')->prefix('admin')->group(function () {
         Route::get('/student/{id}', 'StudentController@details')->name('admin-student-details');
         Route::get('/student/delete/{id}', 'StudentController@delete')->name('admin-student-delete');
         
+        Route::get('/student_applied_for_teacher', 'StudentController@studentsAppliedForTeacher')->name('student_applied_for_teacher');
+        Route::post('/student_applied_for_teacher', 'StudentController@studentsAppliedForTeacher')->name('student_applied_for_teacher_search');
+        Route::get('/student_applied_for_teacher/approve/{id}', 'StudentController@approveStudentForTeacher')->name('admin-student-applied-for-teacher-approve');
+        Route::get('/student_applied_for_teacher/disapprove/{id}', 'StudentController@disapproveStudentForTeacher')->name('admin-student-applied-for-teacher-disapprove');
         
-        
-        
+
         Route::get('/website-setting/{id}', 'WebsiteSettingController@edit')->name('admin-website-setting-edit');
         Route::post('/website-setting/{id}', 'WebsiteSettingController@edit')->name('admin-website-setting-update');
         Route::get('/website-setting', 'WebsiteSettingController@index')->name('admin-website-setting-list');;
@@ -130,6 +133,10 @@ Route::namespace('Admin')->prefix('admin')->group(function () {
         Route::get('/support/delete/{id}', 'SupportController@delete')->name('admin-support-delete');
         Route::get('/support', 'SupportController@list')->name('admin-support-list');
         Route::post('/support', 'SupportController@list')->name('admin-support-search');
+
+        Route::get('/enquiry/delete/{id}', 'EnquiryController@delete')->name('admin-enquiry-delete');
+        Route::get('/enquiry', 'EnquiryController@list')->name('admin-enquiry-list');
+        Route::post('/enquiry', 'EnquiryController@list')->name('admin-enquiry-search');
         
         
         Route::get('/terms/add', 'TermsController@add')->name('admin-terms-add');
@@ -158,6 +165,7 @@ Route::namespace('Admin')->prefix('admin')->group(function () {
 
 
 Route::get('/', 'HomeController@index');
+
 
 // Login
 Route::get('/login', 'LoginController@login')->name('login');
@@ -194,8 +202,13 @@ Route::get('/community', 'CommunityController@index')->name('community');
 Route::get('/community/{id}','CommunityController@get_community_detail')->name('community-detail');
 Route::get('/add-community', 'CommunityController@add')->name('add-community');
 Route::post('/community/insert', 'CommunityController@add')->name('post-community-data');
+Route::get('/edit-community/{id}', 'CommunityController@edit')->name('edit-community');
+Route::post('/community/update/{id}', 'CommunityController@update')->name('update-community-data');
+Route::get('/delete-community/{id}', 'CommunityController@delete')->name('delete-community');
 
 Route::get('/support','SupportController@index')->name('support');
+Route::post('send_enquiry', 'SupportController@send_enquiry');
+
 Route::get('/privacy-policy','PrivacyPolicyController@index')->name('privacy-policy');
 Route::get('/terms','TermsController@index')->name('terms');
 
@@ -216,14 +229,14 @@ Route::middleware(['isUserAuthenticated', 'cors'])->group(function(){
     Route::post('/stripe-post', 'StripePaymentController@stripePost')->name('stripe-post'); 
     Route::post('/stripe', 'StripePaymentController@stripeCreditPost')->name('stripe.credit.post'); 
     
-    Route::get('/my-lesson', 'LessonController@my_lesson')->name('my-lesson'); 
+    Route::get('/my-lesson', 'LessonController@my_lesson')->name('my-lesson');
     Route::get('/lesson-detail/{id}','LessonController@get_lesson_detail')->name('lesson-detail');
     Route::get('/change-lesson-date/{id}','LessonController@change_lesson_date')->name('change-lesson-date');
     Route::post('/post-new-lesson-date','LessonController@update_new_lesson_date')->name('post-new-lesson-date'); 
     Route::get('/change-lesson-completion-time/{id}','LessonController@update_lesson_completion_time')->name('change-lesson-completion-time'); 
-    
-    
-
+    Route::get('/cancel-lesson/{id}', 'LessonController@cancel_lesson')->name('cancel-lesson');
+    Route::get('/accept-cancel-lesson/{id}', 'LessonController@accept_cancel_lesson')->name('accept-cancel-lesson');
+    Route::get('/reject-cancel-lesson/{id}', 'LessonController@reject_cancel_lesson')->name('reject-cancel-lesson');
 });
 
 
@@ -239,7 +252,8 @@ Route::middleware(['isStudentAuthenticated', 'cors'])->group(function(){
     Route::get('/student-wallet', 'DashboardController@wallet')->name('student-wallet');
     Route::post('/student-wallet-update', 'DashboardController@wallet')->name('student-wallet-update');
     Route::post('/favorite-teacher', 'DashboardController@my_favorite_teacher')->name('favorite-teacher');  
-    Route::get('/add-credit', 'DashboardController@add_credit')->name('add-credit');  
+    Route::get('/add-credit', 'DashboardController@add_credit')->name('add-credit');
+    Route::get('/get-saved-card-data/{id}', 'DashboardController@get_saved_card_data')->name('get-saved-card-data');
     
     Route::get('/student-calendar', 'CalendarController@student_calendar')->name('student-calendar'); 
     
@@ -254,6 +268,7 @@ Route::middleware(['isStudentAuthenticated', 'cors'])->group(function(){
     Route::get('/fetch-communication-tool-account-id/{accID}', 'BookingController@fetch_communication_tool_accountID');  
     Route::get('/fetch-package-price/{lesson_package_id}', 'BookingController@fetch_package_price');  
     Route::post('/booking-data', 'BookingController@insert_booking_data')->name('booking-data');
+    Route::post('/get-booking-dates/{lesson_package_id}', 'BookingController@get_booking_dates');  
     Route::get('/feedback/{id}', 'BookingController@give_feedback')->name('feedback');   
     Route::post('/feedback/{id}', 'BookingController@give_feedback')->name('feedback-post');   
     
@@ -263,7 +278,9 @@ Route::middleware(['isStudentAuthenticated', 'cors'])->group(function(){
     Route::get('/accept-lesson-invitation/{id}', 'LessonController@accept_lesson_invitation')->name('student-accept-lesson-invitation'); 
     Route::get('/decline-lesson-invitation/{id}', 'LessonController@decline_lesson_invitation')->name('student-decline-lesson-invitation'); 
     
-    Route::get('/switch-to-teacher-mode', 'DashboardController@switch_to_teacher_mode')->name('switch-to-teacher-mode'); 
+    Route::get('/switch-to-teacher-mode', 'DashboardController@switch_to_teacher_mode')->name('switch-to-teacher-mode');
+
+    Route::get('/apply-for-teacher', 'DashboardController@apply_for_teacher')->name('apply-for-teacher'); 
     
 });
 
@@ -284,11 +301,15 @@ Route::middleware(['isTeacherAuthenticated', 'cors'])->group(function(){
     Route::post('/teacher-settings-update', 'SettingsController@settings_update')->name('teacher-settings-update'); 
     Route::post('/teacher-password-update', 'SettingsController@password_update')->name('teacher-password-update'); 
     Route::post('/teacher-video-update', 'SettingsController@video_update')->name('teacher-video-update'); 
+    Route::post('/teacher-youtube-link-update', 'SettingsController@youtube_link_update')->name('teacher-youtube-link-update'); 
     Route::post('/teacher-availability-settings-update', 'SettingsController@teacher_availability_settings_update')->name('teacher-availability-settings-update');  
     Route::post('/teacher-booking-settings-update', 'SettingsController@teacher_booking_settings_update')->name('teacher-booking-settings-update');  
     Route::post('/teacher-education-update', 'SettingsController@teacher_education_update')->name('teacher-education-update');  
     Route::post('/teacher-work-exp-update', 'SettingsController@teacher_work_exp_update')->name('teacher-work-exp-update');   
-    Route::post('/teacher-certificate-update', 'SettingsController@teacher_certificate_update')->name('teacher-certificate-update');   
+    Route::post('/teacher-certificate-update', 'SettingsController@teacher_certificate_update')->name('teacher-certificate-update');
+
+    Route::get('/teacher-accept-reschedule/{id}', 'LessonController@accept_lesson_reschedule')->name('teacher-accept-reschedule'); 
+    Route::get('/teacher-decline-reschedule/{id}', 'LessonController@decline_lesson_reschedule')->name('teacher-decline-reschedule');
     
     Route::get('/add-lesson', 'LessonController@add_lesson')->name('add-lesson');
     Route::post('/post-lesson-data', 'LessonController@add_lesson')->name('post-lesson-data');

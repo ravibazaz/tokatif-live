@@ -108,7 +108,7 @@ $getVisitorCountry = getVisitorCountry();
 
                                     $countryFlagData = DB::table('countries')->where('name', '=', $val->country_living_in)->first(); 
 
-                                    $flag = strtolower($countryFlagData->sortname);
+                                    $flag = (isset($countryFlagData->sortname)) ? strtolower($countryFlagData->sortname) : "";
 
                                 ?>
 
@@ -118,7 +118,7 @@ $getVisitorCountry = getVisitorCountry();
 
                                     $countryFlagData = DB::table('countries')->where('name', '=', $getVisitorCountry)->first(); 
 
-                                    $flag = strtolower($countryFlagData->sortname);
+                                    $flag = (isset($countryFlagData->sortname)) ? strtolower($countryFlagData->sortname) : "";
 
                                 ?>
 
@@ -274,7 +274,9 @@ $getVisitorCountry = getVisitorCountry();
 
                                     <?php
 
-                                        $lessonCount = DB::table('lessons')->where('user_id', '=', $val->id)->where('deleted_at', '=', null)->count();
+                                        //$lessonCount = DB::table('lessons')->where('user_id', '=', $val->id)->where('deleted_at', '=', null)->count();
+
+                                        $lessonCount = DB::table('booking')->where('teacher_id', '=', $val->id)->where('lesson_completed_at', '!=', null)->count();
 
                                     ?>
 
@@ -318,11 +320,27 @@ $getVisitorCountry = getVisitorCountry();
 
                                                         ->where('lessons.user_id', '=', $val->id)
 
-                                                        ->min('lesson_packages.total'); 
+                                                        ->min('lesson_packages.total');
+
+                                    $min_individual_lesson = DB::table('lessons')
+
+                                                        ->leftJoin('lesson_packages', 'lessons.id', '=', 'lesson_packages.lesson_id')
+
+                                                        ->whereNull('lessons.deleted_at')
+
+                                                        ->where('lessons.user_id', '=', $val->id)
+
+                                                        ->min('lesson_packages.individual_lesson');
+
+                                    $min_amount = $min_individual_lesson;
+                                    if($min_individual_lesson > $minLessonsPrice)
+                                    {
+                                      $min_amount = $packageData;
+                                    } 
 
                                     ?>
 
-                                   <h3>USD <?php echo e(number_format($minLessonsPrice,2)); ?> </h3>
+                                   <h3>USD <?php echo e(number_format($min_amount,2)); ?> </h3>
 
                                    <p>Min Booking Price</p>
 
@@ -514,11 +532,11 @@ $getVisitorCountry = getVisitorCountry();
 
                          <?php if($val->youtube_link !=''): ?>
 
-                            <iframe width="100%" height="100%" src="https://www.youtube.com/embed/8iRfiAxPgBc" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                            <iframe width="100%" height="100%" src="<?php echo e(str_replace("https://www.youtube.com/watch?v=", "https://www.youtube.com/embed/", $val->youtube_link)); ?>" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
                          <?php elseif($val->video !=''): ?>
 
-                            <video src="<?php echo e(url('storage/app/video/'.$val->video)); ?>" controls width="100%" height="280px"></video>     
+                            
 
                          <?php else: ?>
 

@@ -39,7 +39,7 @@
 
               </button>
               <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                    <a class="dropdown-item" href="<?php echo e(route('teacher-profile')); ?>"><i class="fa fa-user" aria-hidden="true"></i> View Profile</a>
+                    <a class="dropdown-item" href="<?php echo e(route('teacher-detail', ['id' => session('id')])); ?>"><i class="fa fa-user" aria-hidden="true"></i> View Profile</a>
                     <a class="dropdown-item" href="<?php echo e(route('switch-to-student-mode')); ?>"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Switch to student mode </a>
                     <!--
                     <a class="dropdown-item" href="#"><i class="fa fa-gift" aria-hidden="true"></i> Refer a Friend</a>-->

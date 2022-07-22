@@ -30,6 +30,19 @@ $getVisitorCountry = getVisitorCountry();
 
 <section class="article-list">
 
+<style>
+  .delete-artical{
+    position: absolute;
+    background: red;
+    float: right;
+    color: white;
+    border-radius: 50%;
+    padding: 9px;
+    text-align: center;
+    right: 4%;
+  }
+</style>
+
 <div class="container-fluid">
 
   <div class="row">
@@ -54,7 +67,11 @@ $getVisitorCountry = getVisitorCountry();
             <div class="col-lg-6 col-md-6 col-sm-6 col-12 mt-5">
 
                <div class="aricle-box">
-
+                    <a href="{{ url('delete-community', $val->id) }}">
+                      <div class="col-md-1 delete-artical">
+                        <i class="fa fa-close"></i>
+                      </div>
+                    </a>
                     @php 
 
                         $exists = file_exists( storage_path() . '/app/article/' . $val->photo );
@@ -77,7 +94,7 @@ $getVisitorCountry = getVisitorCountry();
 
                     
 
-                    <a href="{{route('community-detail',['id'=>$val->id])}}"><h4>{{$val->title}}</h4></a>    
+                    <a href="{{route('edit-community',['id'=>$val->id])}}"><h4>{{$val->title}}</h4></a>    
 
                     <p>{{$val->description}}</p>   
 
@@ -256,7 +273,6 @@ $getVisitorCountry = getVisitorCountry();
         @endif
 
        <div class="aricle-box mb-5">
-
         <h2>Trending Articles</h2>
 
         

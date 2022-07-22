@@ -63,7 +63,7 @@ $getVisitorCountry = getVisitorCountry();
                     <?php else: ?>
                         <?php
                             $countryFlagData = DB::table('countries')->where('name', '=', $getVisitorCountry)->first(); 
-                            $flag = strtolower($countryFlagData->sortname);
+                            $flag = (isset($countryFlagData->sortname)) ? strtolower($countryFlagData->sortname) : "";
                         ?>
                     <?php endif; ?>
                     
@@ -95,7 +95,7 @@ $getVisitorCountry = getVisitorCountry();
               
             ?>
 
-            <p><?php echo e($teacherType); ?></p> 
+            <p><?php echo e($teacherType ?? ''); ?></p> 
             <h5><i class="fa fa-star" aria-hidden="true"></i> 5.0</h5>
             <h4><img src="<?php echo e(asset('public/frontendassets/images/offline.png')); ?>"/> Offline (Visited 2days ago)</h4>
            </div> 
@@ -316,7 +316,7 @@ $getVisitorCountry = getVisitorCountry();
             <div class="col-12 text-center">
                 
                 <?php if($user->youtube_link !=''): ?>
-                    <iframe width="100%" height="315" src="<?php echo e($user->youtube_link); ?>" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen class="mb-4"></iframe>
+                    <iframe width="100%" height="315" src="<?php echo e(str_replace("https://youtu.be/", "https://www.youtube.com/embed/", $user->youtube_link)); ?>" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen class="mb-4"></iframe>
                 <?php elseif($user->video !=''): ?>
                     <video src="<?php echo e(url('storage/app/video/'.$user->video)); ?>" controls width="98%" height="280px"></video>     
                 <?php else: ?>
@@ -327,6 +327,9 @@ $getVisitorCountry = getVisitorCountry();
               
             <h2 class="mt-4">About Me</h2>
             <p><?php echo e($user->about_me); ?></p>
+
+            <h2 class="mt-4">About My Lessons</h2>
+            <p><?php echo e($user->about_my_lessons); ?></p>
             </div>
           </div>
           

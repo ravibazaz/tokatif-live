@@ -48,7 +48,12 @@
                     <a class="dropdown-item" href="{{route('student-profile')}}"><i class="fa fa-user" aria-hidden="true"></i> Profile</a>
                     <a class="dropdown-item" href="{{route('student-settings')}}"><i class="fa fa-cogs" aria-hidden="true"></i> Settings</a>
                     <a class="dropdown-item" href="{{route('support')}}"><i class="fa fa-question-circle-o" aria-hidden="true"></i> Support</a>
-                    <a class="dropdown-item" href="{{route('switch-to-teacher-mode')}}"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Switch to teacher mode </a>
+
+                    @if(isset($getLoggedIndata) && isset($getLoggedIndata->applied_for_teacher) && ($getLoggedIndata->applied_for_teacher == 2 || $getLoggedIndata->original_mode == 2))
+                      <a class="dropdown-item" href="{{route('switch-to-teacher-mode')}}"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Switch to teacher mode </a>
+                    @else
+                      <a class="dropdown-item" href="{{route('apply-for-teacher')}}"><i class="fa fa-pencil-square-o"></i> Apply for teacher</a>
+                    @endif
                     <!--<a class="dropdown-item" href="#"><i class="fa fa-gift" aria-hidden="true"></i> Refer a Friend</a>-->
                     <a class="dropdown-item" href="{{URL::route('logout')}}"><i class="fa fa-sign-out" aria-hidden="true"></i> Logout</a>
                 

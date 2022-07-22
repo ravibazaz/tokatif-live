@@ -63,7 +63,7 @@
                 </div>
                 <div class="form-group col-md-12">
                   <label for="inputEmail4">Description</label>
-                  <textarea name="description" class="form-control" rows="6" placeholder="">{{$privacy->description}}</textarea>
+                  <textarea name="description" id="description" class="form-control" rows="6" placeholder="">{{$privacy->description}}</textarea>
                   @if ($errors->has('description'))
                     <span class="text-danger">{{ $errors->first('description') }}</span>
                   @endif
@@ -88,3 +88,20 @@
       </div>
   </section>
 @endsection
+
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script> 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js"></script>
+<!-- CKeditor -->
+<script type="text/javascript" src="{{url('public/ckeditor/ckeditor.js')}}"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        CKEDITOR.replace( 'description',{
+            allowedContent : true,
+            height: '200px',
+            extraPlugins: 'uploadimage',
+            uploadUrl: '/apps/ckfinder/3.4.5/core/connector/php/connector.php?command=QuickUpload&type=Files&responseType=json',
+            filebrowserUploadUrl: '{{url('admin/ck-editor/upload_file')}}',
+            filebrowserImageUploadUrl: '{{url('admin/ck-editor/upload_file')}}',
+        });
+    });
+</script>

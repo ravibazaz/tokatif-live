@@ -50,8 +50,8 @@ class CommunityController extends Controller
         $data['title']="Community";
         $data['breadcrumb']='Community';
 
-        
-        if(count($request->all()) > 0) {   
+
+        if(count($request->all()) > 0) {
             
             if($request->post_type=='forum'){
                 $validator = Validator::make($request->all(), [
@@ -70,18 +70,21 @@ class CommunityController extends Controller
                         ]);
             }
             
-                        
-            if ($validator->fails()) { 
-                if($request->role=='2'){
-                    return redirect('community/add')->withErrors($validator)->withInput();
-                }else{
-                    return redirect('student-dashboard'); 
+
+            if($validator->fails())
+            {
+                if($request->role=='2')
+                {
+                    return redirect()->back()->withErrors($validator)->withInput();
                 }
-                
-            }else{
-                
-                
-                try{
+                else
+                {
+                    return redirect('student-dashboard'); 
+                }    
+            }
+            else{
+
+                // try{
                     
                     // Handle Photo File Upload ================================================================
                     if($request->hasFile('photo')) {
@@ -124,19 +127,19 @@ class CommunityController extends Controller
                     $communityId = $this->communityModel->insertGetId($insertData);
                     
                     if($request->role=='2'){
-                        return redirect('community/add')->with('success','Community data has been added successfully.');
+                        return redirect('community')->with('success','Community data has been added successfully. It will show once admin approve.');
                     }else{
                         return redirect('student-dashboard')->with('error','You dont have the access to add community data.');
                     }
                     
-                }catch(Exception $e){
+                // }catch(Exception $e){
                     
-                    if($request->role=='2'){
-                        return redirect('community/add')->with('error','Please try again!');
-                    }else{
-                        return redirect('student-dashboard')->with('error','Please try again!'); 
-                    }
-                }
+                //     if($request->role=='2'){
+                //         return redirect('community/add')->with('error','Please try again!');
+                //     }else{
+                //         return redirect('student-dashboard')->with('error','Please try again!'); 
+                //     }
+                // }
                 
                 
             }
@@ -145,7 +148,91 @@ class CommunityController extends Controller
             return view('community.add',$data);
         }
     }
+
+    public function edit($id)
+    {
+        $data['community'] = Community::find($id);
+        return view('community.edit',$data);
+    }
     
+    public function update($id, Request $request)
+    {
+        if($request->post_type=='forum'){
+            $validator = Validator::make($request->all(), [
+                        'post_type' => 'required',
+                        'forum_topic' => 'required',
+                        'title' => 'required',
+                        'description' => 'required',
+                    ]);
+        }else{
+            $validator = Validator::make($request->all(), [
+                        'post_type' => 'required',
+                        'title' => 'required',
+                        'description' => 'required',
+                    ]);
+        }
+        
+                    
+        if ($validator->fails()) { 
+            if($request->role=='2'){
+                return redirect()->back()->withErrors($validator)->withInput();
+            }else{
+                return redirect('student-dashboard'); 
+            }
+            
+        }else{
+                
+                // Handle Photo File Upload ================================================================
+                if($request->hasFile('photo')) {
+                    $filenameWithExt = $request->file('photo')->getClientOriginalName();
+                    $filename = pathinfo($filenameWithExt, PATHINFO_FILENAME);    // Get just filename 
+                    $filename = str_replace(' ', '_', $filename);
+
+                    $extension = $request->file('photo')->getClientOriginalExtension();  // Get just ext
+
+                    $photoFileNameToStore = 'article_'.$filename.'_'.time().'.'.$extension;         //Filename to store              
+                    $destinationPath = storage_path('app/article');
+
+                    $request->file('photo')->move($destinationPath, $photoFileNameToStore);
+
+                } else {
+                    $photoFileNameToStore = '';
+                }
+                
+                if($request->post_type=='forum'){
+                    $forum_topic = $request->forum_topic;
+                    $status = '1';
+                }else{
+                    $forum_topic = '';
+                    $status = '2';
+                }
+
+                $updateData = [
+                    'post_type'=>$request->post_type,
+                    'forum_topic'=>$forum_topic,
+                    'title'=>ucfirst($request->title),
+                    'description'=>$request->description,
+                    'photo'=>$photoFileNameToStore,
+                    'added_by'=>session('id'),
+                    'status'=>$status,
+                    'created_at'=>date('Y-m-d H:i:s')
+                ];
+
+                Community::where('id', $id)->update($updateData);
+
+                if($request->role=='2'){
+                    return redirect('community')->with('success','Community data has been updated successfully. It will show once admin approve.');
+                }else{
+                    return redirect('student-dashboard')->with('error','You dont have the access to add community data.');
+                }
+        }
+    }
+
+    public function delete($id)
+    {
+        Community::where('id',$id)->delete();
+        return redirect()->back()->with('success','Community data has been deleted successfully.');
+    }
     
     public function get_community_detail(Request $request){
         $data['title']="Community Detail";

@@ -68,7 +68,7 @@
        <div class="row">
         <div class="col-md-12 mb-5 mt-4">
           <div class="input-group">
-            <input type="text" class="form-control" id="creditvalue" placeholder="Enter Your Amount" aria-describedby="inputGroupPrepend" required disabled>
+            <input type="text" class="form-control" id="creditvalue" placeholder="Enter Your Amount" aria-describedby="inputGroupPrepend" required>
             <div class="input-group-prepend">
               <span class="input-group-text" id="inputGroupPrepend">USD</span>
             </div>
@@ -87,7 +87,7 @@
         </nav>
         <div class="tab-content mt-4" id="nav-tabContent">
           <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
-            <form action="{{ route('stripe.credit.post') }}" method="POST" class="require-validation" data-cc-on-file="false" data-stripe-publishable-key="{{ env('STRIPE_KEY') }}"> 
+            <form id="paymentForm" action="{{ route('stripe.credit.post') }}" method="POST" class="require-validation" data-cc-on-file="false" data-stripe-publishable-key="{{ env('STRIPE_KEY') }}"> 
             @csrf
             
             <input type="hidden" id="credit_amount" name="credit_amount" value="" />
@@ -165,21 +165,14 @@
                         purchases may be refunded for Tokatif Credits only.</p>
                     </div> 
                 </div>
-                <div class="row">
-                    <div class="col-lg-12 col-12 mt-3">
-                        <button type="submit" class="btn btn-submit">Pay USD <span id="creditAmtSpan"></span></button>
-                    </div>
-                </div>
-            
-             
-            </form>
+                
           </div>
           <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
             <div class="row">
                 
                @foreach($userCardDetail as $val)
                <div class="col-lg-12 col-12">
-                <div class="communication-row ">
+                <div class="communication-row saved-card" data-id="{{ $val->id }}">
                      <div class="row align-items-center"> 
                        <div class="col-lg-1 col-12"> 
                          <div class="form-check">
@@ -260,7 +253,15 @@
         			All sales are final, purchases may be refunded for tokatif Credits only.</p>
                 </div>                                                                                                            
              </div>
+
           </div>
+
+            <div class="row">
+                    <div class="col-lg-12 col-12 mt-3">
+                        <button type="submit" class="btn btn-submit stripePay">Pay USD <span id="creditAmtSpan"></span></button>
+                    </div>
+                </div>
+            </form>
         </div>
        </div>
      </div>
@@ -307,9 +308,9 @@
                <input type="text" class="form-control" id="" placeholder="Type Your Tokatif Password"> 
             </div>
         </div>-->
-              
+
             
-            <!--<button type="submit" class="btn btn-submit">Pay USD <span id="creditAmtSpan"></span></button>-->
+            <!--<button type="submit" class="btn btn-submit">Pay USD <span id="creditAmtSpan__1"></span></button>-->
         </div>
          
      </div>
@@ -319,3 +320,35 @@
 
 
 @include('include/footer')
+
+<script>
+    $(document).on('keyup change', '#creditvalue', function(){
+
+        $('#credit_amount').val($(this).val());
+        $('#creditAmtSpan').text($(this).val());
+        $('.creditAmtDiv').text('USD '+$(this).val());
+    });
+
+    $(document).on('click','.saved-card', function(){
+
+        var id = $(this).data('id');
+
+        $.ajaxSetup({ headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') } });
+        $.ajax({
+            url: "{{ url('get-saved-card-data') }}" + "/" + id,
+            type: 'GET',
+            success: function (response) {
+                var data = JSON.parse(response);
+
+                $('#c_cardholder_name').val(data.cardholder_name);
+                $('#c_card_no').val(data.card_no);
+                $('#c_expiry_month').val(data.expiry_month);
+                $('#c_expiry_year').val(data.expiry_year);
+                $('#c_cvv').val(data.cvv);
+            },
+            error: function(){
+                alert('Something went wrong, please try again later.');
+            }
+        });
+    });
+</script>

@@ -44,7 +44,7 @@ $getVisitorCountry = getVisitorCountry();
 					<?php $__currentLoopData = $terms; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $val): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
 					<h5 class="h5-xl"><?php echo e($val->title); ?></h5>
 					
-					<p class="p-lg"><?php echo e($val->description); ?></p>
+					<p class="p-lg"><?php echo $val->description; ?></p>
 					<?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
 					
 					

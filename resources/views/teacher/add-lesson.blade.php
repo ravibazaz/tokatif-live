@@ -272,7 +272,7 @@
 
                 <div class="form-group col-md-6">
 
-                  <label for=""> Focus Areas </label>
+                  <label for=""> Focus Areas (Press Ctrl for multiple select)</label>
 
                   <select class="custom-select mr-sm-2" name="lesson_tag[]" id="lesson_tag" multiple >
 
@@ -282,14 +282,14 @@
 
                 </div>
 
-            </div>   
-
-           
+            </div>
 
             <div class="form-row mb-2 align-items-center">
 
-                <div class="form-group col-md-12 text-left">Price <span class="priceHint">Min. $10 USD/lesson, Max. $80 USD/lesson</span></div>
+                <!-- <div class="form-group col-md-12 text-left">Price <span class="priceHint">Min. {{ ($user->teacher_type == "community_tutor") ? "$5" : "$10" }} USD/lesson, Max. $80 USD/lesson</span></div> -->
+                <div class="form-group col-md-12 text-left">Price <span class="priceHint">Min. {{ ($user->teacher_type == "community_tutor") ? "$5" : "$10" }}</span></div>
 
+                <div class="priceHint" id="lessons_error"></div>
             </div>
 
     <?php 
@@ -300,11 +300,11 @@
 
             <div class="form-row mb-2 align-items-center">
 
-               <div class="form-group col-md-6 text-center">Individual Lessons</div>
+               <div class="form-group col-md-6 text-center">Single Price</div>
 
                <div class="form-group col-md-3 text-center">Packages</div>
 
-               <div class="form-group col-md-3 text-center">Total</div>
+               <div class="form-group col-md-3 text-center">Package price</div>
 
             </div>
 
@@ -318,7 +318,7 @@
 
                         <label for="">&nbsp;</label>
 
-                        <input type="checkbox" class="" id="">
+                        <input type="checkbox" name="checkbox[]" value="1" class="" id="">
 
                     </div>
 
@@ -330,7 +330,7 @@
 
                    <span class="individual-doller-sign">$</span>
 
-                  <input type="text" class="form-control individual-price" name="individual_lesson[]" value="{{Request::old('individual_lesson')[0]}}" id="individual_lesson_30" aria-describedby="emailHelp" placeholder=""> 
+                  <input type="text" class="form-control individual-price individual_lesson" name="individual_lesson[]" value="{{Request::old('individual_lesson')[0]}}" id="individual_lesson_30" aria-describedby="emailHelp" placeholder=""> 
 
                    <span class="individual-usd">USD</span>
 
@@ -360,7 +360,7 @@
 
                     <span class="individual-doller-sign">$</span>
 
-                    <input type="text" class="form-control individual-price" name="total[]" value="{{Request::old('total')[0]}}" id="package_total_30">
+                    <input type="text" class="form-control individual-price package_price" name="total[]" value="{{Request::old('total')[0]}}" id="package_total_30">
 
                     <span class="individual-usd">USD</span>
 
@@ -384,7 +384,7 @@
 
                         <label for="">&nbsp;</label>
 
-                        <input type="checkbox" class="" id="">
+                        <input type="checkbox" name="checkbox[]" value="1" class="" id="">
 
                     </div>
 
@@ -394,7 +394,7 @@
 
                     <span class="individual-doller-sign">$</span>
 
-                    <input type="text" class="form-control individual-price" name="individual_lesson[]" value="{{Request::old('individual_lesson')[1]}}" id="individual_lesson_45" aria-describedby="emailHelp" placeholder=""> 
+                    <input type="text" class="form-control individual-price individual_lesson" name="individual_lesson[]" value="{{Request::old('individual_lesson')[1]}}" id="individual_lesson_45" aria-describedby="emailHelp" placeholder=""> 
 
                     <span class="individual-usd">USD</span>
 
@@ -427,7 +427,7 @@
 
                     <span class="individual-doller-sign">$</span>
 
-                    <input type="text" class="form-control individual-price" name="total[]" value="{{Request::old('total')[1]}}" id="package_total_45">
+                    <input type="text" class="form-control individual-price package_price" name="total[]" value="{{Request::old('total')[1]}}" id="package_total_45">
 
                     <span class="individual-usd">USD</span>
 
@@ -449,7 +449,7 @@
 
                         <label for="">&nbsp;</label>
 
-                        <input type="checkbox" class="" id="">
+                        <input type="checkbox" name="checkbox[]" value="1" class="" id="">
 
                     </div>
 
@@ -461,7 +461,7 @@
 
                     <span class="individual-doller-sign">$</span>
 
-                    <input type="text" class="form-control individual-price" name="individual_lesson[]" value="{{Request::old('individual_lesson')[2]}}" id="individual_lesson_60" aria-describedby="emailHelp" placeholder=""> 
+                    <input type="text" class="form-control individual-price individual_lesson" name="individual_lesson[]" value="{{Request::old('individual_lesson')[2]}}" id="individual_lesson_60" aria-describedby="emailHelp" placeholder=""> 
 
                     <span class="individual-usd">USD</span>
 
@@ -494,7 +494,7 @@
 
                     <span class="individual-doller-sign">$</span>
 
-                    <input type="text" class="form-control individual-price" name="total[]" value="{{Request::old('total')[2]}}" id="package_total_60"> 
+                    <input type="text" class="form-control individual-price package_price" name="total[]" value="{{Request::old('total')[2]}}" id="package_total_60"> 
 
                     <span class="individual-usd">USD</span>
 
@@ -516,7 +516,7 @@
 
                         <label for="">&nbsp;</label>
 
-                        <input type="checkbox" class="" id="">
+                        <input type="checkbox" name="checkbox[]" value="1" class="" id="">
 
                     </div>
 
@@ -528,7 +528,7 @@
 
                     <span class="individual-doller-sign">$</span>
 
-                    <input type="text" class="form-control individual-price" name="individual_lesson[]" value="{{Request::old('individual_lesson')[3]}}" id="individual_lesson_75" aria-describedby="emailHelp" placeholder=""> 
+                    <input type="text" class="form-control individual-price individual_lesson" name="individual_lesson[]" value="{{Request::old('individual_lesson')[3]}}" id="individual_lesson_75" aria-describedby="emailHelp" placeholder=""> 
 
                     <span class="individual-usd">USD</span>
 
@@ -561,7 +561,7 @@
 
                     <span class="individual-doller-sign">$</span>
 
-                    <input type="text" class="form-control individual-price" name="total[]" value="{{Request::old('total')[3]}}" id="package_total_75">
+                    <input type="text" class="form-control individual-price package_price" name="total[]" value="{{Request::old('total')[3]}}" id="package_total_75">
 
                     <span class="individual-usd">USD</span>
 
@@ -583,7 +583,7 @@
 
                         <label for="">&nbsp;</label>
 
-                        <input type="checkbox" class="" id="">
+                        <input type="checkbox" name="checkbox[]" value="1" class="" id="">
 
                     </div>
 
@@ -595,7 +595,7 @@
 
                     <span class="individual-doller-sign">$</span>
 
-                    <input type="text" class="form-control individual-price" name="individual_lesson[]" value="{{Request::old('individual_lesson')[4]}}" id="individual_lesson_90" aria-describedby="emailHelp" placeholder=""> 
+                    <input type="text" class="form-control individual-price individual_lesson" name="individual_lesson[]" value="{{Request::old('individual_lesson')[4]}}" id="individual_lesson_90" aria-describedby="emailHelp" placeholder=""> 
 
                     <span class="individual-usd">USD</span>
 
@@ -628,7 +628,7 @@
 
                     <span class="individual-doller-sign">$</span>
 
-                    <input type="text" class="form-control individual-price" name="total[]" value="{{Request::old('total')[4]}}" id="package_total_90">
+                    <input type="text" class="form-control individual-price package_price" name="total[]" value="{{Request::old('total')[4]}}" id="package_total_90">
 
                     <span class="individual-usd">USD</span>
 
@@ -664,7 +664,7 @@
 
                 <div class="form-group col-md-12 example">        
 
-                    <button type="submit" class="btn btn-submit">Submit</button> 
+                    <button type="submit" class="btn btn-submit" id="btn_submit">Submit</button> 
 
                 </div>
 
@@ -687,4 +687,100 @@
 @include('include/footer')
 
 
+<script>
 
+    $(document).on('keyup change','.individual_lesson', function(){
+
+        var teacher_type = "{{ $user->teacher_type }}";
+        // var max_price = 80;
+        var flag = 0;
+
+        var min_price = 10;
+
+        if(teacher_type == "community_tutor")
+        {
+            min_price = 5;
+        }
+
+        $('.individual_lesson').each(function(){
+
+            if($(this).val()!= "" && $(this).val() < min_price)
+            {
+                $('#lessons_error').html('Price must not be less than '+ min_price);
+                $('#btn_submit').attr('disabled','disabled');
+                flag = 1;
+                return false;
+            }
+        });
+
+        enable_button();
+    });
+
+    $(document).on('keyup change','.package_price', function(){
+
+        var teacher_type = "{{ $user->teacher_type }}";
+        // var max_price = 80;
+        var flag = 0;
+
+        var min_price = 10;
+
+        if(teacher_type == "community_tutor")
+        {
+            min_price = 5;
+        }
+
+        $('.package_price').each(function(){
+
+            if($(this).val()!= "" && $(this).val() < min_price)
+            {
+                $('#lessons_error').html('Price must not be less than '+ min_price);
+                $('#btn_submit').attr('disabled','disabled');
+                flag = 1;
+                return false;
+            }
+        });
+
+        enable_button();
+    });
+
+    function enable_button()
+    {
+        var teacher_type = "{{ $user->teacher_type }}";
+        // var max_price = 80;
+        var flag = 0;
+        var individual_lesson_flag = 0;
+
+        var min_price = 10;
+
+        if(teacher_type == "community_tutor")
+        {
+            min_price = 5;
+        }
+
+        $('.package_price').each(function(){
+            // if($(this).val() != "" && ($(this).val() < min_price || $(this).val() > max_price))
+            if($(this).val() != "" && $(this).val() < min_price)
+            {
+                flag = 1;
+                return false;
+            }
+        });
+
+        $('.individual_lesson').each(function(){
+
+            // if($(this).val() != "" && ($(this).val() < min_price || $(this).val() > max_price))
+            if($(this).val() != "" && $(this).val() < min_price)
+            {
+                individual_lesson_flag = 1;
+                return false;
+            }
+        });
+
+        if(flag == 0 && individual_lesson_flag == 0)
+        {
+            $('#btn_submit').removeAttr('disabled');
+            $('#lessons_error').html(' ');
+        }
+    } 
+
+</script>

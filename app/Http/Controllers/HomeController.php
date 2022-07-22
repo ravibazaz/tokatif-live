@@ -14,6 +14,7 @@ use Hash;
 
 use App\Mail\ForgotPassword;
 use Illuminate\Support\Facades\Mail;
+use App\Models\Language;
 
 class HomeController extends Controller
 {
@@ -38,6 +39,7 @@ class HomeController extends Controller
         $alldata['howitworks_data'] = DB::table('howitworks')->get()->toArray();
         $alldata['howitworks_data'] = DB::table('howitworks')->get()->toArray();
         $alldata['becomefluents_data'] = DB::table('becomefluents')->get()->toArray();
+        $alldata['languages'] = Language::select('name')->orderBy('name')->get()->toArray();
 
         return view('home/homepage',$alldata);
     }

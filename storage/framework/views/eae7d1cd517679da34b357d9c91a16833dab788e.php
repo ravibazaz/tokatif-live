@@ -48,7 +48,7 @@ $getVisitorCountry = getVisitorCountry();
 					<h5 class="h5-xl"><?php echo e($val->title); ?></h5>
 					
 					<!-- Text -->  
-					<p class="p-lg"><?php echo e($val->description); ?></p>
+					<p class="p-lg"><?php echo $val->description; ?></p>
 
 				</div>	<!-- END TERMS BOX -->
 				<?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>

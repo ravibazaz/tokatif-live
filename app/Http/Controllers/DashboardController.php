@@ -58,8 +58,7 @@ class DashboardController extends Controller
         $data['breadcrumb']='Dashboard';
 
         
-        $data['user'] = $this->registrationModel->where('deleted_at', '=', null)->where(['id'=>session('id')])->first(); 
-
+        $data['user'] = $this->registrationModel->where('deleted_at', '=', null)->where(['id'=>session('id')])->first();
         //echo "<pre>"; print_r($data['user']); exit(); 
         
 
@@ -70,9 +69,15 @@ class DashboardController extends Controller
                                                 ->where('booking.student_id', '=', session('id'))
                                                 ->orderBy('lessons.created_at', 'desc')->limit(5)->get(); 
                                                 
-            $data['myTeachers'] = $this->bookingModel->select([ DB::raw('DISTINCT(teacher_id)')])->where('student_id', '=', session('id'))->get(); 
+            // $data['myTeachers'] = $this->bookingModel->select([ DB::raw('DISTINCT(teacher_id)')])->where('student_id', '=', session('id'))->get(); 
             //echo "<pre>"; print_r($data['myTeachers']); exit(); 
-            
+
+            $data['myTeachers'] = Booking::select([ DB::raw('DISTINCT(teacher_id)')])
+                                            ->join('registrations','registrations.id','=','booking.teacher_id','inner')
+                                            ->where('booking.student_id', session('id'))
+                                            ->where('registrations.deleted_at', null)
+                                            ->get();
+
             $myTeacherIds = $this->bookingModel->where('student_id', '=', session('id'))->select('teacher_id')->distinct()->get(); 
             if(count($myTeacherIds)>0){
                 $myTeacherIdsArr = array();
@@ -1139,7 +1144,11 @@ class DashboardController extends Controller
         }
     }
     
-    
+    public function get_saved_card_data($id)
+    {
+        $card_detail = CardDetail::find($id);
+        return json_encode($card_detail);
+    }
     
     
     public function switch_to_teacher_mode(){
@@ -1183,6 +1192,44 @@ class DashboardController extends Controller
         }
     }
     
+    public function apply_for_teacher()
+    {
+        try{
+
+            $student = Registration::where('id', session('id'))->first();
+
+            if($student->applied_for_teacher == 0 || $student->applied_for_teacher == 3)
+            {
+                // Registration::where('id', session('id'))->update(['applied_for_teacher' => 'true']);
+                // return redirect()->back()->with('success', 'Applied for teacher successfully!');
+
+                $data['user'] = $student;
+                $data['countries'] = DB::table('countries')->get();
+                $data['languages'] = DB::table('languages')->get();
+                //echo "<pre>"; print_r($data['countries']); exit(); 
+                
+                // if(session('role')=='1'){
+                //     return redirect('student-dashboard');
+                // }elseif(session('role')=='2'){
+                //     return redirect('teacher-dashboard');
+                // }else{
+                    if($student->applied_for_teacher == 3)
+                    {
+                        \Session::flash('error', 'Admin has disapproved your request, Please refill the form.');
+                        return view('user/teacher-registration',$data);
+                    }
+                    return view('user/teacher-registration',$data);
+                // }
+            }
+            else
+            {
+                return redirect()->back()->with('error','Already applied for the teacher, Please wait for the admin to confirm your request!');
+            }
+
+        }catch(Exception $e){
+            return redirect()->back()->with('error','Please try again!');
+        }
+    }
     
     public function switch_to_student_mode(){
         $data['user'] = $this->registrationModel->where('deleted_at', '=', null)->where(['id'=>session('id')])->first(); 
@@ -1227,6 +1274,14 @@ class DashboardController extends Controller
     
     
     public function logout(){
+
+        $user = Registration::where('id', session('id'))->first();
+
+        if($user->original_mode == 1)
+        {
+            Registration::where('id', session('id'))->update(['role' => 1]);
+        }
+
         session()->flush();
         return redirect('login');
     }

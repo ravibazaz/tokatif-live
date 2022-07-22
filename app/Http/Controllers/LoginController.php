@@ -39,15 +39,20 @@ class LoginController extends Controller
                 return redirect('login')->withErrors($validator)->withInput(); 
             }else{
                 
-                if (is_numeric($request->username)) {
-                    $user = $this->registrationModel->where('phone_number', '=', $request->username)
+                // if (is_numeric($request->username)) {
+                //     $user = $this->registrationModel->where('phone_number', '=', $request->username)
+                //                                 ->where('status', '=', '1')
+                //                                 ->where('deleted_at', '=', null)->get();
+                // }else{
+                //     $user = $this->registrationModel->where('email', '=', $request->username)
+                //                                     ->where('status', '=', '1')
+                //                                     ->where('deleted_at', '=', null)->get();
+                // }
+
+                $user = $this->registrationModel->where('phone_number', '=', $request->username)
+                                                ->orWhere('email', '=', $request->username)
                                                 ->where('status', '=', '1')
                                                 ->where('deleted_at', '=', null)->get();
-                }else{
-                    $user = $this->registrationModel->where('email', '=', $request->username)
-                                                    ->where('status', '=', '1')
-                                                    ->where('deleted_at', '=', null)->get();
-                }
                 
                 if(count($user)>0){
 
@@ -59,7 +64,9 @@ class LoginController extends Controller
                             'phone'=>$user[0]->phone_number,
                             'name'=>$user[0]->name,
                             'role'=>$user[0]->role,
-                            'gender'=>$user[0]->gender
+                            'gender'=>$user[0]->gender,
+                            'applied_for_teacher'=>$user[0]->applied_for_teacher,
+                            'original_mode'=>$user[0]->original_mode,
                         ]);
                         
                         //dd(session()->all());
@@ -79,7 +86,7 @@ class LoginController extends Controller
                     
                     
                 }else{
-                    return redirect('login')->with('error','Student email does not exist!')->withInput();
+                    return redirect('login')->with('error','Email does not exist!')->withInput();
                 }
                 
                             

@@ -4,7 +4,6 @@
 @endphp
 
 
-
 <footer>
 
 <section class="top_foot">
@@ -424,7 +423,7 @@
 
 <script type="text/javascript" src="https://cdn.datatables.net/buttons/1.7.1/js/buttons.print.min.js"></script>
 
-
+<script src="https://momentjs.com/downloads/moment-with-locales.js"></script>
 
 
 
@@ -759,6 +758,26 @@ function scrollToBottomFunc() { console.log("auto scroll.....");
         });
 
         
+        $(document).on('click', '#newTimeSlot .deleteTimeSlot', function(){
+
+            var id = $(this).data('id');
+            var date = $(this).data('date');
+
+            var _this = $(this);
+            $.ajax({
+                    type: "post",
+                    url: APP_URL+'/delete-teacher-time-slot',
+                    data: { date: date, id: id },
+                    cache: false,
+                    success: function (data) {
+                        location.reload();
+                    },
+                    error: function (jqXHR, status, err) {
+                        alert('Something went wrong, please try again later');
+                    }
+                })
+
+        });
 
         $(document).on('click', '.sendChatMsg', function (e) {
 
@@ -962,6 +981,152 @@ $(document).ready(function () {
 
     });
 
+    $(document).on('click', '#teacher_registration .nxt-step', function(e){
+
+        var step = $(this).data("step");
+        var flag = false;
+
+        if(step == 1)
+        {
+            var teacher_type = $('#teacher_registration #teacherTyp').val();
+
+            if(teacher_type == "")
+            {
+                $('#teacher_type_error').html('The teacher type field is required.');
+            }
+            else
+            {
+                flag = true;
+            }
+        }
+        else if(step == 2)
+        {
+            var display_name = $('#teacher_registration #display_name').val();
+            var user_account_id = $('#teacher_registration #user_account_id').val();
+            var email = $('#teacher_registration #email').val();
+            var phone = $('#teacher_registration #phone').val();
+            var dob = $('#teacher_registration #dob').val();
+            var gender = $("input[name='gender']:checked").val();
+            var street_address = $("input[name='street_address']").val();
+
+            if(display_name == "")
+            {
+                $('#display_name_error').html('The display name field is required.');
+            }
+            if(display_name != "")
+            {
+                $('#display_name_error').html('');
+            }
+            if(user_account_id == "")
+            {
+                $('#user_account_id_error').html('The user account id field is required.');
+            }
+            if(user_account_id != "")
+            {
+                $('#user_account_id_error').html('');
+            }
+            if(email == "")
+            {
+                $('#email_error').html('The email field is required.');
+            }
+            if(email != "")
+            {
+                $('#email_error').html('');
+            }
+            if(phone == "")
+            {
+                $('#phone_error').html('The phone field is required.');
+            }
+            if(phone != "")
+            {
+                $('#phone_error').html('');
+            }
+            if(dob == "")
+            {
+                $('#dob_error').html('The dob field is required.');
+            }
+            if(dob != "")
+            {
+                $('#dob_error').html('');
+            }
+            if(gender == undefined)
+            {
+                $('#gender_error').html('The gender field is required.');
+            }
+            if(gender != undefined)
+            {
+                $('#gender_error').html('');
+            }
+            if(street_address == "")
+            {
+                $('#street_address_error').html('The street address field is required.');
+            }
+            if(street_address != "")
+            {
+                $('#street_address_error').html('');
+            }
+
+            if(dob == "" || gender == "" || street_address == "")
+            {
+                $('#listtwo').show();
+            }
+            else
+            {
+                $('#listtwo').hide();
+            }
+
+            if(display_name != "" && user_account_id != ""  && email != "" && phone != "" && dob != "" && gender != "" && street_address!=""){
+                flag = true;
+            }
+
+        }
+        else if(step == 3)
+        {
+            var about_me = $('#teacher_registration #about_me').val();
+            var about_my_lessons = $('#teacher_registration #about_my_lessons').val();
+
+            if(about_me == "")
+            {
+                $('#about_me_error').html('The about me field is required.');
+            }
+            if(about_me != "")
+            {
+                $('#about_me_error').html('');
+            }
+            if(about_my_lessons == "")
+            {
+                $('#about_my_lessons_error').html('The about my lessons field is required.');
+            }
+            if(about_my_lessons != "")
+            {
+                $('#about_my_lessons_error').html('');
+            }
+
+            if(about_me != "" && about_my_lessons != "")
+            {
+                flag = true;
+            }
+        }
+        else if(step == '4')
+        {
+            flag = true;
+        }
+        else if(step == '5')
+        {
+            flag = true;
+        }
+
+
+        if(flag)
+        {
+            var active = $('.wizard .nav-tabs li.active');
+
+            active.next().removeClass('disabled');
+
+            nextTab(active);
+        }
+    });
+
     $(".prev-step").click(function (e) {
 
 
@@ -1038,7 +1203,7 @@ $('.ncheck:button').click(function(){
 
     var checked = !$(this).data('checked');
 
-    $('input:checkbox').prop('checked', checked);
+    $('#Introduction input:checkbox').prop('checked', checked);
 
     $(this).val(checked ? 'Unsubscribe From All' : 'Subscribe All' )
 
@@ -1993,6 +2158,8 @@ $('#community_photo').change(function() {
 
     $('.lesson-box-select').click(function(e) {  
 
+        $('.lesson-box-select').removeClass("active");
+
         $(this).addClass("active");
 
         $(this).find('input[type=radio]').prop("checked", true);
@@ -2001,6 +2168,7 @@ $('#community_photo').change(function() {
 
         var selectedLessonId = $(this).attr('data-lessonId'); 
 
+        var lesson_name = $(this).data("lesson_name");
         //alert("selected LessonId:: "+selectedLessonId); 
 
         
@@ -2019,8 +2187,9 @@ $('#community_photo').change(function() {
 
                 success: function (response) {
 
-                    $('#lesson_packages_table').append(response);
-
+                    // $('#lesson_packages_table').append(response);
+                    $('#lesson_packages_table').html(response);
+                    $(".lesson_type").html(lesson_name);
                 }
 
             });
@@ -2065,6 +2234,8 @@ $('#community_photo').change(function() {
 
                     $('#payment_communication_account_id').val(response);
 
+
+                    $(".communication-text").html(encodeURI(accID)+":"+response);
                 }
 
             });
@@ -2105,7 +2276,7 @@ $('#community_photo').change(function() {
 
         
 
-        if(selectedDate) { //alert(selectedDate); 
+        if(selectedDate) { //alert(selectedDate);
 
             $.ajax({
 
@@ -2114,6 +2285,8 @@ $('#community_photo').change(function() {
                 type: "GET",
 
                 success:function(data) {  //console.log(data);
+
+                    $('#newTimeSlot').html('<div class="form-row mb-2 align-items-center" id="timesDiv"></div>');
 
                     $('#addTeacherAvailability').modal("show");
 
@@ -2205,7 +2378,11 @@ $('#community_photo').change(function() {
 
         var applyBtnType = $(this).attr('data-BtnType'); 
 
-        
+        var ids=[]; 
+
+        $('.edit_time_slot_ids').each(function() {
+          ids.push($(this).val());
+        });
 
         var fromTime=[]; 
 
@@ -2236,15 +2413,11 @@ $('#community_photo').change(function() {
                 type: 'POST',
 
                 data: {
-
                     applyBtnType: applyBtnType,
-
                     date: selectedDate,
-
                     from_time: fromTime,
-
                     to_time: toTime,
-
+                    ids: ids
                 },
 
                 success: function (response) {
@@ -2289,7 +2462,16 @@ $('#community_photo').change(function() {
 
     // Book a Slot =============================================================
 
-    
+    // $(document).on('click','.light-bg',function(e){
+
+    //     var slot = $(this).data('slot');
+    //     var time = $(this).data('time');
+    //     var date = $(this).data('date');
+
+    //     console.log(moment.utc(time,'hh:mm').add(30,'minutes').format('hh:mm'));
+
+    //     // $(this).closest('ping-bg').removeClass('light-bg');
+    // });    
 
     $(document).on('click','.ping-bg',function(e){ 
 
@@ -2319,6 +2501,64 @@ $('#community_photo').change(function() {
 
         
 
+        var slot = $('.lesson-booking #slot').val();
+        var time = $(this).data('time');
+        var date = $(this).data('date');
+
+        if(slot == 2)
+        {
+            var second_slot = moment.utc(time,'hh:mm').add(30,'minutes').format('hh-mm');
+            var class_name = ".slot_"+date+second_slot;
+
+            if(!$(class_name).hasClass("ping-bg"))
+            {
+                $('.ping-bg').removeClass('light-bg');
+                $('#booking_date').val("");
+                $('#booking_time').val("");
+                alert('Please select two available slots');
+            }
+            else
+            {
+                $('.ping-bg').removeClass('light-bg');
+                $(this).addClass("light-bg");
+                $(class_name).addClass('light-bg');
+            }
+        }
+
+        if(slot == 3)
+        {
+            var second_slot = moment.utc(time,'hh:mm').add(30,'minutes').format('hh-mm');
+            var class_name = ".slot_"+date+second_slot;
+
+            if($(class_name).hasClass("ping-bg"))
+            {
+                var third_slot = moment.utc(time,'hh:mm').add(60,'minutes').format('hh-mm');
+                var third_class_name = ".slot_"+date+third_slot;
+
+                if(!$(third_class_name).hasClass("ping-bg"))
+                {
+                    $('.ping-bg').removeClass('light-bg');
+                    $('#booking_date').val("");
+                    $('#booking_time').val("");
+                    alert('Please select three available slots');
+                }
+                else
+                {
+                    $('.ping-bg').removeClass('light-bg');
+                    $(this).addClass("light-bg");
+                    $(class_name).addClass('light-bg');
+                    $(third_class_name).addClass('light-bg');
+                }
+            }
+            else
+            {
+                $('.ping-bg').removeClass('light-bg');
+                $('#booking_date').val("");
+                $('#booking_time').val("");
+                alert('Please select three available slots');
+            }
+        }
+
     });
 
     
@@ -2347,17 +2587,17 @@ $('#community_photo').change(function() {
 
         var timeInputCount = 1; 
 
-        
+        var row = '<div class="form-row mb-2 align-items-center" id="timesDiv"><div class="form-group col-md-5"><select class="custom-select mr-sm-2 from_time" name="from_time[]" id="from_time"><option value="00:00">00:00</option><option value="00:30">00:30</option><option value="01:00">01:00</option><option value="01:30">01:30</option><option value="02:00">02:00</option><option value="02:30">02:30</option><option value="03:00">03:00</option><option value="03:30">03:30</option><option value="04:00">04:00</option><option value="04:30">04:30</option><option value="05:00">05:00</option><option value="05:30">05:30</option><option value="06:00">06:00</option><option value="06:30">06:30</option><option value="07:00">07:00</option><option value="07:30">07:30</option><option value="08:00">08:00</option><option value="08:30">08:30</option><option value="09:00">09:00</option><option value="09:30">09:30</option><option value="10:00">10:00</option><option value="10:30">10:30</option><option value="11:00">11:00</option><option value="11:30">11:30</option><option value="12:00">12:00</option><option value="12:30">12:30</option><option value="13:00">13:00</option><option value="13:30">13:30</option><option value="14:00">14:00</option><option value="14:30">14:30</option><option value="15:00">15:00</option><option value="15:30">15:30</option><option value="16:00">16:00</option><option value="16:30">16:30</option><option value="17:00">17:00</option><option value="17:30">17:30</option><option value="18:00">18:00</option><option value="18:30">18:30</option><option value="19:00">19:00</option><option value="19:30">19:30</option><option value="20:00">20:00</option><option value="20:30">20:30</option><option value="21:00">21:00</option><option value="21:30">21:30</option><option value="22:00">22:00</option><option value="22:30">22:30</option><option value="23:00">23:00</option><option value="23:30">23:30</option></select></div><div class="form-group col-md-5"><select class="custom-select mr-sm-2 to_time" name="to_time[]" id="to_time"><option value="00:00" >00:00</option><option value="00:30" >00:30</option><option value="01:00" >01:00</option><option value="01:30" >01:30</option><option value="02:00" >02:00</option><option value="02:30" >02:30</option><option value="03:00" >03:00</option><option value="03:30" >03:30</option><option value="04:00" >04:00</option><option value="04:30" >04:30</option><option value="05:00" >05:00</option><option value="05:30" >05:30</option><option value="06:00" >06:00</option><option value="06:30" >06:30</option><option value="07:00" >07:00</option><option value="07:30" >07:30</option><option value="08:00" >08:00</option><option value="08:30" >08:30</option><option value="09:00" >09:00</option><option value="09:30" >09:30</option><option value="10:00" >10:00</option><option value="10:30" >10:30</option><option value="11:00" >11:00</option><option value="11:30" >11:30</option><option value="12:00" >12:00</option><option value="12:30" >12:30</option><option value="13:00" >13:00</option><option value="13:30" >13:30</option><option value="14:00" >14:00</option><option value="14:30" >14:30</option><option value="15:00" >15:00</option><option value="15:30" >15:30</option><option value="16:00" >16:00</option><option value="16:30" >16:30</option><option value="17:00" >17:00</option><option value="17:30" >17:30</option><option value="18:00" >18:00</option><option value="18:30" >18:30</option><option value="19:00" >19:00</option><option value="19:30" >19:30</option><option value="20:00" >20:00</option><option value="20:30" >20:30</option><option value="21:00" >21:00</option><option value="21:30" >21:30</option><option value="22:00" >22:00</option><option value="22:30" >22:30</option><option value="23:00" >23:00</option><option value="23:30" >23:30</option></select></div><div class="form-group remove-time-row col-md-2 text-center"><a href="javascript:void(0);"><i class="fa fa-trash-o" aria-hidden="true"></i></a></div></div>';
 
-        $('#timeSlotAppend').click(function () {
+        // $('#timeSlotAppend').click(function () {
 
             var newRow = timeSlotRowTemplate.clone();
 
             timeInputCount++;
 
-            $(".timeSlotDiv").append(newRow);
+            $(".timeSlotDiv").append(row);
 
-        });
+        // });
 
     });   
 
@@ -2387,7 +2627,38 @@ $('#community_photo').change(function() {
 
     
 
-    
+    $(document).on('click','.lesson-box', function(){
+
+        var slot = $(this).data('slot');
+        $('.lesson-booking #slot').val(slot);
+        $('#payment_slot').val(slot);
+
+        var lesson_package_id = $('input[name="lesson_package_id"]:checked').val();
+        var lesson_id = $('input[name="lesson_id"]:checked').val();
+        var teacher_id = $('#payment_teacher_id').val();
+
+        $.ajaxSetup({ headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') } });
+
+        $.ajax({
+
+            url: APP_URL+'/get-booking-dates/'+encodeURI(lesson_package_id),
+            type: 'POST',
+            data: { teacher_id : teacher_id },
+            success: function (bookings) {
+                var bookings = JSON.parse(bookings);
+                $.each( bookings, function( key, booking ) {
+
+                    $('.ping-bg').each(function(){
+                        if($(this).data('date') == booking.booking_date && $(this).data('time') == booking.booking_time)
+                        {
+                            $(this).removeClass('ping-bg');
+                        }
+                    });
+                });
+            }
+
+        });
+    });
 
     // Booking Data ============================================================
 
@@ -2395,15 +2666,13 @@ $('#community_photo').change(function() {
 
         var lesson_id = $('input[name="lesson_id"]:checked').val();
 
-        var lesson_package_id = $('input[name="lesson_package_id"]:checked').val(); 
-
-        
+        var lesson_package_id = $('input[name="lesson_package_id"]:checked').val();
 
         $("#booking_lesson_id").val(lesson_id);
 
         $("#booking_lesson_package_id").val(lesson_package_id);
 
-        
+        $('.ping-bg').removeClass('light-bg');
 
         if(lesson_package_id){
 
@@ -2417,7 +2686,7 @@ $('#community_photo').change(function() {
 
                 success: function (response) {
 
-                    $('#booking_amount').val(response);
+                    // $('#booking_amount').val(response);
 
                 }
 
@@ -4671,125 +4940,206 @@ function rate11(){
 
 
 
-document.getElementById("5").onclick = function(){
+// document.getElementById("5").onclick = function(){
 
-  rate5();
+//   rate5();
 
-  document.getElementById("audio_quality_rating").value = 5;
+//   document.getElementById("audio_quality_rating").value = 5;
 
-}
+// }
 
-document.getElementById("4").onclick = function(){
+$(document).on('click', '#5', function(){
+    rate5();
+    $('#audio_quality_rating').val(5);
+});
 
-  rate4();
+// document.getElementById("4").onclick = function(){
 
-  document.getElementById("audio_quality_rating").value = 4;
+//   rate4();
 
-}
+//   document.getElementById("audio_quality_rating").value = 4;
 
-document.getElementById("3").onclick = function(){
+// }
 
-  rate3();
 
-  document.getElementById("audio_quality_rating").value = 3;
+$(document).on('click', '#4', function(){
+    rate4();
+    $('#audio_quality_rating').val(4);
+});
 
-}
+// document.getElementById("3").onclick = function(){
 
-document.getElementById("2").onclick = function(){
+//   rate3();
 
-  rate2();
+//   document.getElementById("audio_quality_rating").value = 3;
 
-  document.getElementById("audio_quality_rating").value = 2;
+// }
 
-}
+$(document).on('click', '#3', function(){
+    rate3();
+    $('#audio_quality_rating').val(3);
+});
 
-document.getElementById("1").onclick = function(){
+// document.getElementById("2").onclick = function(){
 
-  rate1();
+//   rate2();
 
-  document.getElementById("audio_quality_rating").value = 1;
+//   document.getElementById("audio_quality_rating").value = 2;
 
-}
+// }
 
-document.getElementById("6").onclick = function(){
+$(document).on('click', '#2', function(){
+    rate2();
+    $('#audio_quality_rating').val(2);
+});
 
-  rate6();
+// document.getElementById("1").onclick = function(){
 
-  document.getElementById("video_quality_rating").value = 1;
+//   rate1();
 
-}
+//   document.getElementById("audio_quality_rating").value = 1;
 
-document.getElementById("7").onclick = function(){
+// }
 
-  rate7();
+$(document).on('click', '#1', function(){
+    rate1();
+    $('#audio_quality_rating').val(1);
+});
 
-  document.getElementById("video_quality_rating").value = 2;
+// document.getElementById("6").onclick = function(){
 
-}
+//   rate6();
 
-document.getElementById("8").onclick = function(){
+//   document.getElementById("video_quality_rating").value = 1;
 
-  rate8();
+// }
 
-  document.getElementById("video_quality_rating").value = 3;
+$(document).on('click', '#6', function(){
+    rate6();
+    $('#audio_quality_rating').val(6);
+});
 
-}
+// document.getElementById("7").onclick = function(){
 
-document.getElementById("9").onclick = function(){
+//   rate7();
 
-  rate9();
+//   document.getElementById("video_quality_rating").value = 2;
 
-  document.getElementById("video_quality_rating").value = 4;
+// }
 
-}
+$(document).on('click', '#7', function(){
+    rate7();
+    $('#audio_quality_rating').val(7);
+});
 
-document.getElementById("10").onclick = function(){
+// document.getElementById("8").onclick = function(){
 
-  rate10();
+//   rate8();
 
-  document.getElementById("video_quality_rating").value = 5;
+//   document.getElementById("video_quality_rating").value = 3;
 
-}
+// }
 
-document.getElementById("11").onclick = function(){
+$(document).on('click', '#8', function(){
+    rate8();
+    $('#audio_quality_rating').val(8);
+});
 
-  rate11();
+// document.getElementById("9").onclick = function(){
 
-  document.getElementById("teacher_rating").value = 1;
+//   rate9();
 
-}
+//   document.getElementById("video_quality_rating").value = 4;
 
-document.getElementById("12").onclick = function(){
+// }
 
-  rate12();
+$(document).on('click', '#9', function(){
+    rate9();
+    $('#audio_quality_rating').val(9);
+});
 
-  document.getElementById("teacher_rating").value = 2;
+// document.getElementById("10").onclick = function(){
 
-}
+//   rate10();
 
-document.getElementById("13").onclick = function(){
+//   document.getElementById("video_quality_rating").value = 5;
 
-  rate13();
+// }
 
-  document.getElementById("teacher_rating").value = 3;
+$(document).on('click', '#10', function(){
+    rate10();
+    $('#audio_quality_rating').val(10);
+});
 
-}
+// document.getElementById("11").onclick = function(){
 
-document.getElementById("14").onclick = function(){
+//   rate11();
 
-  rate14();
+//   document.getElementById("teacher_rating").value = 1;
 
-  document.getElementById("teacher_rating").value = 4;
+// }
 
-}
 
-document.getElementById("15").onclick = function(){
+$(document).on('click', '#11', function(){
+    rate11();
+    $('#audio_quality_rating').val(11);
+});
 
-  rate15();
+// document.getElementById("12").onclick = function(){
 
-  document.getElementById("teacher_rating").value = 5;
+//   rate12();
 
-}
+//   document.getElementById("teacher_rating").value = 2;
+
+// }
+
+
+$(document).on('click', '#12', function(){
+    rate12();
+    $('#audio_quality_rating').val(12);
+});
+
+// document.getElementById("13").onclick = function(){
+
+//   rate13();
+
+//   document.getElementById("teacher_rating").value = 3;
+
+// }
+
+
+$(document).on('click', '#13', function(){
+    rate13();
+    $('#audio_quality_rating').val(13);
+});
+
+// document.getElementById("14").onclick = function(){
+
+//   rate14();
+
+//   document.getElementById("teacher_rating").value = 4;
+
+// }
+
+
+$(document).on('click', '#14', function(){
+    rate14();
+    $('#audio_quality_rating').val(14);
+});
+
+// document.getElementById("15").onclick = function(){
+
+//   rate15();
+
+//   document.getElementById("teacher_rating").value = 5;
+
+// }
+
+
+$(document).on('click', '#15', function(){
+    rate15();
+    $('#audio_quality_rating').val(15);
+});
 
 
 

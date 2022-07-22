@@ -99,7 +99,11 @@ class CalendarController extends Controller
         
         $existCheck = $this->teacherAvailabilityModel->where('user_id', '=', $user_id)->where('date', '=', $date)->where('type', '=', $type)->get(); 
         if(count($existCheck)>0){
-            $deleteOldRecords = $this->teacherAvailabilityModel->where(['user_id'=>$user_id])->delete();
+            // $deleteOldRecords = $this->teacherAvailabilityModel->where(['user_id'=>$user_id])->delete();
+            if($request->ids)
+            {
+                $deleteOldRecords = $this->teacherAvailabilityModel->where(['user_id'=>$user_id])->whereIn('id', $request->ids)->delete();
+            }
             
             if($deleteOldRecords){
                 for ($i=0; $i < count($request->from_time); $i++ ) {
@@ -159,6 +163,8 @@ class CalendarController extends Controller
             
             foreach($timeSlots as $key => $val){
                 
+                $html .= '<input type="hidden" class="edit_time_slot_ids" id="ids[]" value="'. $val->id .'">';
+
                 $html .= '<div class="form-group col-md-5"><select class="custom-select mr-sm-2 from_time" name="from_time[]" id="from_time">';
                             
                             for ($i=$start; $i<=$end; $i = $i + 30*60){
@@ -175,9 +181,9 @@ class CalendarController extends Controller
                 
                 $html .='</select></div>';
                 
-                if($key>0){
-                    $html .='<div class="form-group deleteTimeSlot col-md-2 text-center" data-Date="'.$date.'"><a href="javascript:void(0);"><i class="fa fa-trash-o" aria-hidden="true"></i></a></div>';
-                }            
+                // if($key>0){
+                    $html .='<div class="form-group deleteTimeSlot col-md-2 text-center"  data-id="'.$val->id.'" data-Date="'.$date.'"><a href="javascript:void(0);"><i class="fa fa-trash-o" aria-hidden="true"></i></a></div>';
+                // }
                 
             }
             
@@ -210,10 +216,10 @@ class CalendarController extends Controller
         $user_id = session('id');
         $date = $request->date;
         
-        $existCheck = $this->teacherAvailabilityModel->where('user_id', '=', $user_id)->where('date', '=', $date)->get(); 
+        $existCheck = $this->teacherAvailabilityModel->where('user_id', '=', $user_id)->where('id', '=', $request->id)->get(); 
         
         if(count($existCheck)>0){
-            $deleteTimeSlots = $this->teacherAvailabilityModel->where(['user_id'=>$user_id,'date'=>$date])->delete();
+            $deleteTimeSlots = $this->teacherAvailabilityModel->where(['user_id'=>$user_id,'id'=>$request->id])->delete();
         
             if($deleteTimeSlots){
                 echo 1;

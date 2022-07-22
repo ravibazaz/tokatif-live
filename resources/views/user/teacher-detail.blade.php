@@ -63,7 +63,7 @@ $getVisitorCountry = getVisitorCountry();
                     @else
                         @php
                             $countryFlagData = DB::table('countries')->where('name', '=', $getVisitorCountry)->first(); 
-                            $flag = strtolower($countryFlagData->sortname);
+                            $flag = (isset($countryFlagData->sortname)) ? strtolower($countryFlagData->sortname) : "";
                         @endphp
                     @endif
                     
@@ -95,7 +95,7 @@ $getVisitorCountry = getVisitorCountry();
               
             @endphp
 
-            <p>{{$teacherType}}</p> 
+            <p>{{$teacherType ?? ''}}</p> 
             <h5><i class="fa fa-star" aria-hidden="true"></i> 5.0</h5>
             <h4><img src="{{ asset('public/frontendassets/images/offline.png') }}"/> Offline (Visited 2days ago)</h4>
            </div> 
@@ -316,7 +316,7 @@ $getVisitorCountry = getVisitorCountry();
             <div class="col-12 text-center">
                 
                 @if($user->youtube_link !='')
-                    <iframe width="100%" height="315" src="{{$user->youtube_link}}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen class="mb-4"></iframe>
+                    <iframe width="100%" height="315" src="{{ str_replace("https://youtu.be/", "https://www.youtube.com/embed/", $user->youtube_link) }}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen class="mb-4"></iframe>
                 @elseif($user->video !='')
                     <video src="{{url('storage/app/video/'.$user->video)}}" controls width="98%" height="280px"></video>     
                 @else
@@ -327,6 +327,9 @@ $getVisitorCountry = getVisitorCountry();
               
             <h2 class="mt-4">About Me</h2>
             <p>{{$user->about_me}}</p>
+
+            <h2 class="mt-4">About My Lessons</h2>
+            <p>{{$user->about_my_lessons}}</p>
             </div>
           </div>
           

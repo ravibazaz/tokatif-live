@@ -48,7 +48,7 @@ $getVisitorCountry = getVisitorCountry();
 					<h5 class="h5-xl">{{$val->title}}</h5>
 					
 					<!-- Text -->  
-					<p class="p-lg">{{$val->description}}</p>
+					<p class="p-lg">{!! $val->description !!}</p>
 
 				</div>	<!-- END TERMS BOX -->
 				@endforeach

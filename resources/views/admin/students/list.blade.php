@@ -28,7 +28,7 @@
                 </div>
 
                 <div class="col-md-5 mb-5">
-                  <form action="{{route('admin-teacher-search')}}" method="POST">
+                  <form action="{{route('admin-student-search')}}" method="POST">
                     @csrf
                   <div class="input-group md-form form-sm form-2 pl-0">
                     <input class="form-control my-0 py-1 amber-border" type="text" placeholder="Search" aria-label="Search" name="q" value={{ app('request')->input('q') }}>

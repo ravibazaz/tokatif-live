@@ -73,13 +73,21 @@
                          </div>
                         
                         @php
-                        $lessonsPrice = DB::table('lesson_packages')
+                          $lessons = DB::table('lesson_packages')
+                                            ->select(DB::Raw('individual_lesson, total'))
                                             ->whereNull('deleted_at')
                                             ->where('lesson_id', '=', $val->id)
-                                            ->sum('total'); 
+                                            ->get();
+
+                          $lesson_amount = 0;
+                          foreach($lessons as $lesson)
+                          {
+                              $lesson_amount += $lesson->individual_lesson + $lesson->total;
+                          }
+
                         @endphp
                         <div class="form-group col-md-2">
-                            <a href="javascript:void(0);" class="uploaded">USD {{number_format($lessonsPrice,2)}}</a>
+                            <a href="javascript:void(0);" class="uploaded">USD {{number_format($lesson_amount,2)}}</a>
                         </div>     
                      
                         <div class="form-group col-md-2">

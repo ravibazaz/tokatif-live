@@ -110,11 +110,27 @@ for ( $day = 1; $day <= $day_count; $day++, $str++) {
 
     $date = $ym . '-' . $day;
 
+    $booking_window_day = 0;
     
+    if($user->booking_window == "2weeks")
+    {
+        $booking_window_date = date('Y-m-d', strtotime(date('Y-m-d'). ' + 14 days'));
+    }
+    else if($user->booking_window == "3weeks")
+    {
+        $booking_window_date = date('Y-m-d', strtotime(date('Y-m-d'). ' + 21 days'));
+    }
+    else if($user->booking_window == "1month")
+    {
+        $booking_window_date = date('Y-m-d', strtotime(date('Y-m-d'). ' +1 months'));
+    }
+    else if($user->booking_window == "2months")
+    {
+        $booking_window_date = date('Y-m-d', strtotime(date('Y-m-d'). ' +2 months'));
+    }
 
     $calenderDay = date('l', strtotime($date));
 
-    
 
     //echo "========================".$today." :: ".$date; 
 
@@ -328,22 +344,16 @@ for ( $day = 1; $day <= $day_count; $day++, $str++) {
 
                 }
 
-                
-
-                
-
                 foreach($availabilityWeeklyData as $val){
 
-                    $from_time = $val->from_time;
+                    if(isset($booking_window_date) && $date <= $booking_window_date)
+                    {
+                        $from_time = $val->from_time;
 
-                    $to_time = $val->to_time;
+                        $to_time = $val->to_time;
 
-                    
-
-                    $timeArr[] = '<div class="item-list completed '.$timeClass.'"><span class="item-time">'.$from_time.' - '.$to_time.'</span></div>';
-
-                    
-
+                        $timeArr[] = '<div class="item-list completed '.$timeClass.'"><span class="item-time">'.$from_time.' - '.$to_time.'</span></div>';
+                    }
                 }
 
                 

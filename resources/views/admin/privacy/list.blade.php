@@ -66,7 +66,7 @@
                 <tr>
                   <td>{{$a->id}}</td>
                   <td>{{$a->title}}</td>
-                  <td>{{$a->description}}</td>
+                  <td>{!! $a->description !!}</td>
                   <td>
                     <a href="{{route('admin-privacy-edit',['id'=>$a->id])}}" class="actionLink"><i class="fa fa-pencil-square-o"></i></a>
                     

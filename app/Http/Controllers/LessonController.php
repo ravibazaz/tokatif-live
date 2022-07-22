@@ -21,6 +21,13 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Storage;
 
 use App\Mail\LessonBooking;
+use App\Mail\LessionAccepted;
+use App\Mail\UpdateNewLessonDateMail;
+use App\Mail\TeacherAcceptReschedule;
+use App\Mail\TeacherAcceptButModified;
+use App\Mail\CancelRequest;
+use App\Mail\CancelLesson;
+use App\Mail\CancellationDeclined;
 use Illuminate\Support\Facades\Mail;
 
 if (version_compare(PHP_VERSION, '7.2.0', '>=')) {
@@ -80,7 +87,7 @@ class LessonController extends Controller
     }
     
     public function my_lesson(){
-        
+
         $data['user'] = $this->registrationModel->where('deleted_at', '=', null)->where(['id'=>session('id')])->first(); 
         $data['lessonCategory'] = DB::table('lesson_category')->where('deleted_at', '=', null)->get()->unique('name');
         $data['students'] = $this->registrationModel->where('deleted_at', '=', null)->where('role', '=', '1')->get();
@@ -305,13 +312,13 @@ class LessonController extends Controller
     
     
     public function add_lesson(request $request){
-        
+
         $data['user'] = $this->registrationModel->where('deleted_at', '=', null)->where(['id'=>session('id')])->first(); 
-        $data['lessonCategory'] = DB::table('lesson_category')->where('deleted_at', '=', null)->get()->unique('name');  
+        $data['lessonCategory'] = DB::table('lesson_category')->where('deleted_at', '=', null)->get()->unique('name');
         //$data['currencies'] = DB::table('currency')->get();
-        
+
         //echo "<pre>"; print_r($data['lessonCategory']); exit();
-        
+
         if(count($request->all()) > 0) {   
             $validator = Validator::make($request->all(), [
                             'id' => 'required',
@@ -357,26 +364,25 @@ class LessonController extends Controller
                                         'student_languages_level_to'=>$request->student_languages_level_to,
                                         'created_at'=>date('Y-m-d H:i:s')
                                     ];
-                                    
+
                     $lessionId = $this->lessonsModel->insertGetId($insertLessonData);
-                    
+
                     //$packageArr = array();
-                    for ($i=0; $i < count($request->package); $i++ )
+                    for ($i=0; $i < count($request->time); $i++ )
                     {
-                        if($request->individual_lesson[$i]!='' && $request->package[$i]!='' && $request->total[$i]!=''){ 
-                            
+                        // if($request->individual_lesson[$i]!='' && $request->total[$i]!=''){ 
+
                             $packageArr = [
                                                 'lesson_id' => $lessionId,
-                                                'individual_lesson' => $request->individual_lesson[$i],
+                                                'individual_lesson' => (isset($request->individual_lesson[$i])) ? $request->individual_lesson[$i] : null,
                                                 'time' => $request->time[$i],
                                                 'package' => $request->package[$i],
-                                                'total' => $request->total[$i],
+                                                'total' => (isset($request->total[$i]) && $request->total[$i] != null) ? $request->total[$i] : null,
                                                 'created_at'=>date('Y-m-d H:i:s')
                                             ];
-                                            
-                            
+
                             $this->lessonPackagesModel->insertGetId($packageArr);
-                        }
+                        // }
                     }
                     
                     
@@ -419,6 +425,7 @@ class LessonController extends Controller
     
     
     public function edit_lesson(Request $request, $id){
+
         $data['title']="Edit Lesson";
         $data['breadcrumb']="Edit Lesson";
 
@@ -504,22 +511,28 @@ class LessonController extends Controller
                         
                         $DeleteExistingPackages = $this->lessonPackagesModel->where(['lesson_id'=>$id])->delete(); 
                         
-                        for ($i=0; $i < count($request->package); $i++ )
+                        for ($i=0; $i < count($request->time); $i++ )
                         {
-                            if($request->individual_lesson[$i]!='' && $request->package[$i]!='' && $request->total[$i]!=''){ 
+                            // if($request->individual_lesson[$i]!='' && $request->total[$i]!=''){ 
                                 
                                 $packageArr = [
                                                     'lesson_id' => $id,
-                                                    'individual_lesson' => $request->individual_lesson[$i],
+                                                    'individual_lesson' => (isset($request->individual_lesson[$i])) ? $request->individual_lesson[$i] : null,
                                                     'time' => $request->time[$i],
                                                     'package' => $request->package[$i],
-                                                    'total' => $request->total[$i],
+                                                    'total' => (isset($request->total[$i])) ? $request->total[$i] : null,
                                                     'created_at'=>date('Y-m-d H:i:s')
                                                 ];
-                                                
+
+                                // 'lesson_id' => $id,
+                                // 'individual_lesson' => (isset($request->individual_lesson[$i])) ? $request->individual_lesson[$i] : null,
+                                // 'time' => $request->time[$i],
+                                // 'package' => $request->package[$i],
+                                // 'total' => (isset($request->total[$i]) && isset($request->package[$i]) && $request->package[$i] != null) ? $request->total[$i] : null,
+                                // 'created_at'=>date('Y-m-d H:i:s')
                                 
                                 $this->lessonPackagesModel->insertGetId($packageArr);
-                            }
+                            // }
                         }
     
                         
@@ -594,15 +607,25 @@ class LessonController extends Controller
             
             $html .= '<div class="form-row price-boxs">
                           <div class="col-lg-12 col-12">
-                             <h2>Packages</h2></div>';
+                             <h2>All Lessons</h2></div>';
                              
             foreach($lessonPackages as $v){
-                $html .= '<div class="col-lg-3 col-md-6 col-sm-6 col-12">
+                if($v->individual_lesson != null)
+                {
+                    $html.='<div class="col-lg-3 col-md-6 col-sm-6 col-12"><div class="r-box">
+                       <p><i class="fa fa-clock-o" aria-hidden="true"></i> '.$v->time.' <br> Single Lesson </p>
+                       <h3>USD '.number_format($v->individual_lesson,2).' </h3>
+                     </div></div>';
+                }
+                if($v->total != null)
+                {
+                    $html .= '<div class="col-lg-3 col-md-6 col-sm-6 col-12">
                              <div class="r-box">
-                               <p><i class="fa fa-clock-o" aria-hidden="true"></i> '.$v->time.' </p>
+                               <p><i class="fa fa-clock-o" aria-hidden="true"></i> '.$v->time.'<br> '.$v->package.' </p>
                                <h3>USD '.number_format($v->total,2).' </h3>
                              </div>
                             </div>';
+                }
             }
                             
                                  
@@ -717,6 +740,7 @@ class LessonController extends Controller
             $data['booking_id'] = $bookingData->id;
             $data['student_id'] = $bookingData->student_id;
             $data['booking_status'] = $bookingData->status;
+            $data['cancel_status'] = $bookingData->cancel_status;
             $data['bookingDate'] = $bookingData->booking_date;
             $data['booking_date'] = date('d M Y',strtotime($bookingData->booking_date));
             $data['booking_time'] = date('h:i a',strtotime($bookingData->booking_time));
@@ -759,10 +783,11 @@ class LessonController extends Controller
                                             ->where('lesson_id', '=', $bookingData->lesson_id)
                                             ->orderBy('created_at', 'desc')->count(); 
                                             
-            
+
             $data['booking_id'] = $bookingData->id;
             $data['student_id'] = $bookingData->student_id;
             $data['booking_status'] = $bookingData->status;
+            $data['cancel_status'] = $bookingData->cancel_status;
             $data['bookingDate'] = $bookingData->booking_date;
             $data['booking_date'] = date('d M Y',strtotime($bookingData->booking_date));
             $data['booking_time'] = date('h:i a',strtotime($bookingData->booking_time));
@@ -807,8 +832,14 @@ class LessonController extends Controller
     
     public function accept_lesson($id){
         $getLoggedIndata = getLoggedinData();
-        $booking = $this->bookingModel->where('id', '=', $id)->first();
-                                                
+        // $booking = $this->bookingModel->where('id', '=', $id)->first();
+
+        $booking = Booking::select('booking.*','lessons.name as lesson_name','teacher.name as teacher_name','student.name as student_name','student.email as student_email')
+                            ->leftJoin('lessons','lessons.id','=','booking.lesson_id')
+                            ->leftJoin('registrations as teacher','teacher.id','=','booking.teacher_id')
+                            ->leftJoin('registrations as student','student.id','=','booking.student_id')
+                            ->where('booking.id', '=', $id)->first();
+
         if($booking){
             $updateData=[];
             $updateData['updated_at'] = date('Y-m-d H:i:s');
@@ -843,6 +874,26 @@ class LessonController extends Controller
                                         ];
 
                 $lessonLogId = $this->lessonLogModel->insertGetId($insertLessonLogData);
+
+                // Send email to student
+
+                $subject = 'Lesson Request Accepted!'; 
+                $message = '';
+                
+                $details = [
+                    'to' => $booking->student_email,
+                    'from' => env('MAIL_FROM_ADDRESS'),
+                    'subject' => $subject,
+                    'receiver' => ucfirst($booking->student_name),
+                    'sender' => env('MAIL_FROM_NAME'), 
+                    'msg'=>$message,
+                    'teacher_name'=>$booking->teacher_name,
+                    'lession_id'=>$booking->lesson_id,
+                    'course_name'=>$booking->lesson_name,
+                    'lession_time'=>date("jS F, Y", strtotime($booking->booking_date))." ".$booking->booking_time
+                ];
+
+                Mail::to($booking->student_email)->send(new LessionAccepted($details));
                 
                 if($getLoggedIndata->role=='1' || $getLoggedIndata->role=='2'){
                     return redirect('my-lesson')->with('success','Booking has been accepted successfully.');
@@ -1117,7 +1168,9 @@ class LessonController extends Controller
         
         $bookingData = $this->bookingModel->where('id', '=', $request->booking_id)
                                         ->orderBy('created_at', 'desc')->first();
-                                            
+
+        $oldLessonDateTime = date('d M Y',strtotime($bookingData->booking_date))."/".$bookingData->booking_time; 
+
         if($bookingData){
             $updateData=[];
             $updateData['updated_at'] = date('Y-m-d H:i:s');
@@ -1152,23 +1205,23 @@ class LessonController extends Controller
                 
                 // Send Email =========================================================
                 
+                $user = $this->registrationModel->where('deleted_at', '=', null)->where('id', '=', $bookingData->student_id)->first();  
+                $studentName = $user->name;
+                $studentEmail = $user->email;
+                
+                $teacherData = $this->registrationModel->where('deleted_at', '=', null)->where('id', '=', $bookingData->teacher_id)->first(); 
+                $teacherName = $teacherData->name;
+                $teacherEmail = $teacherData->email;
+            
+                $lessonData = $this->lessonsModel->where('deleted_at', '=', null)->where('id', '=', $bookingData->lesson_id)->first(); 
+                $lessonName = $lessonData->name;
+                $lessonID = $lessonData->id;
+                $lessonDateTime = date('d M Y',strtotime($request->new_booking_date))."/".$request->new_booking_time; 
+                $lessonPrice = number_format($bookingData->booking_amount,2).' USD';
+                $lessonUrl = url('/lesson-detail/'.$lessonData->id);
+
                 if($getLoggedIndata->role=='1'){
-                    
-                    $user = $this->registrationModel->where('deleted_at', '=', null)->where('id', '=', $bookingData->student_id)->first();  
-                    $studentName = $user->name;
-                    
-                    $teacherData = $this->registrationModel->where('deleted_at', '=', null)->where('id', '=', $bookingData->teacher_id)->first(); 
-                    $teacherName = $teacherData->name;
-                    $teacherEmail = $teacherData->email;
-                
-                    $lessonData = $this->lessonsModel->where('deleted_at', '=', null)->where('id', '=', $bookingData->lesson_id)->first(); 
-                    $lessonName = $lessonData->name;
-                    $lessonID = $lessonData->id;
-                    $lessonDateTime = date('d M Y',strtotime($request->new_booking_date))."/".$request->new_booking_time; 
-                    $lessonPrice = number_format($bookingData->booking_amount,2).' USD';
-                    $lessonUrl = url('/lesson-detail/'.$lessonData->id);
-                    
-                
+
                     $subject = $getLoggedIndata->name.' has requested to reschedule a lesson'; 
 	                $message = 'A student has requested to change the scheduled time/date of one of their lessons. Please see details below.';
 	                
@@ -1182,14 +1235,38 @@ class LessonController extends Controller
 	                        'student_name'=>$studentName,
 	                        'course_name'=>$lessonName,
 	                        'lesson_id'=>$lessonID,
-	                        'lesson_date'=>$lessonDateTime,
+                            'lesson_date'=>$lessonDateTime,
 	                        'lesson_price'=>$lessonPrice,
 	                        'lesson_url'=>$lessonUrl
 	                    ];
 
-	               Mail::to($teacherEmail)->send(new LessonBooking($details));
-	                   
+	               Mail::to($teacherEmail)->send(new UpdateNewLessonDateMail($details));
+
                 }
+                else{
+
+                    $subject ='Request to reschedule by your teacher';
+                    $message = 'Your teacher '. $teacherName .' has requested to change the schedule date/time of one of your lessons. Please respond to the request via the button below.';
+
+                    $details = [
+                            'to' => $teacherEmail,
+                            'from' => env('MAIL_FROM_ADDRESS'),
+                            'subject' => $subject,
+                            'receiver' => ucfirst($teacherName),
+                            'sender' => env('MAIL_FROM_NAME'), 
+                            'msg'=>$message,
+                            'student_name'=>$studentName,
+                            'course_name'=>$lessonName,
+                            'lesson_id'=>$lessonID,
+                            'old_lesson_date'=>$oldLessonDateTime,
+                            'lesson_date'=>$lessonDateTime,
+                            'lesson_price'=>$lessonPrice,
+                            'lesson_url'=>$lessonUrl
+                        ];
+
+                   Mail::to($studentEmail)->send(new TeacherAcceptButModified($details));
+                }
+
                  
                 
                 return redirect('change-lesson-date/'.$request->booking_id)->with('success','Scheduled date has been changed successfully.');
@@ -1455,7 +1532,7 @@ class LessonController extends Controller
                     $lessonPrice = number_format($request->offer_price,2).' USD';
                     $lessonUrl = url('/lesson-detail/'.$lessonData->id);
                         
-	                $subject = 'Lesson invitation from '.$teacherName; 
+	                $subject = 'Book a Trial Lesson now!'; 
 	                $message = 'A teacher has sent a lesson invitation to you. Please click the button below to accept or modify the lesson request.';
 	                    
                     $details = [
@@ -1473,7 +1550,7 @@ class LessonController extends Controller
                         'lesson_url'=>$lessonUrl
                     ];
 
-                    Mail::to($teacherEmail)->send(new LessonBooking($details));
+                    Mail::to($studentEmail)->send(new LessonBooking($details));
 	                    
                     return redirect('my-lesson')->with('success','Lesson invitation has been sent successfully.'); 
                 }else{
@@ -1584,64 +1661,269 @@ class LessonController extends Controller
     
     
     public function decline_lesson_invitation($id){
-        $getLoggedIndata = getLoggedinData();
-        $invitation = $this->lessonInvitationModel->where('id', '=', $id)->first();
-                                                
-        if($invitation){
-            $updateData=[];
-            $updateData['updated_at'] = date('Y-m-d H:i:s');
-            
-            if($getLoggedIndata->role=='1'){
-                $updateData['status'] = '2'; 
-                
-                try{
-                    $this->lessonInvitationModel->where('id',$id)->update($updateData); 
-                    
-                    $action = 'Lesson invitation request has been declined by student: '.$getLoggedIndata->name;
-                    
-                    
-                    $insertLessonLogData = [
-                                                'lesson_id'=>$invitation->lesson_id,
-                                                'lesson_package_id'=>$invitation->lesson_package_id,
-                                                'teacher_id'=>$invitation->teacher_id,
-                                                'student_id'=>$invitation->student_id,
-                                                'booking_id'=>null,
-                                                'action'=>$action,
-                                                'lesson_accept_reject'=>'2',
-                                                'created_at'=>date('Y-m-d H:i:s')
-                                            ];
-    
-                    $lessonLogId = $this->lessonLogModel->insertGetId($insertLessonLogData);
-                    
-                    return redirect('my-lesson')->with('success','Lesson invitation request has been declined successfully.');
-                    
-                }catch(Exception $e){
-                    return redirect('my-lesson')->with('error','Please try again!');
-                }
-                
-            }else{
-                return redirect('student-dashboard')->with('error','You are not authorized! Please login as a student!'); 
-            }
-            
-            
-        }else{
-            if($getLoggedIndata->role=='1' || $getLoggedIndata->role=='2'){
-                return redirect('my-lesson')->with('error','Booking not found!');
-            }
-        }
-        
+
     }
     
     
+    public function accept_lesson_reschedule($id){
+        $getLoggedIndata = getLoggedinData();
+        $booking = Booking::where('id', $id)->first();
+                                                
+        if($booking){
+            $updateData=[];
+            $updateData['updated_at'] = date('Y-m-d H:i:s');
+            
+            if($getLoggedIndata->role=='2'){
+                
+                try{
+                    
+                    Booking::where('id', $id)->update(['status' => '1']);
+
+                    // $subject = 'Modified lesson request by your teacher'; 
+                    // $message = 'Unfortunately, your '. $getLoggedIndata->name .' teacher can’t make your preferred time and has modified the request. We apologise for the inconvenience caused. Please accept or decline the modified date/time via the button below.';
+
+                    // $student = Registration::where('deleted_at', '=', null)->where('id', '=', $booking->student_id)->first();  
+                    // $studentName = $student->name;
+                    // $studentEmail = $student->email;
+
+                    // $teacher = Registration::where('deleted_at', '=', null)->where('id', '=', session('id'))->first();  
+                    // $teacherName = $teacher->name;
+                    // $teacherEmail = $teacher->email;
+
+                    // $lessonData = Lessons::where('deleted_at', '=', null)->where('id', $booking->lesson_id)->first();
+
+                    // $lessonName = $lessonData->name;
+                    // $lessonID = $lessonData->id;
+                    // $lessonDateTime = date('d M Y',strtotime($booking->booking_date))."/".$booking->booking_time; 
+                    // $lessonPrice = number_format($booking->booking_amount,2).' USD';
+                    // $lessonUrl = url('/lesson-detail/'.$lessonData->id);
+
+                    // $details = [
+                    //     'to' => $studentEmail,
+                    //     'from' => env('MAIL_FROM_ADDRESS'),
+                    //     'subject' => $subject,
+                    //     'receiver' => ucfirst($studentName),
+                    //     'sender' => env('MAIL_FROM_NAME'), 
+                    //     'msg'=>$message,
+                    //     'student_name'=>$studentName,
+                    //     'teacher_name'=>$teacherName,
+                    //     'course_name'=>$lessonName,
+                    //     'lesson_id'=>$lessonID,
+                    //     'lesson_date'=>$lessonDateTime,
+                    //     'lesson_price'=>$lessonPrice,
+                    //     'lesson_url'=>$lessonUrl
+                    // ];
+
+                    // Mail::to($studentEmail)->send(new TeacherAcceptReschedule($details));
+
+                    $subject = 'Reschedule Request Accepted'; 
+                    $message = 'Your teacher has accepted your request to reschedule a lesson. For more details, please click the button below.';
+
+                    $student = Registration::where('deleted_at', '=', null)->where('id', '=', $booking->student_id)->first();  
+                    $studentName = $student->name;
+                    $studentEmail = $student->email;
+
+                    $teacher = Registration::where('deleted_at', '=', null)->where('id', '=', $booking->teacher_id)->first();  
+                    $teacherName = $teacher->name;
+                    $teacherEmail = $teacher->email;
+
+                    $lessonData = Lessons::where('deleted_at', '=', null)->where('id', $booking->lesson_id)->first();
+
+                    $lessonName = $lessonData->name;
+                    $lessonID = $lessonData->id;
+                    $lessonDateTime = date('d M Y',strtotime($booking->booking_date))."/".$booking->booking_time; 
+                    $lessonPrice = number_format($booking->booking_amount,2).' USD';
+                    $lessonUrl = url('/lesson-detail/'.$lessonData->id);
+
+                    $details = [
+                        'to' => $studentEmail,
+                        'from' => env('MAIL_FROM_ADDRESS'),
+                        'subject' => $subject,
+                        'receiver' => ucfirst($studentName),
+                        'sender' => env('MAIL_FROM_NAME'), 
+                        'msg'=>$message,
+                        'student_name'=>$studentName,
+                        'teacher_name'=>$teacherName,
+                        'course_name'=>$lessonName,
+                        'lesson_id'=>$lessonID,
+                        'lesson_date'=>$lessonDateTime,
+                        'lesson_price'=>$lessonPrice,
+                        'lesson_url'=>$lessonUrl
+                    ];
+
+                    Mail::to($studentEmail)->send(new TeacherAcceptReschedule($details));
+
+                    return redirect()->back()->with('success','Reschedule accepted successfully.!!');
+
+                }catch(Exception $e){
+                    return redirect()->back()->with('error','Please try again!');
+                }
+
+            }else{
+                return redirect()->back()->with('error','Please try again!');
+            }
+
+        }else{
+            return redirect()->back()->with('error','Please try again!');
+        }
+        
+    }
+
+    
+    public function cancel_lesson($id)
+    {
+        $getLoggedIndata = getLoggedinData();
+        $booking = Booking::where('id', $id)->first();
+                      
+        if($booking){
+
+            $updated_booking_data = Booking::where('id', $id)->update(['cancel_status' => '1']);
+
+            $student = Registration::where('deleted_at', '=', null)->where('id', '=', $booking->student_id)->first();  
+            $studentName = $student->name;
+            $studentEmail = $student->email;
+
+            $teacher = Registration::where('deleted_at', '=', null)->where('id', '=', $booking->teacher_id)->first();  
+            $teacherName = $teacher->name;
+            $teacherEmail = $teacher->email;
+
+            $lessonData = Lessons::where('deleted_at', '=', null)->where('id', $booking->lesson_id)->first();
+
+            $lessonName = $lessonData->name;
+            $lessonID = $lessonData->id;
+            $lessonDateTime = date('d M Y',strtotime($booking->booking_date))."/".$booking->booking_time; 
+            $lessonPrice = number_format($booking->booking_amount,2).' USD';
+            $lessonUrl = url('/lesson-detail/'.$lessonData->id);
+
+            $subject = 'Cancelled request from student'; 
+            $message = "Student has sent lesson cancellation request. To accept or reject cancellation request, click the button below.";
+
+            $details = [
+                'to' => $teacherEmail,
+                'from' => env('MAIL_FROM_ADDRESS'),
+                'subject' => $subject,
+                'receiver' => ucfirst($studentName),
+                'sender' => env('MAIL_FROM_NAME'), 
+                'msg'=>$message,
+                'student_name'=>$studentName,
+                'teacher_name'=>$teacherName,
+                'course_name'=>$lessonName,
+                'lesson_id'=>$lessonID,
+                'lesson_date'=>$lessonDateTime,
+                'lesson_price'=>$lessonPrice,
+                'lesson_url'=>$lessonUrl
+            ];
+
+            Mail::to($teacherEmail)->send(new CancelRequest($details));
+            return redirect()->back()->with('success','Cancelled request send to teacher successfully.!!');
+        }else{
+            return redirect()->back()->with('error','Please try again!');
+        }
+    }
+
+    public function accept_cancel_lesson($id)
+    {
+        $getLoggedIndata = getLoggedinData();
+        $booking = Booking::where('id', $id)->first();
+
+        if($booking){
+
+            $student = Registration::where('deleted_at', '=', null)->where('id', '=', $booking->student_id)->first();  
+            $studentName = $student->name;
+            $studentEmail = $student->email;
+
+            $teacher = Registration::where('deleted_at', '=', null)->where('id', '=', session('id'))->first();  
+            $teacherName = $teacher->name;
+            $teacherEmail = $teacher->email;
+
+            $lessonData = Lessons::where('deleted_at', '=', null)->where('id', $booking->lesson_id)->first();
+
+            $lessonName = $lessonData->name;
+            $lessonID = $lessonData->id;
+            $lessonDateTime = date('d M Y',strtotime($booking->booking_date))."/".$booking->booking_time; 
+            $lessonPrice = number_format($booking->booking_amount,2).' USD';
+            $lessonUrl = url('/lesson-detail/'.$lessonData->id);
+
+            $subject = 'Lesson Cancellation Accepted'; 
+            $message = "Your teacher has accepted your request to cancel the lesson. Unused Tokatif Tokens will be returned to you. Please click on the button below to view the lesson cancellation details.";
+
+            $details = [
+                'to' => $studentEmail,
+                'from' => env('MAIL_FROM_ADDRESS'),
+                'subject' => $subject,
+                'receiver' => ucfirst($studentName),
+                'sender' => env('MAIL_FROM_NAME'), 
+                'msg'=>$message,
+                'student_name'=>$studentName,
+                'teacher_name'=>$teacherName,
+                'course_name'=>$lessonName,
+                'lesson_id'=>$lessonID,
+                'lesson_date'=>$lessonDateTime,
+                'lesson_price'=>$lessonPrice,
+                'lesson_url'=>$lessonUrl
+            ];
+
+            Booking::where('id', $id)->update(['cancel_status' => '2']);
+
+            Mail::to($studentEmail)->send(new CancelLesson($details));
+            return redirect()->back()->with('success','Lesson cancelled successfully.!!');
+        }else{
+            return redirect()->back()->with('error','Please try again!');
+        }
+    }
     
     
-    
-    
-    
-    
-    
-    
-    
+    public function reject_cancel_lesson($id)
+    {
+        $getLoggedIndata = getLoggedinData();
+        $booking = Booking::where('id', $id)->first();
+
+        if($booking){
+
+            $student = Registration::where('deleted_at', '=', null)->where('id', '=', $booking->student_id)->first();  
+            $studentName = $student->name;
+            $studentEmail = $student->email;
+
+            $teacher = Registration::where('deleted_at', '=', null)->where('id', '=', session('id'))->first();  
+            $teacherName = $teacher->name;
+            $teacherEmail = $teacher->email;
+
+            $lessonData = Lessons::where('deleted_at', '=', null)->where('id', $booking->lesson_id)->first();
+
+            $lessonName = $lessonData->name;
+            $lessonID = $lessonData->id;
+            $lessonDateTime = date('d M Y',strtotime($booking->booking_date))."/".$booking->booking_time; 
+            $lessonPrice = number_format($booking->booking_amount,2).' USD';
+            $lessonUrl = url('/lesson-detail/'.$lessonData->id);
+
+            $subject = 'Lesson Cancellation Declined'; 
+            $message = "Unfortunately, your teacher has declined your request to cancel the lesson. The lesson will proceed as per schedule date/time. If you still wish to cancel the lesson, please get in contact with your teacher to resolve this directly or alternatively send an email to support@tokatif.com with the reason for cancellation and evidence to support that (i.e. screenshots of conversation logs). We will make a final decision based on the evidence available to us.";
+
+            $details = [
+                'to' => $studentEmail,
+                'from' => env('MAIL_FROM_ADDRESS'),
+                'subject' => $subject,
+                'receiver' => ucfirst($studentName),
+                'sender' => env('MAIL_FROM_NAME'), 
+                'msg'=>$message,
+                'student_name'=>$studentName,
+                'teacher_name'=>$teacherName,
+                'course_name'=>$lessonName,
+                'lesson_id'=>$lessonID,
+                'lesson_date'=>$lessonDateTime,
+                'lesson_price'=>$lessonPrice,
+                'lesson_url'=>$lessonUrl
+            ];
+
+            Booking::where('id', $id)->update(['cancel_status' => '2']);
+
+            Mail::to($studentEmail)->send(new CancellationDeclined($details));
+            return redirect()->back()->with('success','Cancellation declined successfully.!!');
+
+        }else{
+            return redirect()->back()->with('error','Please try again!');
+        }
+    }
     
 }
 

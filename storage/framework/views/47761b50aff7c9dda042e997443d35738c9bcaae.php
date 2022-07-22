@@ -83,22 +83,25 @@
       <input data-cy="ts_pl_input" placeholder="English" class="ant-input" type="text" value="">
       </span></div>
   </div>
-   <ul> 
-   <li> <a class="dropdown-item" href="#">English</a> </li>
-   <li> <a class="dropdown-item" href="#">Chinese (Mandarin)</a></li>
-   <li> <a class="dropdown-item" href="#">French</a></li>
-   <li> <a class="dropdown-item" href="#">English</a> </li>
-   <li> <a class="dropdown-item" href="#">Chinese (Mandarin)</a></li>
-   <li> <a class="dropdown-item" href="#">French</a></li>
-   <li> <a class="dropdown-item" href="#">English</a> </li>
-   <li> <a class="dropdown-item" href="#">Chinese (Mandarin)</a></li>
-   <li> <a class="dropdown-item" href="#">French</a></li>
-   <li> <a class="dropdown-item" href="#">English</a> </li>
-   <li> <a class="dropdown-item" href="#">Chinese (Mandarin)</a></li>
-   <li> <a class="dropdown-item" href="#">French</a></li>
-   <li> <a class="dropdown-item" href="#">English</a> </li>
-   <li> <a class="dropdown-item" href="#">Chinese (Mandarin)</a></li>
-   <li> <a class="dropdown-item" href="#">French</a></li>
+   <ul>
+        <?php $__currentLoopData = $languages; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $language): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+          <li><a class="dropdown-item" href="<?php echo e(url('teachers', $language['name'])); ?>"><?php echo e($language['name']); ?></a> </li>
+        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+   <!--<li> <a class="dropdown-item" href="#">English</a> </li>-->
+   <!--<li> <a class="dropdown-item" href="#">Chinese (Mandarin)</a></li>-->
+   <!--<li> <a class="dropdown-item" href="#">French</a></li>-->
+   <!--<li> <a class="dropdown-item" href="#">English</a> </li>-->
+   <!--<li> <a class="dropdown-item" href="#">Chinese (Mandarin)</a></li>-->
+   <!--<li> <a class="dropdown-item" href="#">French</a></li>-->
+   <!--<li> <a class="dropdown-item" href="#">English</a> </li>-->
+   <!--<li> <a class="dropdown-item" href="#">Chinese (Mandarin)</a></li>-->
+   <!--<li> <a class="dropdown-item" href="#">French</a></li>-->
+   <!--<li> <a class="dropdown-item" href="#">English</a> </li>-->
+   <!--<li> <a class="dropdown-item" href="#">Chinese (Mandarin)</a></li>-->
+   <!--<li> <a class="dropdown-item" href="#">French</a></li>-->
+   <!--<li> <a class="dropdown-item" href="#">English</a> </li>-->
+   <!--<li> <a class="dropdown-item" href="#">Chinese (Mandarin)</a></li>-->
+   <!--<li> <a class="dropdown-item" href="#">French</a></li>-->
     
     </ul>
   </div>

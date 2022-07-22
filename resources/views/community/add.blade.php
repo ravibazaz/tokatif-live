@@ -186,7 +186,7 @@
 
                 <div class="impression-left">
 
-                    <p>Click or Drage here to upload Photo *</p>
+                    <p>Click or Drag here to upload Photo *</p>
 
                     <input type="file" class="form-control-file" name="photo" id="community_photo" accept="image/*">
 
@@ -234,7 +234,7 @@
 
          <p>Can someone explain the role of '하면' in this sentence?</p>
 
-         <p>In English, what's the right way of saying "the middle-left/rig</p>
+         <p>In English, what's the right way of saying "the middle-left/right</p>
 
          <p>Is well turned out= neatly turned out?</p>
 

@@ -60,9 +60,14 @@ class SearchController extends Controller
     public function getAllTeachers(){
         $data['title']="Teachers";
         $data['breadcrumb']='Teachers';
-        
-        $data['user'] = $this->registrationModel->where('role', '=', '2')->where('status', '=', '1')->where('deleted_at', '=', null)->get();
-        
+
+        $user = $this->registrationModel->where('role', '2')->orWhere('applied_for_teacher', '2')->where('status', '=', '1')->where('deleted_at', '=', null);
+        if(Session::has('id'))
+        {
+            $user->where('id','!=', Session::get('id'));
+        }
+        $data['user'] = $user->get();
+
         $data['countries'] = DB::table('countries')->orderBy('name', 'ASC')->get();
         $data['languages'] = DB::table('languages')->where('deleted_at', '=', null)->orderBy('name', 'ASC')->get();
         $data['lessonType'] = DB::table('lesson_category')->select([ DB::raw('DISTINCT(name)')])->where('deleted_at', '=', null)->orderBy('name', 'ASC')->get();
@@ -275,12 +280,13 @@ class SearchController extends Controller
         
         if($id){
             $data['user'] = $this->registrationModel
-                                    ->where('role', '=', '2')
+                                    // ->where('role', '=', '2')
+                                    // ->orWhere('applied_for_teacher', '=', '2')
                                     ->where('status', '=', '1')
                                     ->where('deleted_at', '=', null)
                                     ->where('id', '=', $id)
                                     ->first();
-            
+
             $data['lessonCount'] = $this->lessonsModel->where('deleted_at', '=', null)->where(['user_id'=>$id])->count();
             $data['studentCount'] = $this->bookingModel->where(['teacher_id'=>$id])->distinct('student_id')->count('student_id');
             

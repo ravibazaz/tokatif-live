@@ -2,11 +2,22 @@
 
 <?php echo $__env->make('include/header', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
 
+<style>
+    .nxt-step{
+        background-color: #ffe001;
+    }
+    .prev-step, .nxt-step {
+        font-size: 16px;
+        padding: 8px 24px;
+        border: none;
+        border-radius: 30px;
+        margin-top: 30px;
+        cursor: pointer;
+    }
+</style>
 
 
-
-
-<section class="step">
+<section class="step" id="teacher_registration">
 
     <div class="container">
 
@@ -135,6 +146,7 @@
 
                                                 <h4 class="text-center step-title">On Tokatif there are two types of teachers.<br/> Which one are you?</h4>
 
+                                                <span class="text-danger" id="teacher_type_error"></span>
                                                 <?php if($errors->has('teacher_type')): ?>
 
                                                     <span class="text-danger"><?php echo e($errors->first('teacher_type')); ?></span>
@@ -187,7 +199,7 @@
 
                                                             </ul>
 
-                                                            <p>USD 4.00</p>
+                                                            <p>USD 5.00</p>
 
                                                         </div>
 
@@ -229,7 +241,7 @@
 
                                                             </ul>
 
-                                                            <p>USD 4.00</p>
+                                                            <p>USD 10.00</p>
 
                                                         </div>
 
@@ -241,7 +253,7 @@
 
                                                 <ul class="list-inline pull-right">
 
-                                                    <li><button type="button" class="default-btn next-step">Continue to next step</button></li>
+                                                    <li><button type="button" data-step="1" class="default-btn nxt-step">Continue to next step</button></li>
 
                                                 </ul>
 
@@ -271,8 +283,8 @@
 
                                                                     <label for="inputAddress">Display Name</label>
 
-                                                                    <input type="text" name="display_name" id="display_name" value="<?php echo e(Request::old('display_name')); ?>" class="form-control" placeholder="">
-
+                                                                    <input type="text" name="display_name" id="display_name" value="<?php echo e(Request::old('display_name', (isset($user)) ? $user->name : '')); ?>" class="form-control" placeholder="">
+                                                                    <span class="text-danger" id="display_name_error"></span>
                                                                     <?php if($errors->has('display_name')): ?>
 
                                                                         <span class="text-danger"><?php echo e($errors->first('display_name')); ?></span>
@@ -311,6 +323,7 @@
 
                                                                       <input type="text" name="user_account_id" id="user_account_id" value="<?php echo e(Request::old('user_account_id')); ?>" class="form-control" placeholder=""/>
 
+                                                                        <span class="text-danger" id="user_account_id_error"></span>
                                                                       <?php if($errors->has('user_account_id')): ?>
 
                                                                         <span class="text-danger"><?php echo e($errors->first('user_account_id')); ?></span>
@@ -333,7 +346,7 @@
 
                                                                         <?php $__currentLoopData = $countries; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $val): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
 
-                                                                         <option value="<?php echo e($val->name); ?>" <?php echo e((Request::old('country_of_origin') == $val->name) ? 'selected' : ''); ?>><?php echo e($val->name); ?></option>               
+                                                                         <option value="<?php echo e($val->name); ?>" <?php echo e((Request::old('country_of_origin', (isset($user)) ? $user->country_of_origin : '') == $val->name) ? 'selected' : ''); ?>><?php echo e($val->name); ?></option>               
 
                                                                         <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?> 
 
@@ -361,7 +374,7 @@
 
                                                                         <?php $__currentLoopData = $countries; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $val): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
 
-                                                                         <option value="<?php echo e($val->name); ?>" <?php echo e((Request::old('country_living_in') == $val->name) ? 'selected' : ''); ?>><?php echo e($val->name); ?></option>               
+                                                                         <option value="<?php echo e($val->name); ?>" <?php echo e((Request::old('country_living_in', (isset($user)) ? $user->country_living_in : '') == $val->name) ? 'selected' : ''); ?>><?php echo e($val->name); ?></option>               
 
                                                                         <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?> 
 
@@ -405,8 +418,8 @@
 
                                                                       <label for="">Email</label>
 
-                                                                      <input type="email" name="email" id="email" value="<?php echo e(Request::old('email')); ?>" class="form-control" placeholder="" />
-
+                                                                      <input type="email" name="email" id="email" value="<?php echo e(Request::old('email', (isset($user)) ? $user->email : '')); ?>" class="form-control" placeholder="" />
+                                                                      <span class="text-danger" id="email_error"></span>
                                                                       <?php if($errors->has('email')): ?>
 
                                                                         <span class="text-danger"><?php echo e($errors->first('email')); ?></span>
@@ -419,8 +432,8 @@
 
                                                                       <label for="">Phone</label>
 
-                                                                      <input type="tel" name="phone" id="phone" value="<?php echo e(Request::old('phone')); ?>" class="form-control" placeholder=""/>
-
+                                                                      <input type="tel" name="phone" id="phone" value="<?php echo e(Request::old('phone', (isset($user)) ? $user->phone_number : '')); ?>" class="form-control" placeholder=""/>
+                                                                      <span class="text-danger" id="phone_error"></span>
                                                                       <?php if($errors->has('phone')): ?>
 
                                                                         <span class="text-danger"><?php echo e($errors->first('phone')); ?></span>
@@ -434,7 +447,7 @@
                                                                 
 
                                                                 
-
+                                                                <?php if(!isset($user)): ?>
                                                                 <div class="form-row">
 
                                                                     <div class="form-group col-md-6">
@@ -454,7 +467,7 @@
                                                                     
 
                                                                 </div>
-
+                                                                <?php endif; ?>
                                                               
 
                                                             </div>
@@ -513,8 +526,8 @@
 
                                                                   <label for="">Date Of Birth</label>
 
-                                                                  <input type="date" name="dob" value="<?php echo e(Request::old('dob')); ?>" class="form-control" >
-
+                                                                  <input type="date" name="dob" id="dob" value="<?php echo e(Request::old('dob', (isset($user)) ? $user->dob : '')); ?>" class="form-control" >
+                                                                  <span class="text-danger" id="dob_error"></span>
                                                                   <!--<i class="fa fa-calendar" aria-hidden="true"></i>-->
 
                                                                   <?php if($errors->has('dob')): ?>
@@ -559,8 +572,8 @@
 
                                                                   </li>
 
-                                                                </ul> <br>
-
+                                                                </ul> <br><br>
+                                                                <span class="text-danger" id="gender_error"></span>
                                                                 <?php if($errors->has('gender')): ?>
 
                                                                     <span class="text-danger"><?php echo e($errors->first('gender')); ?></span>
@@ -579,6 +592,7 @@
 
                                                                     <input type="text" name="street_address" value="<?php echo e(Request::old('street_address')); ?>" class="form-control" placeholder="">
 
+                                                                    <span class="text-danger" id="street_address_error"></span>
                                                                     <?php if($errors->has('street_address')): ?>
 
                                                                         <span class="text-danger"><?php echo e($errors->first('street_address')); ?></span>
@@ -1156,7 +1170,7 @@
 
                                                     <div class="form-group col-md-4 text-right">
 
-                                                       <button type="button" class="default-btn next-step">Next 
+                                                       <button type="button" data-step="2" class="default-btn step-2 nxt-step">Next 
 
                                                        <i class="fa fa-long-arrow-right" aria-hidden="true"></i>
 
@@ -1178,10 +1192,10 @@
 
                                                     <label for="exampleFormControlTextarea1">About Me</label>
 
-                                                    <textarea class="form-control" name="about_me" id="about_me" placeholder="Tell Us About Your Self " rows="3"><?php echo e(Request::old('about_me')); ?></textarea>
+                                                    <textarea class="form-control" name="about_me" id="about_me" placeholder="Tell Us About Yourself " rows="3"><?php echo e(Request::old('about_me')); ?></textarea>
 
                                                     <small>250 characters min  |  1000 character limit</small> <br>
-
+                                                    <span class="text-danger" id="about_me_error"></span>
                                                     <?php if($errors->has('about_me')): ?>
 
                                                         <span class="text-danger"><?php echo e($errors->first('about_me')); ?></span>
@@ -1202,6 +1216,7 @@
 
                                                     <small>250 characters min  |  1000 character limit</small> <br>
 
+                                                    <span class="text-danger" id="about_my_lessons_error"></span>
                                                     <?php if($errors->has('about_my_lessons')): ?>
 
                                                         <span class="text-danger"><?php echo e($errors->first('about_my_lessons')); ?></span>
@@ -1232,7 +1247,7 @@
 
                                                     <div class="form-group col-md-4 text-right">
 
-                                                       <button type="button" class="default-btn next-step">Next 
+                                                       <button type="button" data-step="3" class="default-btn nxt-step">Next 
 
                                                        <i class="fa fa-long-arrow-right" aria-hidden="true"></i>
 
@@ -1302,7 +1317,7 @@
 
                                                     <h3>Examples</h3>
 
-                                                    <p>A person named John Smith teaching English would title their vi</p>
+                                                    <p>A person named John Smith teaching English would title their video “Learn English with John Smith on tokatif.com”</p>
 
                                                  </div>
 
@@ -1416,7 +1431,7 @@
 
                                                     <div class="form-group col-md-4 text-right">
 
-                                                       <button type="button" class="default-btn next-step">Next 
+                                                       <button type="button" data-step="4" class="default-btn nxt-step">Next 
 
                                                        <i class="fa fa-long-arrow-right" aria-hidden="true"></i>
 
@@ -1514,7 +1529,7 @@
 
                                                     <div class="form-group col-md-6 text-right">
 
-                                                        <button type="submit" class="default-btn next-step"> Finish </button> 
+                                                        <button type="submit" data-step="5" class="default-btn nxt-step"> Finish </button> 
 
                                                     </div>
 
@@ -1552,16 +1567,5 @@
 
 </section>
 
-
-
-
-
 <?php echo $__env->make('include/footer', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
-
-
-
-
-
-
-
 <?php /**PATH /home/tokatifc/public_html/resources/views/user/teacher-registration.blade.php ENDPATH**/ ?>

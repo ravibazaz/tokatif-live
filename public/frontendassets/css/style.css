@@ -2236,6 +2236,9 @@ a.log-in:hover{ color:#590770;}
 
 }
 
+
+.Language-dollar .form-control:focus { background-color: transparent;}
+
 .Language-dollar .form-control {
 
 	border: 1px solid #fff;
@@ -15998,7 +16001,7 @@ ul.bdg-icon li:hover .tool-tips {
 
     left: 0;
 
-    padding: 5px 10px;
+    padding: 5px 5px;
 
     background-color: #8d05b3;
 
@@ -16006,9 +16009,13 @@ ul.bdg-icon li:hover .tool-tips {
 
     border-radius: 0;
 
-    top: -40px;	
+    top: -50px;	
 	min-width: 130px;
 
+}
+
+ul.bdg-icon li span.tool-tips {
+  font-size: 11px;
 }
 
 .file-icon-chat{ position:relative;} 
@@ -20746,7 +20753,24 @@ overflow-y: scroll;}
 	box-shadow: 1px 1px 5px 1px #0003;
 	}
 
+span#teacher_type_error {
+  text-align: center;
+  display: block;
+  font-size: 18px;
+  font-weight: 400;
+  color: #ff0000 !important;
+  padding:5px 0;
+}
 
+span.text-danger {
+  padding-top: 5px;
+  display: block;
+  font-weight: 600;
+  text-align: left;
+  font-style:italic;
+}
+
+.alert-danger{ text-align:center; font-style:italic; color:#d72637;}
 
 
 /*-==============================

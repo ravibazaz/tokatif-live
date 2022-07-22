@@ -335,6 +335,58 @@ class SettingsController extends Controller
     }
     
     
+    public function youtube_link_update(Request $request)
+    {
+        $data['user'] = $this->registrationModel->where('deleted_at', '=', null)->where(['id'=>session('id')])->first(); 
+        
+        if(count($request->all()) > 0) {   
+            $validator = Validator::make($request->all(), [
+                            'id' => 'required',
+                            'role' => 'required',
+                            'youtube_link' => 'required',
+                        ]);
+                        
+            if ($validator->fails()) { 
+                if($request->role=='1'){
+                    return redirect('student-dashboard');  
+                }else{
+                    return redirect('teacher-settings')->withErrors($validator)->withInput(); 
+                }
+                
+            }else{
+                
+                try{
+                    $this->registrationModel->where('id',$request->id)->update(['youtube_link' => $request->youtube_link]);
+                    
+                    if($request->role=='1'){
+                        return redirect('student-dashboard');  
+                    }else{
+                        return redirect('teacher-profile-edit')->with('success','Youtube link has been updated successfully.');
+                    }
+                    
+                }catch(Exception $e){
+                    
+                    if($request->role=='1'){
+                        return redirect('student-dashboard');  
+                    }else{
+                        return redirect('teacher-profile-edit')->with('error','Please try again!');
+                    }
+                }
+                
+                
+            }
+            
+        }else{
+            
+            if($data['user']->role=='1'){
+                return redirect('student-dashboard');  
+            }else{
+                return view('teacher.setting',$data);
+            }
+        }
+    }
+    
+    
     
     
     public function teacher_availability_settings_update(Request $request){

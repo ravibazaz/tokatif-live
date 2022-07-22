@@ -85,19 +85,81 @@ class BookingController extends Controller
         
         $data['user'] = $this->registrationModel->where('deleted_at', '=', null)->where('status', '=', '1')->where(['id'=>session('id')])->first(); 
         //echo $data['user']->role; die();
-        
+
         $teacher_id = $id;
         $data['lessons'] = $this->lessonsModel->where('deleted_at', '=', null)->where(['user_id'=>$teacher_id])->get(); 
-        
+
         $data['availability'] = $this->teacherAvailabilityModel->where('user_id', '=', $teacher_id)->get(); 
-        
-        $data['selected_teacher'] = $this->registrationModel->where('deleted_at', '=', null)->where('status', '=', '1')->where(['id'=>$teacher_id])->first(); 
+
+        $data['selected_teacher'] = $this->registrationModel->where('deleted_at', '=', null)->where('status', '=', '1')->where(['id'=>$teacher_id])->first();
+
+        $booking_data = Booking::select('booking_date','booking_time','booking_slots')->where('teacher_id',$teacher_id)->get();
+
+        $data['bookings'] = [];
+        foreach($booking_data as $booking)
+        {
+            $data['bookings'][] = [ 'booking_date' => $booking->booking_date, 'booking_time' => $booking->booking_time];
+            if($booking->booking_slots == 2)
+            {
+                $time = strtotime($booking->booking_time);
+                $second_slot_time = date("H:i", strtotime('+30 minutes', $time));
+                $data['bookings'][] = [ 'booking_date' => $booking->booking_date, 'booking_time' => $second_slot_time];
+            }
+
+            if($booking->booking_slots == 3)
+            {
+                $time = strtotime($booking->booking_time);
+                $second_slot_time = date("H:i", strtotime('+30 minutes', $time));
+                $third_slot_time = date("H:i", strtotime('+60 minutes', $time));
+
+                $data['bookings'][] = [ 'booking_date' => $booking->booking_date, 'booking_time' => $second_slot_time];
+                $data['bookings'][] = [ 'booking_date' => $booking->booking_date, 'booking_time' => $third_slot_time];
+            }
+        }
 
         if($data['user']->role=='2'){
             return redirect('teacher-dashboard');
         }else{
             return view('student.lesson-booking',$data);
         }
+    }
+
+
+    public function get_booking_dates(Request $request)
+    {
+        $booking_data = Booking::select('booking_date','booking_time','booking_slots')->where('teacher_id', $request->teacher_id)->get();
+
+        $bookings = [];
+        foreach($booking_data as $booking)
+        {
+            $bookings[] = [ 'booking_date' => $booking->booking_date, 'booking_time' => $booking->booking_time];
+            if($booking->booking_slots == 2)
+            {
+                $time = strtotime($booking->booking_time);
+                $second_slot_time = date("H:i", strtotime('+30 minutes', $time));
+                $bookings[] = [ 'booking_date' => $booking->booking_date, 'booking_time' => $second_slot_time];
+            }
+
+            if($booking->booking_slots == 3)
+            {
+                $time = strtotime($booking->booking_time);
+                $second_slot_time = date("H:i", strtotime('+30 minutes', $time));
+                $third_slot_time = date("H:i", strtotime('+60 minutes', $time));
+
+                $bookings[] = [ 'booking_date' => $booking->booking_date, 'booking_time' => $second_slot_time];
+                $bookings[] = [ 'booking_date' => $booking->booking_date, 'booking_time' => $third_slot_time];
+            }
+        }
+
+        // $data['booking_date_array'] = [];
+        // $data['booking_time_array'] = [];
+
+        // foreach ($bookings as $booking) {
+        //     $data['booking_date_array'][] = $booking['booking_date'];
+        //     $data['booking_time_array'][] = $booking['booking_time'];
+        // }
+
+        echo json_encode($bookings);
     }
     
     
@@ -183,6 +245,7 @@ class BookingController extends Controller
                             'lesson_package_id'=>$lesson_package_id, 
                             'booking_date'=>$booking_date, 
                             'booking_time'=>$booking_time,
+                            'booking_slots'=> (int)$request->booking_slots,
                             'booking_amount'=>$booking_amount,
                             'communication_tool'=>$communication_tool,
                             'communication_account_id'=>$communication_account_id,
@@ -304,27 +367,27 @@ class BookingController extends Controller
                         $lessonPrice = number_format($booking_amount,2).' USD';
                         $lessonUrl = url('/lesson-detail/'.$lessonData->id);
                         
-	                    $subject = 'New lesson request from '.$studentName; 
-	                    $message = 'A student has requested to schedule lessons with you. Please click the button below to accept or modify the lesson request.';
-	                    
-	                    $details = [
-	                        'to' => $teacherEmail,
-	                        'from' => env('MAIL_FROM_ADDRESS'),
-	                        'subject' => $subject,
-	                        'receiver' => ucfirst($teacherName),
-	                        'sender' => env('MAIL_FROM_NAME'), 
-	                        'msg'=>$message,
-	                        'student_name'=>$studentName,
-	                        'course_name'=>$lessonName,
-	                        'lesson_id'=>$lessonID,
-	                        'lesson_date'=>$lessonDateTime,
-	                        'lesson_price'=>$lessonPrice,
-	                        'lesson_url'=>$lessonUrl
-	                    ];
+                        $subject = 'New lesson request from '.$studentName; 
+                        $message = 'A student has requested to schedule lessons with you. Please click the button below to accept or modify the lesson request.';
+                        
+                        $details = [
+                            'to' => $teacherEmail,
+                            'from' => env('MAIL_FROM_ADDRESS'),
+                            'subject' => $subject,
+                            'receiver' => ucfirst($teacherName),
+                            'sender' => env('MAIL_FROM_NAME'), 
+                            'msg'=>$message,
+                            'student_name'=>$studentName,
+                            'course_name'=>$lessonName,
+                            'lesson_id'=>$lessonID,
+                            'lesson_date'=>$lessonDateTime,
+                            'lesson_price'=>$lessonPrice,
+                            'lesson_url'=>$lessonUrl
+                        ];
 
-	                    Mail::to($teacherEmail)->send(new LessonBooking($details));
-		                  
-		                    
+                        Mail::to($teacherEmail)->send(new LessonBooking($details));
+                          
+                            
                         // Update student wallet ========================================================================== 
                         if($user){
                             $updateData=[];
@@ -379,17 +442,29 @@ class BookingController extends Controller
         Session::forget('b_booking_amt');
         Session::forget('b_lesson_package_time');
         Session::forget('b_lesson_package');
+        Session::forget('b_booking_slot');
         
         $package = $this->lessonPackagesModel->where('deleted_at', '=', null)->where(['id'=>$lesson_package_id])->first();
         $lesson = $this->lessonsModel->where('deleted_at', '=', null)->where(['id'=>$package->lesson_id])->first(); 
         
+        $slot = 1;
+        if($package->time == "45 mins" || $package->time == "60 mins")
+        {
+            $slot = 2;
+        }
+        if($package->time == "75 mins" || $package->time == "90 mins")
+        {
+            $slot = 3;
+        }
+
         session([
                     'b_lesson_id'=>$package->lesson_id,
                     'b_lesson_name'=>$lesson->name,
                     'b_lesson_package_id'=>$lesson_package_id,
                     'b_lesson_package_time'=>$package->time,
                     'b_lesson_package'=>$package->package,
-                    'b_booking_amt'=>$package->total
+                    'b_booking_amt'=>$package->total,
+                    'b_booking_slot'=>$slot
                 ]);
         return $package->total; 
     }
@@ -405,18 +480,42 @@ class BookingController extends Controller
         
         
         
-        $html = '';
+        $html = '<table id="lesson_packages_table" width="100%" border="0" cellspacing="0" cellpadding="0" class="booking-steptable mt-5">';
+        $html .= '<tr>
+                <td><h3>30 Mins</h3></td>
+                <td><h3>45 Mins</h3></td>
+                <td><h3>60 Mins</h3></td>
+                <td><h3>75 Mins</h3></td>
+                <td><h3>90 Mins</h3></td>
+              </tr>';
         $html .= '<tr>';
         
         $thirtyMinsPackage = $this->lessonPackagesModel->where('deleted_at', '=', null)->where(['lesson_id'=>$lesson_id,'time'=>'30 mins'])->first(); 
         if($thirtyMinsPackage){
             if($thirtyMinsPackage->time=='30 mins'){
-                $html .= '<td align="center"><div class="slot-box">
-                                   <p>'.$thirtyMinsPackage->package.'</p>
+                $html .= '<td><table width="100%">';
+                if($thirtyMinsPackage->individual_lesson != null)
+                {
+                    $lesson_text = 'Single Lesson';
+                    $html .= '<tr><td align="center"><div class="slot-box lesson-box getLessonPackageType" data-lesson="'.$lesson_text.'" data-amount="'. number_format($thirtyMinsPackage->individual_lesson, 2) .'" data-time="30 mins" data-slot="1">
+                                   <p>'.$lesson_text.'</p>
+                                   <h4>USD '.number_format($thirtyMinsPackage->individual_lesson, 2).'</h4>
+                                    <input class="form-check-input" type="radio" name="lesson_package_id" id="" value="'.$thirtyMinsPackage->id.'" >
+                                 </div>
+                                </td></tr>';
+                }
+
+                if($thirtyMinsPackage->total != null)
+                {
+                    $lesson_text = $thirtyMinsPackage->package;
+                    $html .= '<tr><td align="center"><div class="slot-box lesson-box getLessonPackageType" data-lesson="'.$lesson_text.'" data-amount="'. number_format($thirtyMinsPackage->total, 2) .'" data-time="30 mins" data-slot="1">
+                                   <p>'.$lesson_text.'</p>
                                    <h4>USD '.number_format($thirtyMinsPackage->total, 2).'</h4>
                                     <input class="form-check-input" type="radio" name="lesson_package_id" id="" value="'.$thirtyMinsPackage->id.'" >
                                  </div>
-                                </td>';
+                                </td></tr>';
+                }
+                $html .= '</table></td>';
             }
         }
         
@@ -424,12 +523,29 @@ class BookingController extends Controller
         $fourtyfiveMinsPackage = $this->lessonPackagesModel->where('deleted_at', '=', null)->where(['lesson_id'=>$lesson_id,'time'=>'45 mins'])->first(); 
         if($fourtyfiveMinsPackage){
             if($fourtyfiveMinsPackage->time=='45 mins'){
-                $html .= '<td align="center"><div class="slot-box">
-                                   <p>'.$fourtyfiveMinsPackage->package.'</p>
+                $html .= '<td><table width="100%">';
+                if($fourtyfiveMinsPackage->individual_lesson != null)
+                {
+                    $lesson_text = 'Single Lesson';
+                    $html .= '<tr><td align="center"><div class="slot-box lesson-box getLessonPackageType" data-lesson="'.$lesson_text.'" data-amount="'. number_format($fourtyfiveMinsPackage->individual_lesson, 2) .'" data-time="45 mins" data-slot="2">
+                                   <p>'.$lesson_text.'</p>
+                                   <h4>USD '.number_format($fourtyfiveMinsPackage->individual_lesson, 2).'</h4>
+                                    <input class="form-check-input" type="radio" name="lesson_package_id" id="" value="'.$fourtyfiveMinsPackage->id.'" >
+                                 </div>
+                                </td></tr>';
+                }
+
+                if($fourtyfiveMinsPackage->total != null)
+                {
+                    $lesson_text = $fourtyfiveMinsPackage->package;
+                    $html .= '<tr><td align="center"><div class="slot-box lesson-box getLessonPackageType" data-lesson="'.$lesson_text.'" data-amount="'. number_format($fourtyfiveMinsPackage->total, 2) .'" data-time="45 mins" data-slot="2">
+                                   <p>'.$lesson_text.'</p>
                                    <h4>USD '.number_format($fourtyfiveMinsPackage->total, 2).'</h4>
                                     <input class="form-check-input" type="radio" name="lesson_package_id" id="" value="'.$fourtyfiveMinsPackage->id.'" >
                                  </div>
-                                </td>';
+                                </td></tr>';
+                }
+                $html .= '</table></td>';
             }
         }
         
@@ -437,12 +553,29 @@ class BookingController extends Controller
         $sixtyMinsPackage = $this->lessonPackagesModel->where('deleted_at', '=', null)->where(['lesson_id'=>$lesson_id,'time'=>'60 mins'])->first(); 
         if($sixtyMinsPackage){
             if($sixtyMinsPackage->time=='60 mins'){
-                $html .= '<td align="center"><div class="slot-box">
-                                   <p>'.$sixtyMinsPackage->package.'</p>
+                $html .= '<td><table width="100%">';
+                if($sixtyMinsPackage->individual_lesson != null)
+                {
+                    $lesson_text = 'Single Lesson';
+                    $html .= '<tr><td align="center"><div class="slot-box lesson-box getLessonPackageType" data-lesson="'.$lesson_text.'" data-amount="'. number_format($sixtyMinsPackage->individual_lesson, 2) .'" data-time="60 mins" data-slot="2">
+                                   <p>'.$lesson_text.'</p>
+                                   <h4>USD '.number_format($sixtyMinsPackage->individual_lesson, 2).'</h4>
+                                    <input class="form-check-input" type="radio" name="lesson_package_id" id="" value="'.$sixtyMinsPackage->id.'" >
+                                 </div>
+                                </td></tr>';
+                }
+
+                if($sixtyMinsPackage->total != null)
+                {
+                    $lesson_text = $sixtyMinsPackage->package;
+                    $html .= '<tr><td align="center"><div class="slot-box lesson-box getLessonPackageType" data-lesson="'.$lesson_text.'" data-amount="'. number_format($sixtyMinsPackage->total, 2) .'" data-time="60 mins" data-slot="2">
+                                   <p>'.$lesson_text.'</p>
                                    <h4>USD '.number_format($sixtyMinsPackage->total, 2).'</h4>
                                     <input class="form-check-input" type="radio" name="lesson_package_id" id="" value="'.$sixtyMinsPackage->id.'" >
                                  </div>
-                                </td>';
+                                </td></tr>';
+                }
+                $html .= '</table></td>';
             }
         }
         
@@ -450,12 +583,29 @@ class BookingController extends Controller
         $seventyfiveMinsPackage = $this->lessonPackagesModel->where('deleted_at', '=', null)->where(['lesson_id'=>$lesson_id,'time'=>'75 mins'])->first(); 
         if($seventyfiveMinsPackage){
             if($seventyfiveMinsPackage->time=='75 mins'){
-                $html .= '<td align="center"><div class="slot-box">
-                                   <p>'.$seventyfiveMinsPackage->package.'</p>
+                $html .= '<td><table width="100%">';
+                if($seventyfiveMinsPackage->individual_lesson != null)
+                {
+                    $lesson_text = 'Single Lesson';
+                    $html .= '<tr><td align="center"><div class="slot-box lesson-box getLessonPackageType" data-lesson="'.$lesson_text.'" data-amount="'. number_format($seventyfiveMinsPackage->individual_lesson, 2) .'" data-time="75 mins" data-slot="3">
+                                   <p>'.$lesson_text.'</p>
+                                   <h4>USD '.number_format($seventyfiveMinsPackage->individual_lesson, 2).'</h4>
+                                    <input class="form-check-input" type="radio" name="lesson_package_id" id="" value="'.$seventyfiveMinsPackage->id.'" >
+                                 </div>
+                                </td></tr>';
+                }
+
+                if($fourtyfiveMinsPackage->total != null)
+                {
+                    $lesson_text = $seventyfiveMinsPackage->package;
+                    $html .= '<tr><td align="center"><div class="slot-box lesson-box getLessonPackageType" data-lesson="'.$lesson_text.'" data-amount="'. number_format($seventyfiveMinsPackage->total, 2) .'" data-time="75 mins" data-slot="3">
+                                   <p>'.$lesson_text.'</p>
                                    <h4>USD '.number_format($seventyfiveMinsPackage->total, 2).'</h4>
                                     <input class="form-check-input" type="radio" name="lesson_package_id" id="" value="'.$seventyfiveMinsPackage->id.'" >
                                  </div>
-                                </td>';
+                                </td></tr>';
+                }
+                $html .= '</table></td>';
             }
         }
         
@@ -463,16 +613,33 @@ class BookingController extends Controller
         $ninetyMinsPackage = $this->lessonPackagesModel->where('deleted_at', '=', null)->where(['lesson_id'=>$lesson_id,'time'=>'90 mins'])->first(); 
         if($ninetyMinsPackage){
             if($ninetyMinsPackage->time=='90 mins'){
-                $html .= '<td align="center"><div class="slot-box">
-                                   <p>'.$ninetyMinsPackage->package.'</p>
+                $html .= '<td><table width="100%">';
+                if($ninetyMinsPackage->individual_lesson != null)
+                {
+                    $lesson_text = 'Single Lesson';
+                    $html .= '<tr><td align="center"><div class="slot-box lesson-box getLessonPackageType" data-lesson="'.$lesson_text.'" data-amount="'. number_format($ninetyMinsPackage->individual_lesson, 2) .'" data-time="90 mins" data-slot="3">
+                                   <p>'.$lesson_text.'</p>
+                                   <h4>USD '.number_format($ninetyMinsPackage->individual_lesson, 2).'</h4>
+                                    <input class="form-check-input" type="radio" name="lesson_package_id" id="" value="'.$ninetyMinsPackage->id.'"  >
+                                 </div>
+                                </td></tr>';
+                }
+
+                if($ninetyMinsPackage->total != null)
+                {
+                    $lesson_text = $ninetyMinsPackage->package;
+                    $html .= '<tr><td align="center"><div class="slot-box lesson-box getLessonPackageType" data-lesson="'.$lesson_text.'" data-amount="'. number_format($ninetyMinsPackage->total, 2) .'" data-time="90 mins" data-slot="3">
+                                   <p>'.$lesson_text.'</p>
                                    <h4>USD '.number_format($ninetyMinsPackage->total, 2).'</h4>
                                     <input class="form-check-input" type="radio" name="lesson_package_id" id="" value="'.$ninetyMinsPackage->id.'"  >
                                  </div>
-                                </td>';
+                                </td></tr>';
+                }
+                $html .= '</table></td>';
             }
         }
         
-        $html .= '</tr>';
+        $html .= '</tr></table>';
 
         
         echo $html;

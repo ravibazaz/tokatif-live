@@ -8,8 +8,7 @@
 
 
 
-
-<section class="step">
+<section class="step lesson-booking"> 
    <div class="container-fluid">
             <div class="row">
                   
@@ -85,6 +84,8 @@
                                         <input type="hidden" name="booking_date" id="booking_date" value="" />
                                         <input type="hidden" name="booking_time" id="booking_time" value="" /> 
                                         <input type="hidden" name="booking_amount" id="booking_amount" value="" /> 
+                                        <input type="hidden" id="slot" value="<?php echo e(session('b_booking_slot') ? session('b_booking_slot') : ''); ?>" />
+
                                         <div class="tab-content" id="main_form">
                                             <div class="tab-pane <?php if (isset($_GET['year']) && isset($_GET['week'])) {echo '';}else{echo 'active';}?>" role="tabpanel" id="lesson-step1">
                                                 <div class="row mt-5"> 
@@ -93,17 +94,25 @@
                                                     <div class="col-lg-9 col-12">
                                                        <?php $__currentLoopData = $lessons; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $v): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                                         <?php
-                                                            $packageData = DB::table('lesson_packages')->where('lesson_id', $v->id)->sum('total');
+                                                            $packageData = DB::table('lesson_packages')->where('lesson_id', $v->id)->min('total');
+
+                                                            $min_individual_lesson = DB::table('lesson_packages')->where('lesson_id', $v->id)->min('individual_lesson');
+
+                                                            $min_amount = $min_individual_lesson;
+                                                            if($min_individual_lesson > $packageData)
+                                                            {
+                                                              $min_amount = $packageData;
+                                                            }
                                                         ?>
-                                                      
+           
                                                       <?php if($packageData): ?>
-                                                      <div class="lesson-box-select " data-lessonId="<?php echo e($v->id); ?>" style="cursor: pointer;">
+                                                      <div class="lesson-box-select " data-lesson_name="<?php echo e($v->name); ?>" data-lessonId="<?php echo e($v->id); ?>" style="cursor: pointer;">
                                                        <div class="row align-items-center"> 
                                                         <div class="col-lg-6 col-12"><?php echo e($v->name); ?></div>
-                                                        <div class="col-lg-3 col-12">5 Lessons taught</div>
+                                                        <div class="col-lg-3 col-12"><?php echo e($v->lesson_option); ?></div> 
                                                         <div class="col-lg-3 col-12"> 
                                                          <div class="form-check">
-                                                          USD <?php echo e(number_format($packageData,2)); ?> 
+                                                          USD <?php echo e(number_format($min_amount,2)); ?> 
                                                           <input class="form-check-input" type="radio" name="lesson_id" id="lesson_id" value="<?php echo e($v->id); ?>" >
                                                         </div></div>
                                                         </div>
@@ -230,19 +239,19 @@
                                                     
                                                     <div class="lesson-type-text">
                                                     <h5>Lesson Type</h5>
-                                                    <p><?php echo e(session('b_lesson_name') ? session('b_lesson_name') : ''); ?></p>
+                                                    <p class="lesson_type"><?php echo e(session('b_lesson_name') ? session('b_lesson_name') : ''); ?></p>
                                                     </div>
                                                     
                                                     <div class="lesson-type-text">
                                                      <div class="row align-items-center">
                                                       <div class="col-lg-7">
                                                        <h5>Lesson Package</h5>
-                                                       <p><?php echo e(session('b_lesson_package') ? session('b_lesson_package') : ''); ?> &nbsp;&nbsp;&nbsp;
+                                                       <p class="package-text"><?php echo e(session('b_lesson_package') ? session('b_lesson_package') : ''); ?> &nbsp;&nbsp;&nbsp;
                                                        <?php echo e(session('b_lesson_package_time') ? session('b_lesson_package_time') : ''); ?>
 
                                                        </p>
                                                       </div>
-                                                      <div class="col-lg-5"> <h3>USD <?php echo e(session('b_booking_amt') ? number_format(session('b_booking_amt'),2) : '0.00'); ?></h3></div>
+                                                      <div class="col-lg-5"> <h3 class="amount-text">USD <?php echo e(session('b_booking_amt') ? number_format(session('b_booking_amt'),2) : '0.00'); ?></h3></div>
                                                     </div>
                                                     </div>
                                                     
@@ -263,7 +272,7 @@
                                                     <div class="form-group col-md-6 text-right">
                                                        <button type="button" class="getLessonPackageType default-btn next-step">Next 
                                                        <i class="fa fa-long-arrow-right" aria-hidden="true"></i>
-            											</button>
+                                  </button>
                                                     </div>
                                                   </div>
                                             </div>
@@ -315,10 +324,15 @@
                                                                     $d = date('Y-').'01-01';
                                                                     $selectedMonth = date("M", strtotime($d." ".$currentWeek." weeks"));
                                                                     
-                                                                    echo $selectedMonth;
+                                                                    $selectedMonthNo = date("m", strtotime($_GET['year'].'W'.str_pad($_GET['week'], 2, 0, STR_PAD_LEFT)));
+                                                                    $jd=gregoriantojd($selectedMonthNo,10,2019);
+                                                                    $selectedMonthName = jdmonthname($jd,0); 
+                                                                    
+                                                                    echo $selectedMonthName;
                                                                 }else{
                                                                     echo $html_title; 
                                                                 }
+                                                                 
                                                                 ?>   
                                                             <a href="?week=<?php echo e($nextWeek); ?>&year=<?php echo e($year); ?>" class="">&gt;</a>
                                                         </h4>
@@ -362,8 +376,28 @@
                                                         
                                                         
                                                         <?php
-                                                            $class_0 = ''; 
-                                                            if($dateArray[0] > date("Y-m-d")){
+                                                            $class_0 = '';
+                                                            $booking_window_date = "";
+
+                                                            if($selected_teacher->booking_window == "2weeks")
+                                                            {
+                                                                $booking_window_date = date('Y-m-d', strtotime(date('Y-m-d'). ' + 14 days'));
+                                                            }
+                                                            else if($selected_teacher->booking_window == "3weeks")
+                                                            {
+                                                                $booking_window_date = date('Y-m-d', strtotime(date('Y-m-d'). ' + 21 days'));
+                                                            }
+                                                            else if($selected_teacher->booking_window == "1month")
+                                                            {
+                                                                $booking_window_date = date('Y-m-d', strtotime(date('Y-m-d'). ' +1 months'));
+                                                            }
+                                                            else if($selected_teacher->booking_window == "2months")
+                                                            {
+                                                                $booking_window_date = date('Y-m-d', strtotime(date('Y-m-d'). ' +2 months'));
+                                                            }
+
+
+                                                            if($dateArray[0] > date("Y-m-d") && $booking_window_date >= $dateArray[0]){
                                                                 $OneDayExistCheck_0 = DB::table('teacher_availability')->where('user_id', Request::segment(2))
                                                                                     ->where('date', '=', $dateArray[0])
                                                                                     ->where('type', '=', '1')
@@ -382,7 +416,17 @@
                                                                         $toTime = DateTime::createFromFormat('H:i', $v->to_time);
                                                                         
                                                                         if($tbl_time >= $fromTime && $tbl_time <= $toTime){
-                                                                            $class_0 .= 'ping-bg';
+                                                                            $class_0 .= ' ping-bg';
+                                                                        }
+
+                                                                        if(count($bookings))
+                                                                        {
+                                                                            foreach($bookings as $booking){
+                                                                                if($booking['booking_date'] == $dateArray[0] && $booking['booking_time'] == date('H:i',$i))
+                                                                                {
+                                                                                    $class_0 .= '';
+                                                                                }
+                                                                            }
                                                                         }
                                                                     }
                                                                 }elseif(count($weeklyExistCheck_0)>0){
@@ -390,16 +434,26 @@
                                                                     foreach($weeklyExistCheck_0 as $v){
                                                                         $fromTime = DateTime::createFromFormat('H:i', $v->from_time);
                                                                         $toTime = DateTime::createFromFormat('H:i', $v->to_time);
-                                                                        
+
                                                                         if($tbl_time >= $fromTime && $tbl_time <= $toTime){
-                                                                            $class_0 .= 'ping-bg';
+                                                                            $class_0 .= ' ping-bg';
+                                                                        }
+
+                                                                        if(count($bookings))
+                                                                        {
+                                                                            foreach($bookings as $booking){
+                                                                                if($booking['booking_date'] == $dateArray[0] && $booking['booking_time'] == date('H:i',$i))
+                                                                                {
+                                                                                    $class_0 .= '';
+                                                                                }
+                                                                            }
                                                                         }
                                                                     }
                                                                 }
                                                             }
                                                                   
                                                         ?>
-                                                        <td class="<?php echo e($class_0); ?> tbl-td" data-date="<?php echo e($dateArray[0]); ?>" data-time="<?php echo e(date('H:i',$i)); ?>">&nbsp;  </td> 
+                                                        <td class="<?php echo e($class_0); ?> tbl-td slot_<?php echo e($dateArray[0] . date('H-i',$i)); ?>" data-date="<?php echo e($dateArray[0]); ?>" data-time="<?php echo e(date('H:i',$i)); ?>">&nbsp;  </td> 
                                                         
                                                         
                                                         
@@ -407,7 +461,7 @@
                                                         
                                                         <?php
                                                             $class_1 = ''; 
-                                                            if($dateArray[1] > date("Y-m-d")){
+                                                            if($dateArray[1] > date("Y-m-d") && $booking_window_date >= $dateArray[1]){
                                                                 $OneDayExistCheck_1 = DB::table('teacher_availability')->where('user_id', Request::segment(2))
                                                                                     ->where('date', '=', $dateArray[1])
                                                                                     ->where('type', '=', '1')
@@ -425,7 +479,17 @@
                                                                         $toTime = DateTime::createFromFormat('H:i', $v->to_time);
                                                                         
                                                                         if($tbl_time >= $fromTime && $tbl_time <= $toTime){
-                                                                            $class_1 .= 'ping-bg';
+                                                                            $class_1 .= ' ping-bg';
+                                                                        }
+
+                                                                        if(count($bookings))
+                                                                        {
+                                                                            foreach($bookings as $booking){
+                                                                                if($booking['booking_date'] == $dateArray[1] && $booking['booking_time'] == date('H:i',$i))
+                                                                                {
+                                                                                    $class_1 = '';
+                                                                                }
+                                                                            }
                                                                         }
                                                                     }
                                                                 }elseif(count($weeklyExistCheck_1)>0){
@@ -435,7 +499,17 @@
                                                                         $toTime_1 = DateTime::createFromFormat('H:i', $v->to_time);
                                                                         
                                                                         if($tbl_time >= $fromTime_1 && $tbl_time <= $toTime_1){
-                                                                            $class_1 .= 'ping-bg';
+                                                                            $class_1 .= ' ping-bg';
+                                                                        }
+
+                                                                        if(count($bookings))
+                                                                        {
+                                                                            foreach($bookings as $booking){
+                                                                                if($booking['booking_date'] == $dateArray[1] && $booking['booking_time'] == date('H:i',$i))
+                                                                                {
+                                                                                    $class_1 = '';
+                                                                                }
+                                                                            }
                                                                         }
                                                                     }
                                                                 }
@@ -443,7 +517,7 @@
                                                                   
                                                         ?>
                                                         
-                                                        <td class="<?php echo e($class_1); ?> tbl-td" data-date="<?php echo e($dateArray[1]); ?>" data-time="<?php echo e(date('H:i',$i)); ?>">&nbsp;  </td>
+                                                        <td class="<?php echo e($class_1); ?> tbl-td slot_<?php echo e($dateArray[1] . date('H-i',$i)); ?>" data-date="<?php echo e($dateArray[1]); ?>" data-time="<?php echo e(date('H:i',$i)); ?>">&nbsp;  </td>
                                                         
                                                         
                                                         
@@ -452,7 +526,7 @@
                                                         
                                                         <?php
                                                             $class_2 = ''; 
-                                                            if($dateArray[2] > date("Y-m-d")){
+                                                            if($dateArray[2] > date("Y-m-d") && $booking_window_date >= $dateArray[2]){
                                                                 $OneDayExistCheck_2 = DB::table('teacher_availability')->where('user_id', Request::segment(2))
                                                                                     ->where('date', '=', $dateArray[2])
                                                                                     ->where('type', '=', '1')
@@ -463,15 +537,26 @@
                                                                                     ->where('type', '=', '2')
                                                                                     ->get();
                                                                                     
-                                                                $tbl_time = DateTime::createFromFormat('H:i', date('H:i',$i));  
-                                                                
+                                                                $tbl_time = DateTime::createFromFormat('H:i', date('H:i',$i));
+
+
                                                                 if(count($OneDayExistCheck_2)>0){
                                                                     foreach($OneDayExistCheck_2 as $v){
                                                                         $fromTime = DateTime::createFromFormat('H:i', $v->from_time);
                                                                         $toTime = DateTime::createFromFormat('H:i', $v->to_time);
                                                                         
                                                                         if($tbl_time >= $fromTime && $tbl_time <= $toTime){
-                                                                            $class_2 .= 'ping-bg';
+                                                                            $class_2 .= ' ping-bg';
+                                                                        }
+
+                                                                        if(count($bookings))
+                                                                        {
+                                                                            foreach($bookings as $booking){
+                                                                                if($booking['booking_date'] == $dateArray[2] && $booking['booking_time'] == date('H:i',$i))
+                                                                                {
+                                                                                    $class_2 = '';
+                                                                                }
+                                                                            }
                                                                         }
                                                                     }
                                                                 }elseif(count($weeklyExistCheck_2)>0){
@@ -481,14 +566,24 @@
                                                                         $toTime = DateTime::createFromFormat('H:i', $v->to_time);
                                                                         
                                                                         if($tbl_time >= $fromTime && $tbl_time <= $toTime){
-                                                                            $class_2 .= 'ping-bg';
+                                                                            $class_2 .= ' ping-bg';
+                                                                        }
+
+                                                                        if(count($bookings))
+                                                                        {
+                                                                            foreach($bookings as $booking){
+                                                                                if($booking['booking_date'] == $dateArray[2] && $booking['booking_time'] == date('H:i',$i))
+                                                                                {
+                                                                                    $class_2 = '';
+                                                                                }
+                                                                            }
                                                                         }
                                                                     }
                                                                 }
                                                             }
                                                                   
                                                         ?>
-                                                        <td class="<?php echo e($class_2); ?> tbl-td" data-date="<?php echo e($dateArray[2]); ?>" data-time="<?php echo e(date('H:i',$i)); ?>">&nbsp;</td>
+                                                        <td class="<?php echo e($class_2); ?> tbl-td slot_<?php echo e($dateArray[2] . date('H-i',$i)); ?>" data-date="<?php echo e($dateArray[2]); ?>" data-time="<?php echo e(date('H:i',$i)); ?>">&nbsp;</td>
                                                         
                                                         
                                                         
@@ -498,7 +593,7 @@
                                                         
                                                         <?php
                                                             $class_3 = ''; 
-                                                            if($dateArray[3] > date("Y-m-d")){
+                                                            if($dateArray[3] > date("Y-m-d") && $booking_window_date >= $dateArray[3]){
                                                                 $OneDayExistCheck_3 = DB::table('teacher_availability')->where('user_id', Request::segment(2))
                                                                                     ->where('date', '=', $dateArray[3])
                                                                                     ->where('type', '=', '1')
@@ -516,7 +611,17 @@
                                                                         $toTime = DateTime::createFromFormat('H:i', $v->to_time);
                                                                         
                                                                         if($tbl_time >= $fromTime && $tbl_time <= $toTime){
-                                                                            $class_3 .= 'ping-bg';
+                                                                            $class_3 .= ' ping-bg';
+                                                                        }
+
+                                                                        if(count($bookings))
+                                                                        {
+                                                                            foreach($bookings as $booking){
+                                                                                if($booking['booking_date'] == $dateArray[3] && $booking['booking_time'] == date('H:i',$i))
+                                                                                {
+                                                                                    $class_3 = '';
+                                                                                }
+                                                                            }
                                                                         }
                                                                     }
                                                                 }elseif(count($weeklyExistCheck_3)>0){
@@ -526,14 +631,24 @@
                                                                         $toTime = DateTime::createFromFormat('H:i', $v->to_time);
                                                                         
                                                                         if($tbl_time >= $fromTime && $tbl_time <= $toTime){
-                                                                            $class_3 .= 'ping-bg';
+                                                                            $class_3 .= ' ping-bg';
+                                                                        }
+
+                                                                        if(count($bookings))
+                                                                        {
+                                                                            foreach($bookings as $booking){
+                                                                                if($booking['booking_date'] == $dateArray[3] && $booking['booking_time'] == date('H:i',$i))
+                                                                                {
+                                                                                    $class_3 = '';
+                                                                                }
+                                                                            }
                                                                         }
                                                                     }
                                                                 }
                                                             }
                                                                   
                                                         ?>
-                                                        <td class="<?php echo e($class_3); ?> tbl-td" data-date="<?php echo e($dateArray[3]); ?>" data-time="<?php echo e(date('H:i',$i)); ?>">&nbsp;  </td>
+                                                        <td class="<?php echo e($class_3); ?> tbl-td slot_<?php echo e($dateArray[3] . date('H-i',$i)); ?>" data-date="<?php echo e($dateArray[3]); ?>" data-time="<?php echo e(date('H:i',$i)); ?>">&nbsp;  </td>
                                                         
                                                         
                                                         
@@ -542,7 +657,7 @@
                                                         
                                                         <?php
                                                             $class_4 = ''; 
-                                                            if($dateArray[4] > date("Y-m-d")){
+                                                            if($dateArray[4] > date("Y-m-d") && $booking_window_date >= $dateArray[4]){
                                                                 $OneDayExistCheck_4 = DB::table('teacher_availability')->where('user_id', Request::segment(2))
                                                                                     ->where('date', '=', $dateArray[4])
                                                                                     ->where('type', '=', '1')
@@ -560,7 +675,17 @@
                                                                         $toTime = DateTime::createFromFormat('H:i', $v->to_time);
                                                                         
                                                                         if($tbl_time >= $fromTime && $tbl_time <= $toTime){
-                                                                            $class_4 .= 'ping-bg';
+                                                                            $class_4 .= ' ping-bg';
+                                                                        }
+
+                                                                        if(count($bookings))
+                                                                        {
+                                                                            foreach($bookings as $booking){
+                                                                                if($booking['booking_date'] == $dateArray[4] && $booking['booking_time'] == date('H:i',$i))
+                                                                                {
+                                                                                    $class_4 = '';
+                                                                                }
+                                                                            }
                                                                         }
                                                                     }
                                                                 }elseif(count($weeklyExistCheck_4)>0){
@@ -570,14 +695,24 @@
                                                                         $toTime = DateTime::createFromFormat('H:i', $v->to_time);
                                                                         
                                                                         if($tbl_time >= $fromTime && $tbl_time <= $toTime){
-                                                                            $class_4 .= 'ping-bg';
+                                                                            $class_4 .= ' ping-bg';
+                                                                        }
+
+                                                                        if(count($bookings))
+                                                                        {
+                                                                            foreach($bookings as $booking){
+                                                                                if($booking['booking_date'] == $dateArray[4] && $booking['booking_time'] == date('H:i',$i))
+                                                                                {
+                                                                                    $class_4 = '';
+                                                                                }
+                                                                            }
                                                                         }
                                                                     }
                                                                 }
                                                             }
                                                                   
                                                         ?>
-                                                        <td class="<?php echo e($class_4); ?> tbl-td" data-date="<?php echo e($dateArray[4]); ?>" data-time="<?php echo e(date('H:i',$i)); ?>">&nbsp;  </td>
+                                                        <td class="<?php echo e($class_4); ?> tbl-td slot_<?php echo e($dateArray[4] . date('H-i',$i)); ?>" data-date="<?php echo e($dateArray[4]); ?>" data-time="<?php echo e(date('H:i',$i)); ?>">&nbsp;  </td>
                                                         
                                                         
                                                         
@@ -587,7 +722,7 @@
                                                         
                                                         <?php
                                                             $class_5 = ''; 
-                                                            if($dateArray[5] > date("Y-m-d")){
+                                                            if($dateArray[5] > date("Y-m-d") && $booking_window_date >= $dateArray[5]){
                                                                 $OneDayExistCheck_5 = DB::table('teacher_availability')->where('user_id', Request::segment(2))
                                                                                     ->where('date', '=', $dateArray[5])
                                                                                     ->where('type', '=', '1')
@@ -605,7 +740,17 @@
                                                                         $toTime = DateTime::createFromFormat('H:i', $v->to_time);
                                                                         
                                                                         if($tbl_time >= $fromTime && $tbl_time <= $toTime){
-                                                                            $class_5 .= 'ping-bg';
+                                                                            $class_5 .= ' ping-bg';
+                                                                        }
+
+                                                                        if(count($bookings))
+                                                                        {
+                                                                            foreach($bookings as $booking){
+                                                                                if($booking['booking_date'] == $dateArray[5] && $booking['booking_time'] == date('H:i',$i))
+                                                                                {
+                                                                                    $class_5 = '';
+                                                                                }
+                                                                            }
                                                                         }
                                                                     }
                                                                 }elseif(count($weeklyExistCheck_5)>0){
@@ -615,14 +760,24 @@
                                                                         $toTime = DateTime::createFromFormat('H:i', $v->to_time);
                                                                         
                                                                         if($tbl_time >= $fromTime && $tbl_time <= $toTime){
-                                                                            $class_5 .= 'ping-bg';
+                                                                            $class_5 .= ' ping-bg';
+                                                                        }
+
+                                                                        if(count($bookings))
+                                                                        {
+                                                                            foreach($bookings as $booking){
+                                                                                if($booking['booking_date'] == $dateArray[5] && $booking['booking_time'] == date('H:i',$i))
+                                                                                {
+                                                                                    $class_5 = '';
+                                                                                }
+                                                                            }
                                                                         }
                                                                     }
                                                                 }
                                                             }
                                                                   
                                                         ?>
-                                                        <td class="<?php echo e($class_5); ?> tbl-td" data-date="<?php echo e($dateArray[5]); ?>" data-time="<?php echo e(date('H:i',$i)); ?>">&nbsp;  </td>
+                                                        <td class="<?php echo e($class_5); ?> tbl-td slot_<?php echo e($dateArray[5] . date('H-i',$i)); ?>" data-date="<?php echo e($dateArray[5]); ?>" data-time="<?php echo e(date('H:i',$i)); ?>">&nbsp;  </td>
                                                         
                                                         
                                                         
@@ -631,7 +786,7 @@
                                                         
                                                         <?php
                                                             $class_6 = ''; 
-                                                            if($dateArray[6] > date("Y-m-d")){
+                                                            if($dateArray[6] > date("Y-m-d") && $booking_window_date >= $dateArray[6]){
                                                                 $OneDayExistCheck_6 = DB::table('teacher_availability')->where('user_id', Request::segment(2))
                                                                                     ->where('date', '=', $dateArray[6])
                                                                                     ->where('type', '=', '1')
@@ -649,7 +804,17 @@
                                                                         $toTime = DateTime::createFromFormat('H:i', $v->to_time);
                                                                         
                                                                         if($tbl_time >= $fromTime && $tbl_time <= $toTime){
-                                                                            $class_6 .= 'ping-bg';
+                                                                            $class_6 .= ' ping-bg';
+                                                                        }
+
+                                                                        if(count($bookings))
+                                                                        {
+                                                                            foreach($bookings as $booking){
+                                                                                if($booking['booking_date'] == $dateArray[6] && $booking['booking_time'] == date('H:i',$i))
+                                                                                {
+                                                                                    $class_6 = '';
+                                                                                }
+                                                                            }
                                                                         }
                                                                     }
                                                                 }elseif(count($weeklyExistCheck_6)>0){
@@ -659,14 +824,24 @@
                                                                         $toTime = DateTime::createFromFormat('H:i', $v->to_time);
                                                                         
                                                                         if($tbl_time >= $fromTime && $tbl_time <= $toTime){
-                                                                            $class_6 .= 'ping-bg';
+                                                                            $class_6 .= ' ping-bg';
+                                                                        }
+
+                                                                        if(count($bookings))
+                                                                        {
+                                                                            foreach($bookings as $booking){
+                                                                                if($booking['booking_date'] == $dateArray[6] && $booking['booking_time'] == date('H:i',$i))
+                                                                                {
+                                                                                    $class_6 = '';
+                                                                                }
+                                                                            }
                                                                         }
                                                                     }
                                                                 }
                                                             }
                                                                   
                                                         ?>
-                                                        <td class="<?php echo e($class_6); ?> tbl-td" data-date="<?php echo e($dateArray[6]); ?>" data-time="<?php echo e(date('H:i',$i)); ?>">&nbsp;  </td>
+                                                        <td class="<?php echo e($class_6); ?> tbl-td slot_<?php echo e($dateArray[6] . date('H-i',$i)); ?>" data-date="<?php echo e($dateArray[6]); ?>" data-time="<?php echo e(date('H:i',$i)); ?>">&nbsp;  </td>
                                                     </tr>
                                                     <?php endfor; ?>
                                                     
@@ -702,19 +877,19 @@
                                                     
                                                     <div class="lesson-type-text">
                                                     <h5>Lesson Type</h5>
-                                                    <p><?php echo e(session('b_lesson_name') ? session('b_lesson_name') : ''); ?></p>
+                                                    <p class="lesson_type"><?php echo e(session('b_lesson_name') ? session('b_lesson_name') : ''); ?></p>
                                                     </div>
                                                     
                                                     <div class="lesson-type-text">
                                                      <div class="row">
                                                       <div class="col-lg-7">
                                                        <h5>Lesson Package</h5>
-                                                       <p><?php echo e(session('b_lesson_package') ? session('b_lesson_package') : ''); ?> &nbsp;&nbsp;&nbsp;
+                                                       <p class="package-text"><?php echo e(session('b_lesson_package') ? session('b_lesson_package') : ''); ?> &nbsp;&nbsp;&nbsp;
                                                        <?php echo e(session('b_lesson_package_time') ? session('b_lesson_package_time') : ''); ?>
 
                                                        </p>
                                                       </div>
-                                                      <div class="col-lg-5"> <h3>USD <?php echo e(session('b_booking_amt') ? number_format(session('b_booking_amt'),2) : '0.00'); ?></h3></div>
+                                                      <div class="col-lg-5"> <h3 class="amount-text">USD <?php echo e(session('b_booking_amt') ? number_format(session('b_booking_amt'),2) : '0.00'); ?></h3></div>
                                                     </div>
                                                     </div>
                                                     
@@ -732,7 +907,7 @@
                                                     <div class="form-group col-md-6 text-right">
                                                        <button type="button" class="default-btn next-step getBookingDtTime">Next 
                                                        <i class="fa fa-long-arrow-right" aria-hidden="true"></i>
-            											</button>
+                                  </button>
                                                     </div>
                                                   </div>  
                                             </div>
@@ -810,19 +985,19 @@
                                                     
                                                     <div class="lesson-type-text">
                                                     <h5>Lesson Type</h5>
-                                                    <p><?php echo e(session('b_lesson_name') ? session('b_lesson_name') : ''); ?></p>
+                                                    <p class="lesson_type"><?php echo e(session('b_lesson_name') ? session('b_lesson_name') : ''); ?></p>
                                                     </div>
                                                     
                                                     <div class="lesson-type-text">
                                                      <div class="row">
                                                       <div class="col-lg-7">
                                                        <h5>Lesson Package</h5>
-                                                       <p><?php echo e(session('b_lesson_package') ? session('b_lesson_package') : ''); ?> &nbsp;&nbsp;&nbsp;
+                                                       <p class="package-text"><?php echo e(session('b_lesson_package') ? session('b_lesson_package') : ''); ?> &nbsp;&nbsp;&nbsp;
                                                        <?php echo e(session('b_lesson_package_time') ? session('b_lesson_package_time') : ''); ?>
 
                                                        </p>
                                                       </div>
-                                                      <div class="col-lg-5"> <h3>USD <?php echo e(session('b_booking_amt') ? number_format(session('b_booking_amt'),2) : '0.00'); ?></h3></div>
+                                                      <div class="col-lg-5"> <h3 class="amount-text">USD <?php echo e(session('b_booking_amt') ? number_format(session('b_booking_amt'),2) : '0.00'); ?></h3></div>
                                                     </div>
                                                     </div>
                                                     
@@ -839,7 +1014,7 @@
                                                     <div class="form-group col-md-6 text-right">
                                                        <button type="button" class="default-btn next-step getBookingData">Next 
                                                        <i class="fa fa-long-arrow-right" aria-hidden="true"></i>
-            											</button>
+                                  </button>
                                                     </div>
                                                 </div>  
                                             </div>
@@ -986,14 +1161,14 @@
                                                     
                                                     <div class="lesson-type-text">
                                                     <h5>Lesson Type</h5>
-                                                    <p><?php echo e(session('b_lesson_name') ? session('b_lesson_name') : ''); ?></p>
+                                                    <p class="lesson_type"><?php echo e(session('b_lesson_name') ? session('b_lesson_name') : ''); ?></p>
                                                     </div>
                                                     
                                                     <div class="lesson-type-text">
                                                      <div class="row">
                                                       <div class="col-lg-6">
                                                        <h5>Lesson Package</h5>
-                                                       <p><?php echo e(session('b_lesson_package') ? session('b_lesson_package') : ''); ?> &nbsp;&nbsp;&nbsp;
+                                                       <p class="package-text"><?php echo e(session('b_lesson_package') ? session('b_lesson_package') : ''); ?> &nbsp;&nbsp;&nbsp;
                                                        <?php echo e(session('b_lesson_package_time') ? session('b_lesson_package_time') : ''); ?>
 
                                                        </p>
@@ -1007,7 +1182,7 @@
                                                        <h5>Communication Tool</h5>
                                                       </div>
                                                       <div class="col-lg-6">
-                                                          <p><?php echo e(session('b_communication_tool') ? session('b_communication_tool') : 'N/A'); ?>  : 
+                                                          <p class="communication-text"><?php echo e(session('b_communication_tool') ? session('b_communication_tool') : 'N/A'); ?>  : 
                                                             <?php echo e(session('b_communication_tool_account_id') ? session('b_communication_tool_account_id') : 'N/A'); ?>
 
                                                           </p>
@@ -1020,7 +1195,7 @@
                                                        <h5>Sub Total</h5>
                                                       </div>
                                                         <div class="col-lg-6 text-right">
-                                                          <h3>USD <?php echo e(session('b_booking_amt') ? number_format(session('b_booking_amt'),2) : '0.00'); ?> </h3>
+                                                          <h3 class="amount-text">USD <?php echo e(session('b_booking_amt') ? number_format(session('b_booking_amt'),2) : '0.00'); ?> </h3>
                                                         </div>
                                                     </div>
                                                     </div>
@@ -1037,14 +1212,14 @@
                                                       <div class="col-lg-6">
                                                        <h5>Total</h5>
                                                       </div>
-                                                      <div class="col-lg-6 text-right"><h3>USD <?php echo e(session('b_booking_amt') ? number_format(session('b_booking_amt'),2) : '0.00'); ?></h3></div>
+                                                      <div class="col-lg-6 text-right"><h3 class="amount-text">USD <?php echo e(session('b_booking_amt') ? number_format(session('b_booking_amt'),2) : '0.00'); ?></h3></div>
                                                     </div>
                                                     </div>
                                                     
                                                     <div class="lesson-type-text">
                                                      <div class="row">
                                                         <div class="col-lg-12"> <!--<a href="<?php echo e(route('stripe')); ?>">Pay</a> -->
-                                                            <a class="button-pay payment-data-modal" href="javascript:void(0);">Pay USD <?php echo e(session('b_booking_amt') ? number_format(session('b_booking_amt'),2) : '0.00'); ?></a>
+                                                            <a class="button-pay payment-data-modal pay-amount-text" href="javascript:void(0);">Pay USD <?php echo e(session('b_booking_amt') ? number_format(session('b_booking_amt'),2) : '0.00'); ?></a>
                                                         </div>
                                                     </div>
                                                     </div>
@@ -1104,12 +1279,12 @@
        <div class="form-row"> 
         <div class="form-group col-lg-6 col-12">
             <p> Tokatif Pvt Ltd.<br/>
-                Lesson Type: <?php echo e(session('b_lesson_name') ? session('b_lesson_name') : ''); ?> <br/>
-                Lesson Package: <?php echo e(session('b_lesson_package') ? session('b_lesson_package') : ''); ?> &nbsp;&nbsp;&nbsp;
-                                <?php echo e(session('b_lesson_package_time') ? session('b_lesson_package_time') : ''); ?><br/>
+                Lesson Type: <span class="lesson_type"><?php echo e(session('b_lesson_name') ? session('b_lesson_name') : ''); ?> </span><br/>
+                Lesson Package: <span class="package-text"><?php echo e(session('b_lesson_package') ? session('b_lesson_package') : ''); ?> &nbsp;&nbsp;&nbsp;
+                                <?php echo e(session('b_lesson_package_time') ? session('b_lesson_package_time') : ''); ?></span><br/>
                                 
-                Communication Tool: <?php echo e(session('b_communication_tool') ? session('b_communication_tool') : 'N/A'); ?>  : 
-                                    <?php echo e(session('b_communication_tool_account_id') ? session('b_communication_tool_account_id') : 'N/A'); ?><br/>
+                Communication Tool: <span class="communication-text"><?php echo e(session('b_communication_tool') ? session('b_communication_tool') : 'N/A'); ?>  : 
+                                    <?php echo e(session('b_communication_tool_account_id') ? session('b_communication_tool_account_id') : 'N/A'); ?></span><br/>
                                     
                 
             </p>
@@ -1117,7 +1292,7 @@
         <div class="form-group col-lg-6 col-12 pull-right">
             <p>Date: <?php echo e(date('M d, Y')); ?> <br/>
                 Teacher ID: <?php echo e(Request::segment(2)); ?> <br/>
-                Total: <?php echo e(session('b_booking_amt') ? number_format(session('b_booking_amt'),2) : '0.00'); ?> <br/>
+                Total: <span class="amount-text"><?php echo e(session('b_booking_amt') ? number_format(session('b_booking_amt'),2) : '0.00'); ?></span> <br/>
             </p>
         </div>
        </div>    
@@ -1150,7 +1325,7 @@
               </tr>-->
               <tr>
                 <td>Sub Total</td>
-                <td align="right">$<?php echo e(session('b_booking_amt') ? number_format(session('b_booking_amt'),2) : '0.00'); ?> USD</td>
+                <td align="right" class="amount-text">$<?php echo e(session('b_booking_amt') ? number_format(session('b_booking_amt'),2) : '0.00'); ?> USD</td>
               </tr>
               <!--<tr>
                 <td>Processing Fee</td>
@@ -1162,7 +1337,7 @@
               </tr>-->
               <tr>
                 <td><strong>Total</strong></td>
-                <td align="right"><strong>$<?php echo e(session('b_booking_amt') ? number_format(session('b_booking_amt'),2) : '0.00'); ?> USD</strong></td>
+                <td align="right"><strong class="amount-text">$<?php echo e(session('b_booking_amt') ? number_format(session('b_booking_amt'),2) : '0.00'); ?> USD</strong></td>
               </tr>
             </table>
 
@@ -1188,7 +1363,8 @@
             <input type="hidden" name="payment_expiry_month" id="payment_expiry_month" value="" /> 
             <input type="hidden" name="payment_expiry_year" id="payment_expiry_year" value="" /> 
             <input type="hidden" name="payment_cvv" id="payment_cvv" value="" /> 
-            <input type="hidden" name="payment_saveinformation" id="payment_saveinformation" value="" /> 
+            <input type="hidden" name="payment_saveinformation" id="payment_saveinformation" value="" />
+            <input type="hidden" id="payment_slot" name="booking_slots" value="<?php echo e(session('b_booking_slot') ? session('b_booking_slot') : ''); ?>" />
             
             <button type="submit" id="bookingBtn" class="btn btn-submit stripePay"> Pay Now </button> 
         </form>
@@ -1200,4 +1376,21 @@
 
 
 <?php echo $__env->make('include/footer', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
-<?php /**PATH /home/tokatifc/public_html/resources/views/student/lesson-booking.blade.php ENDPATH**/ ?>
+<script type="text/javascript">
+    
+    $(document).on('click', '.lesson-box', function(){
+
+        var lesson = $(this).data('lesson');
+        var amount = $(this).data('amount');
+        var time = $(this).data('time');
+
+        var package_text = lesson+'&nbsp;&nbsp;&nbsp;'+time;
+
+        $('.package-text').html(package_text);
+        $('.amount-text').html("USD "+amount);
+        $('.pay-amount-text').html("PAY USD "+amount);
+
+        $('#booking_amount').val(amount);
+    });
+
+</script><?php /**PATH /home/tokatifc/public_html/resources/views/student/lesson-booking.blade.php ENDPATH**/ ?>
