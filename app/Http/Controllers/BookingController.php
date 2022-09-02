@@ -16,6 +16,7 @@ use App\Models\LessonLog;
 use App\Models\AdminWallet;
 use App\Models\AdminWalletLog;
 use App\Models\FeedbackRating;
+use App\Models\StudentLesson;
 
 use Session;
 use Validator;
@@ -93,20 +94,19 @@ class BookingController extends Controller
 
         $data['selected_teacher'] = $this->registrationModel->where('deleted_at', '=', null)->where('status', '=', '1')->where(['id'=>$teacher_id])->first();
 
-        $booking_data = Booking::select('booking_date','booking_time','booking_slots')->where('teacher_id',$teacher_id)->get();
+        $booking_data = StudentLesson::select('booking_date','booking_time','slots')->where('teacher_id',$teacher_id)->get();
 
         $data['bookings'] = [];
         foreach($booking_data as $booking)
         {
             $data['bookings'][] = [ 'booking_date' => $booking->booking_date, 'booking_time' => $booking->booking_time];
-            if($booking->booking_slots == 2)
+            if($booking->slots == 2)
             {
                 $time = strtotime($booking->booking_time);
                 $second_slot_time = date("H:i", strtotime('+30 minutes', $time));
                 $data['bookings'][] = [ 'booking_date' => $booking->booking_date, 'booking_time' => $second_slot_time];
             }
-
-            if($booking->booking_slots == 3)
+            else if($booking->slots == 3)
             {
                 $time = strtotime($booking->booking_time);
                 $second_slot_time = date("H:i", strtotime('+30 minutes', $time));
@@ -125,22 +125,207 @@ class BookingController extends Controller
     }
 
 
+    public function next_month_calendar(Request $request)
+    {
+        $data['title']="Booking";
+        $data['breadcrumb']='Booking';
+
+        $data['week'] = $request->week;
+        $data['year'] = $request->year;
+
+        $data['user'] = $this->registrationModel->where('deleted_at', '=', null)->where('status', '=', '1')->where(['id'=>session('id')])->first();
+
+        $teacher_id = $request->id;
+        $data['lessons'] = $this->lessonsModel->where('deleted_at', '=', null)->where(['user_id'=>$teacher_id])->get(); 
+
+        $data['availability'] = $this->teacherAvailabilityModel->where('user_id', '=', $teacher_id)->get(); 
+
+        $data['selected_teacher'] = $this->registrationModel->where('deleted_at', '=', null)->where('status', '=', '1')->where(['id'=>$teacher_id])->first();
+
+        $data['exists'] = file_exists( storage_path() . '/app/user_photo/' . $data['selected_teacher']->profile_photo );
+
+        $booking_data = StudentLesson::select('booking_date','booking_time','slots')->where('teacher_id',$teacher_id)->get();
+
+        $data['bookings'] = [];
+        foreach($booking_data as $booking)
+        {
+            $data['bookings'][] = [ 'booking_date' => $booking->booking_date, 'booking_time' => $booking->booking_time];
+            if($booking->slots == 2)
+            {
+                $time = strtotime($booking->booking_time);
+                $second_slot_time = date("H:i", strtotime('+30 minutes', $time));
+                $data['bookings'][] = [ 'booking_date' => $booking->booking_date, 'booking_time' => $second_slot_time];
+            }
+            else if($booking->slots == 3)
+            {
+                $time = strtotime($booking->booking_time);
+                $second_slot_time = date("H:i", strtotime('+30 minutes', $time));
+                $third_slot_time = date("H:i", strtotime('+60 minutes', $time));
+
+                $data['bookings'][] = [ 'booking_date' => $booking->booking_date, 'booking_time' => $second_slot_time];
+                $data['bookings'][] = [ 'booking_date' => $booking->booking_date, 'booking_time' => $third_slot_time];
+            }
+        }
+
+        $data['flag'] = $request->flag;
+        $data['teacherType'] = $request->teacherType;
+        $data['id'] = $request->id;
+
+        return view('student.next_month_calendar', $data);
+    }
+
+    public function bookPendingLesson($booking_id)
+    {
+        $data['title']="Booking";
+        $data['breadcrumb']='Booking';
+
+        $data['week'] = (isset($_GET['week'])) ? $_GET['week'] : null;
+        $data['year'] = (isset($_GET['year'])) ? $_GET['year'] : null;
+
+        $booking = Booking::select(['lessons.*','booking.*','lesson_packages.*','booking.id as booking_id'])
+                            ->join('lessons','lessons.id','=','booking.lesson_id')
+                            ->join('lesson_packages', 'booking.lesson_package_id', '=', 'lesson_packages.id')
+                            ->where('booking.id', $booking_id)->first();
+
+        $data['booking_data'] = $booking;
+
+        $data['user'] = $this->registrationModel->where('deleted_at', '=', null)->where('status', '=', '1')->where(['id'=>session('id')])->first(); 
+        //echo $data['user']->role; die();
+        $data['student_booked_lessons'] = StudentLesson::where('booking_id', $booking_id)->get();
+
+        $teacher_id = $booking->teacher_id;
+        $data['lessons'] = $this->lessonsModel->where('deleted_at', '=', null)->where(['user_id'=>$teacher_id])->get(); 
+
+        $data['availability'] = $this->teacherAvailabilityModel->where('user_id', '=', $teacher_id)->get(); 
+
+        $data['selected_teacher'] = $this->registrationModel->where('deleted_at', '=', null)->where('status', '=', '1')->where(['id'=>$teacher_id])->first();
+
+        $booking_data = StudentLesson::select('booking_date','booking_time','slots')->where('teacher_id',$teacher_id)->get();
+
+        $package_lesson = 0;
+        if($booking->package == "5 lessons")
+        {
+            $package_lesson = 5;
+        }
+        else if($booking->package == "10 lessons")
+        {
+            $package_lesson = 10;
+        }
+        else if($booking->package == "20 lessons")
+        {
+            $package_lesson = 20;
+        }
+
+        $data['pending_lesson'] = ($package_lesson - count($booking_data));
+
+        $data['bookings'] = [];
+        foreach($booking_data as $booking)
+        {
+            $data['bookings'][] = [ 'booking_date' => $booking->booking_date, 'booking_time' => $booking->booking_time];
+            if($booking->slots == 2)
+            {
+                $time = strtotime($booking->booking_time);
+                $second_slot_time = date("H:i", strtotime('+30 minutes', $time));
+                $data['bookings'][] = [ 'booking_date' => $booking->booking_date, 'booking_time' => $second_slot_time];
+            }
+            else if($booking->slots == 3)
+            {
+                $time = strtotime($booking->booking_time);
+                $second_slot_time = date("H:i", strtotime('+30 minutes', $time));
+                $third_slot_time = date("H:i", strtotime('+60 minutes', $time));
+
+                $data['bookings'][] = [ 'booking_date' => $booking->booking_date, 'booking_time' => $second_slot_time];
+                $data['bookings'][] = [ 'booking_date' => $booking->booking_date, 'booking_time' => $third_slot_time];
+            }
+        }
+
+        $student_lessons = StudentLesson::where('lesson_package_id', $booking->lesson_package_id)->get();
+
+        $data['id'] = $teacher_id;
+
+        return view('student.book_pending_lessons', $data);
+    }
+
+    public function postBookPendingLesson($booking_id, Request $request)
+    {
+        if($request->booking_dates)
+        {
+            $booking = Booking::select(['booking.*','lesson_packages.*','booking.id as booking_id'])
+                                ->join('lessons','lessons.id','=','booking.lesson_id')
+                                ->join('lesson_packages', 'booking.lesson_package_id', '=', 'lesson_packages.id')
+                                ->where('booking.id', $booking_id)->first();
+
+            $package_lesson = 0;
+            if($booking->package == "5 lessons")
+            {
+                $package_lesson = 5;
+            }
+            else if($booking->package == "10 lessons")
+            {
+                $package_lesson = 10;
+            }
+            else if($booking->package == "20 lessons")
+            {
+                $package_lesson = 20;
+            }
+
+            $student_lessons_data = [];
+            $booking_dates = explode(",", $request->booking_dates);
+            $booking_times = explode(",", $request->booking_times);
+
+            for($i=0; $i<(count($booking_dates)); $i++)
+            {
+                $student_lessons_data[] = [
+                    'booking_id' => $booking_id,
+                    'lesson_id' => (int)$booking->lesson_id,
+                    'lesson_package_id' => (int)$booking->lesson_package_id,
+                    'slots' => (int)$booking->booking_slots,
+                    'teacher_id'=>(int)$booking->teacher_id,
+                    'student_id'=>session('id'),
+                    'booking_date' => $booking_dates[$i],
+                    'booking_time' => $booking_times[$i],
+                    'created_at' => date('Y-m-d H:i:s'),
+                    'updated_at' => date('Y-m-d H:i:s'),
+                ];
+            }
+
+            if(count($student_lessons_data))
+            {
+                StudentLesson::insert($student_lessons_data);
+            }
+
+            $student_lessons = StudentLesson::where('booking_id', $booking_id)->get();
+            if(count($student_lessons) == $package_lesson)
+            {
+                Booking::where('id', $booking_id)->update(['status' => '1']);
+            }
+
+            return redirect('my-lesson')->with('success','Booking has been created successfully.');
+        }
+        else
+        {
+            return redirect('my-lesson')->with('error','Please select available slots.');
+        }
+    }
+
     public function get_booking_dates(Request $request)
     {
-        $booking_data = Booking::select('booking_date','booking_time','booking_slots')->where('teacher_id', $request->teacher_id)->get();
+        Session::forget('b_lesson_package');
+        session(['b_lesson_package'=>$request->package_lessons]);
+
+        $booking_data = StudentLesson::select('booking_date','booking_time','slots')->where('teacher_id', $request->teacher_id)->get();
 
         $bookings = [];
         foreach($booking_data as $booking)
         {
             $bookings[] = [ 'booking_date' => $booking->booking_date, 'booking_time' => $booking->booking_time];
-            if($booking->booking_slots == 2)
+            if($booking->slots == 2)
             {
                 $time = strtotime($booking->booking_time);
                 $second_slot_time = date("H:i", strtotime('+30 minutes', $time));
                 $bookings[] = [ 'booking_date' => $booking->booking_date, 'booking_time' => $second_slot_time];
             }
-
-            if($booking->booking_slots == 3)
+            else if($booking->slots == 3)
             {
                 $time = strtotime($booking->booking_time);
                 $second_slot_time = date("H:i", strtotime('+30 minutes', $time));
@@ -238,26 +423,69 @@ class BookingController extends Controller
                     $lesson_accept_reject = '0';
                     $action = 'Student sent a lesson request. Awaiting response from the teacher.';
                 }
-                        
+
+                $booking_status = '5';
+
+                $lesson_package = LessonPackages::find($lesson_package_id);
+                $booking_dates = explode(",", $request->booking_dates);
+                $booking_times = explode(",", $request->booking_times);
+
+                if($lesson_package->package == "5 lessons" && count($booking_dates) == 5)
+                {
+                    $booking_status = '1';
+                }
+                else if($lesson_package->package == "10 lessons" && count($booking_dates) == 10)
+                {
+                    $booking_status = '1';
+                }
+                else if($lesson_package->package == "20 lessons" && count($booking_dates) == 20)
+                {
+                    $booking_status = '1';
+                }
+
                 $insertData = [
-                            'teacher_id'=>$teacher_id,
-                            'lesson_id'=>$lesson_id,
-                            'lesson_package_id'=>$lesson_package_id, 
-                            'booking_date'=>$booking_date, 
-                            'booking_time'=>$booking_time,
-                            'booking_slots'=> (int)$request->booking_slots,
-                            'booking_amount'=>$booking_amount,
-                            'communication_tool'=>$communication_tool,
-                            'communication_account_id'=>$communication_account_id,
-                            'student_id'=>session('id'),
-                            'status'=>'1',
-                            'teacher_accept_status'=>$teacher_accept_status,
-                            'student_accept_status'=>'1',
-                            'created_at'=>date('Y-m-d H:i:s')
-                        ];
-                
+                    'teacher_id'=>$teacher_id,
+                    'lesson_id'=>$lesson_id,
+                    'lesson_package_id'=>$lesson_package_id, 
+                    'booking_date'=>$booking_date, 
+                    'booking_time'=>$booking_time,
+                    'booking_slots'=> (int)$request->booking_slots,
+                    'booking_amount'=>$booking_amount,
+                    'communication_tool'=>$communication_tool,
+                    'communication_account_id'=>$communication_account_id,
+                    'student_id'=>session('id'),
+                    'status'=>$booking_status,
+                    'teacher_accept_status'=>$teacher_accept_status,
+                    'student_accept_status'=>'1',
+                    'created_at'=>date('Y-m-d H:i:s')
+                ];
+
                 $BookingId = $this->bookingModel->insertGetId($insertData);
-                
+
+                $student_lessons_data = [];
+
+                for($i=0; $i<(count($booking_dates)); $i++)
+                {
+                    $student_lessons_data[] = [
+                        'booking_id' => $BookingId,
+                        'lesson_id' => (int)$lesson_id,
+                        'lesson_package_id' => (int)$lesson_package_id,
+                        'slots' => (int)$request->booking_slots,
+                        'teacher_id'=>(int)$teacher_id,
+                        'student_id'=>session('id'),
+                        'booking_date' => $booking_dates[$i],
+                        'booking_time' => $booking_times[$i],
+                        'created_at' => date('Y-m-d H:i:s'),
+                        'updated_at' => date('Y-m-d H:i:s'),
+                    ];
+                }
+
+                if(count($student_lessons_data))
+                {
+                    StudentLesson::insert($student_lessons_data);
+                }
+
+
                 if($BookingId!=''){
                     $insertTransactionData = [
                                                 'booking_id'=>$BookingId,
@@ -441,7 +669,7 @@ class BookingController extends Controller
         Session::forget('b_lesson_package_id');
         Session::forget('b_booking_amt');
         Session::forget('b_lesson_package_time');
-        Session::forget('b_lesson_package');
+        // Session::forget('b_lesson_package');
         Session::forget('b_booking_slot');
         
         $package = $this->lessonPackagesModel->where('deleted_at', '=', null)->where(['id'=>$lesson_package_id])->first();
@@ -462,11 +690,11 @@ class BookingController extends Controller
                     'b_lesson_name'=>$lesson->name,
                     'b_lesson_package_id'=>$lesson_package_id,
                     'b_lesson_package_time'=>$package->time,
-                    'b_lesson_package'=>$package->package,
+                    // 'b_lesson_package'=>$package->package,
                     'b_booking_amt'=>$package->total,
                     'b_booking_slot'=>$slot
                 ]);
-        return $package->total; 
+        return $package->total;
     }
     
     
@@ -497,7 +725,7 @@ class BookingController extends Controller
                 if($thirtyMinsPackage->individual_lesson != null)
                 {
                     $lesson_text = 'Single Lesson';
-                    $html .= '<tr><td align="center"><div class="slot-box lesson-box getLessonPackageType" data-lesson="'.$lesson_text.'" data-amount="'. number_format($thirtyMinsPackage->individual_lesson, 2) .'" data-time="30 mins" data-slot="1">
+                    $html .= '<tr><td align="center"><div class="slot-box lesson-box getLessonPackageType" data-lesson="'.$lesson_text.'" data-amount="'. number_format($thirtyMinsPackage->individual_lesson, 2) .'" data-time="30 mins" data-slot="1" data-package_lessons="1">
                                    <p>'.$lesson_text.'</p>
                                    <h4>USD '.number_format($thirtyMinsPackage->individual_lesson, 2).'</h4>
                                     <input class="form-check-input" type="radio" name="lesson_package_id" id="" value="'.$thirtyMinsPackage->id.'" >
@@ -595,7 +823,7 @@ class BookingController extends Controller
                                 </td></tr>';
                 }
 
-                if($fourtyfiveMinsPackage->total != null)
+                if($seventyfiveMinsPackage->total != null)
                 {
                     $lesson_text = $seventyfiveMinsPackage->package;
                     $html .= '<tr><td align="center"><div class="slot-box lesson-box getLessonPackageType" data-lesson="'.$lesson_text.'" data-amount="'. number_format($seventyfiveMinsPackage->total, 2) .'" data-time="75 mins" data-slot="3">

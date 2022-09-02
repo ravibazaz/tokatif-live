@@ -280,23 +280,51 @@ class SearchController extends Controller
         
         if($id){
             $data['user'] = $this->registrationModel
-                                    // ->where('role', '=', '2')
+                                   // ->where('role', '=', '2')
                                     // ->orWhere('applied_for_teacher', '=', '2')
                                     ->where('status', '=', '1')
                                     ->where('deleted_at', '=', null)
                                     ->where('id', '=', $id)
                                     ->first();
-
+            
             $data['lessonCount'] = $this->lessonsModel->where('deleted_at', '=', null)->where(['user_id'=>$id])->count();
             $data['studentCount'] = $this->bookingModel->where(['teacher_id'=>$id])->distinct('student_id')->count('student_id');
             
-            $data['lessons'] = $this->lessonsModel->leftJoin('lesson_packages', 'lessons.id', '=', 'lesson_packages.lesson_id')
-                                                ->whereNull('lessons.deleted_at')
+            // $data['lessons'] = $this->lessonsModel->leftJoin('lesson_packages', 'lessons.id', '=', 'lesson_packages.lesson_id')
+            //                                     ->whereNull('lessons.deleted_at')
+            //                                     ->where('lessons.user_id', '=', $id)
+            //                                     ->orderBy('lessons.created_at', 'desc')->limit(10)->get();
+
+            $lessons = $this->lessonsModel->whereNull('lessons.deleted_at')
                                                 ->where('lessons.user_id', '=', $id)
-                                                ->orderBy('lessons.created_at', 'desc')->limit(10)->get();  
-            
+                                                ->orderBy('lessons.created_at', 'desc')->limit(10)->get();
+
+            $lesson_ids = [];
+            foreach($lessons as $lesson)
+            {
+                $lesson_ids[] = $lesson->id;
+            }
+
+            $lesson_packages = LessonPackages::select(DB::Raw('MIN(individual_lesson) as individual_lesson'),'lesson_id')->whereIn('lesson_id', $lesson_ids)
+                                                ->where('deleted_at', null)
+                                                ->groupBy('lesson_id')
+                                                ->get();
+
+            $data['lessons'] = [];
+            foreach($lessons as $lesson)
+            {
+                foreach($lesson_packages as $lesson_package)
+                {
+                    if($lesson->id == $lesson_package->lesson_id)
+                    {
+                        $lesson->individual_lesson = $lesson_package->individual_lesson;
+                        $data['lessons'][] = $lesson;
+                    }
+                }
+            }
+
             $data['review_rating'] = $this->feedbackRatingModel->where('deleted_at', '=', null)->where(['teacher_id'=>$id])->get();
-            
+
             $totalBadgesCount = 0;
             $badgesArr = array();
             if(count($data['review_rating'])>0){
@@ -335,6 +363,69 @@ class SearchController extends Controller
         return view('user.teacher-detail',$data);
             
     }
+    
+    
+    // public function get_teacher_detail($id){
+    //     $data['title']="Teacher Detail";
+    //     $data['breadcrumb']='Teacher Detail';
+        
+    //     if($id){
+    //         $data['user'] = $this->registrationModel
+    //                                 // ->where('role', '=', '2')
+    //                                 // ->orWhere('applied_for_teacher', '=', '2')
+    //                                 ->where('status', '=', '1')
+    //                                 ->where('deleted_at', '=', null)
+    //                                 ->where('id', '=', $id)
+    //                                 ->first();
+
+    //         $data['lessonCount'] = $this->lessonsModel->where('deleted_at', '=', null)->where(['user_id'=>$id])->count();
+    //         $data['studentCount'] = $this->bookingModel->where(['teacher_id'=>$id])->distinct('student_id')->count('student_id');
+            
+    //         $data['lessons'] = $this->lessonsModel->leftJoin('lesson_packages', 'lessons.id', '=', 'lesson_packages.lesson_id')
+    //                                             ->whereNull('lessons.deleted_at')
+    //                                             ->where('lessons.user_id', '=', $id)
+    //                                             ->orderBy('lessons.created_at', 'desc')->limit(10)->get();  
+            
+    //         $data['review_rating'] = $this->feedbackRatingModel->where('deleted_at', '=', null)->where(['teacher_id'=>$id])->get();
+            
+    //         $totalBadgesCount = 0;
+    //         $badgesArr = array();
+    //         if(count($data['review_rating'])>0){
+    //             foreach($data['review_rating'] as $val){
+    //                 $badgesArr[] = json_decode($val->badges);
+                    
+    //                 $badges = json_decode($val->badges);
+    //                 $totalBadgesCount += count($badges);
+    //             }
+    //         }
+            
+    //         $newBadgesArr = array();
+    //         if($totalBadgesCount>0){
+    //             foreach($badges as $val){ 
+    //                 $newBadgesArr[] = $val;
+    //             }
+    //         }
+            
+            
+    //         $data['total_badges_count'] = $totalBadgesCount;
+    //         $data['badges'] = $newBadgesArr;
+            
+    //     }else{
+    //         $data['user'] = '';
+    //         $data['lessons'] = '';
+    //         $data['review_rating'] = '';
+    //         $data['badges'] = '';
+            
+    //         $data['lessonCount'] = 0;
+    //         $data['studentCount'] = 0;
+    //         $data['total_badges_count'] = 0;
+            
+    //     }
+    //     //echo "<pre>"; print_r($data['badges']); exit();
+        
+    //     return view('user.teacher-detail',$data);
+            
+    // }
  
     
 

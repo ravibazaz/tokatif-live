@@ -16,6 +16,7 @@ use App\Models\CardDetail;
 use App\Models\LessonLog;
 use App\Models\AdminWallet;
 use App\Models\AdminWalletLog;
+use App\Models\StudentLesson;
 
 use Session;
 use Validator;
@@ -221,6 +222,24 @@ class StripePaymentController extends Controller
                             $action = 'Student sent a lesson request. Awaiting response from the teacher.';
                         }
                         
+                        $booking_status = '5';
+
+                        $lesson_package = LessonPackages::find($lesson_package_id);
+                        $booking_dates = explode(",", $request->booking_dates);
+                        $booking_times = explode(",", $request->booking_times);
+
+                        if($lesson_package->package == "5 lessons" && count($booking_dates) == 5)
+                        {
+                            $booking_status = '1';
+                        }
+                        else if($lesson_package->package == "10 lessons" && count($booking_dates) == 10)
+                        {
+                            $booking_status = '1';
+                        }
+                        else if($lesson_package->package == "20 lessons" && count($booking_dates) == 20)
+                        {
+                            $booking_status = '1';
+                        }
                             
                         $insertData = [
                                 'teacher_id'=>$teacher_id,
@@ -232,14 +251,36 @@ class StripePaymentController extends Controller
                                 'communication_tool'=>$communication_tool,
                                 'communication_account_id'=>$communication_account_id,
                                 'student_id'=>session('id'),
-                                'status'=>'1',
+                                'status'=>$booking_status,
                                 'teacher_accept_status'=>$teacher_accept_status,
                                 'student_accept_status'=>'1',
                                 'created_at'=>date('Y-m-d H:i:s')
                             ];
                         
                         $BookingId = $this->bookingModel->insertGetId($insertData);
-                        
+
+                        $student_lessons_data = [];
+
+                        for($i=0; $i<(count($booking_dates)); $i++)
+                        {
+                            $student_lessons_data[] = [
+                                'booking_id' => $BookingId,
+                                'lesson_id' => (int)$lesson_id,
+                                'lesson_package_id' => (int)$lesson_package_id,
+                                'slots' => (int)$request->booking_slots,
+                                'teacher_id'=>(int)$teacher_id,
+                                'student_id'=>session('id'),
+                                'booking_date' => $booking_dates[$i],
+                                'booking_time' => $booking_times[$i],
+                                'created_at' => date('Y-m-d H:i:s'),
+                                'updated_at' => date('Y-m-d H:i:s'),
+                            ];
+                        }
+
+                        if(count($student_lessons_data))
+                        {
+                            StudentLesson::insert($student_lessons_data);
+                        }
                         
                         if($BookingId!=''){
                             $insertTransactionData = [

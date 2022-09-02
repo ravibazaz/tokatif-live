@@ -83,6 +83,7 @@
                                         <input type="hidden" name="booking_time" id="booking_time" value="" /> 
                                         <input type="hidden" name="booking_amount" id="booking_amount" value="" /> 
                                         <input type="hidden" id="slot" value="{{ session('b_booking_slot') ? session('b_booking_slot') : '' }}" />
+                                        <input type="hidden" id="package_lessons" value="{{ session('b_lesson_package') ? session('b_lesson_package') : '' }}">
 
                                         <div class="tab-content" id="main_form">
                                             <div class="tab-pane <?php if (isset($_GET['year']) && isset($_GET['week'])) {echo '';}else{echo 'active';}?>" role="tabpanel" id="lesson-step1">
@@ -107,7 +108,7 @@
                                                       <div class="lesson-box-select " data-lesson_name="{{ $v->name }}" data-lessonId="{{$v->id}}" style="cursor: pointer;">
                                                        <div class="row align-items-center"> 
                                                         <div class="col-lg-6 col-12">{{$v->name}}</div>
-                                                        <div class="col-lg-3 col-12">{{$v->lesson_option}}</div> 
+                                                        <div class="col-lg-3 col-12">{{-- $v->lesson_option --}}</div> 
                                                         <div class="col-lg-3 col-12"> 
                                                          <div class="form-check">
                                                           USD {{number_format($min_amount,2)}} 
@@ -267,9 +268,9 @@
                                                     </div>
                                                     
                                                     <div class="form-group col-md-6 text-right">
-                                                       <button type="button" class="getLessonPackageType default-btn next-step">Next 
-                                                       <i class="fa fa-long-arrow-right" aria-hidden="true"></i>
-                                  </button>
+                                                       <!-- <button type="button" class="getLessonPackageType default-btn next-step"> -->
+                                                        <button type="button" class=" default-btn next-step">Next <i class="fa fa-long-arrow-right" aria-hidden="true"></i>
+                                                        </button>
                                                     </div>
                                                   </div>
                                             </div>
@@ -315,7 +316,9 @@
                                                        <td colspan="8" style="padding:10px 0;">
                                                         <h4 class="text-center">
                                                             @if(($prevWeek >= $currentWeek) && ($year >= date('Y')))
-                                                            <a href="?week={{$prevWeek}}&year={{$year}}" class="">&lt;</a> @endif
+                                                            <!-- <a href="?week={{$prevWeek}}&year={{$year}}" class="">&lt;</a> -->
+                                                            <a href="javascript:;" data-week="{{ $prevWeek }}" data-year="{{ $year }}" class="btn-next-month">&lt;</a>
+                                                            @endif
                                                                 <?php 
                                                                 if (isset($_GET['week']) && isset($_GET['year'])) {
                                                                     $d = date('Y-').'01-01';
@@ -331,7 +334,8 @@
                                                                 }
                                                                  
                                                                 ?>   
-                                                            <a href="?week={{$nextWeek}}&year={{$year}}" class="">&gt;</a>
+                                                            <!-- <a href="?week={{$nextWeek}}&year={{$year}}" class="">&gt;</a> -->
+                                                            <a href="javascript:;" data-week="{{ $nextWeek }}" data-year="{{ $year }}" class="btn-next-month">&gt;</a>
                                                         </h4>
                                                        </td>
                                                     </tr>
@@ -413,7 +417,7 @@
                                                                         $toTime = DateTime::createFromFormat('H:i', $v->to_time);
                                                                         
                                                                         if($tbl_time >= $fromTime && $tbl_time <= $toTime){
-                                                                            $class_0 .= ' ping-bg';
+                                                                            $class_0 .= ' ping-bg available-slot';
                                                                         }
 
                                                                         if(count($bookings))
@@ -433,7 +437,7 @@
                                                                         $toTime = DateTime::createFromFormat('H:i', $v->to_time);
 
                                                                         if($tbl_time >= $fromTime && $tbl_time <= $toTime){
-                                                                            $class_0 .= ' ping-bg';
+                                                                            $class_0 .= ' ping-bg available-slot';
                                                                         }
 
                                                                         if(count($bookings))
@@ -476,7 +480,7 @@
                                                                         $toTime = DateTime::createFromFormat('H:i', $v->to_time);
                                                                         
                                                                         if($tbl_time >= $fromTime && $tbl_time <= $toTime){
-                                                                            $class_1 .= ' ping-bg';
+                                                                            $class_1 .= ' ping-bg available-slot';
                                                                         }
 
                                                                         if(count($bookings))
@@ -496,7 +500,7 @@
                                                                         $toTime_1 = DateTime::createFromFormat('H:i', $v->to_time);
                                                                         
                                                                         if($tbl_time >= $fromTime_1 && $tbl_time <= $toTime_1){
-                                                                            $class_1 .= ' ping-bg';
+                                                                            $class_1 .= ' ping-bg available-slot';
                                                                         }
 
                                                                         if(count($bookings))
@@ -543,7 +547,7 @@
                                                                         $toTime = DateTime::createFromFormat('H:i', $v->to_time);
                                                                         
                                                                         if($tbl_time >= $fromTime && $tbl_time <= $toTime){
-                                                                            $class_2 .= ' ping-bg';
+                                                                            $class_2 .= ' ping-bg available-slot';
                                                                         }
 
                                                                         if(count($bookings))
@@ -563,7 +567,7 @@
                                                                         $toTime = DateTime::createFromFormat('H:i', $v->to_time);
                                                                         
                                                                         if($tbl_time >= $fromTime && $tbl_time <= $toTime){
-                                                                            $class_2 .= ' ping-bg';
+                                                                            $class_2 .= ' ping-bg available-slot';
                                                                         }
 
                                                                         if(count($bookings))
@@ -608,7 +612,7 @@
                                                                         $toTime = DateTime::createFromFormat('H:i', $v->to_time);
                                                                         
                                                                         if($tbl_time >= $fromTime && $tbl_time <= $toTime){
-                                                                            $class_3 .= ' ping-bg';
+                                                                            $class_3 .= ' ping-bg available-slot';
                                                                         }
 
                                                                         if(count($bookings))
@@ -628,7 +632,7 @@
                                                                         $toTime = DateTime::createFromFormat('H:i', $v->to_time);
                                                                         
                                                                         if($tbl_time >= $fromTime && $tbl_time <= $toTime){
-                                                                            $class_3 .= ' ping-bg';
+                                                                            $class_3 .= ' ping-bg available-slot';
                                                                         }
 
                                                                         if(count($bookings))
@@ -672,7 +676,7 @@
                                                                         $toTime = DateTime::createFromFormat('H:i', $v->to_time);
                                                                         
                                                                         if($tbl_time >= $fromTime && $tbl_time <= $toTime){
-                                                                            $class_4 .= ' ping-bg';
+                                                                            $class_4 .= ' ping-bg available-slot';
                                                                         }
 
                                                                         if(count($bookings))
@@ -692,7 +696,7 @@
                                                                         $toTime = DateTime::createFromFormat('H:i', $v->to_time);
                                                                         
                                                                         if($tbl_time >= $fromTime && $tbl_time <= $toTime){
-                                                                            $class_4 .= ' ping-bg';
+                                                                            $class_4 .= ' ping-bg available-slot';
                                                                         }
 
                                                                         if(count($bookings))
@@ -737,7 +741,7 @@
                                                                         $toTime = DateTime::createFromFormat('H:i', $v->to_time);
                                                                         
                                                                         if($tbl_time >= $fromTime && $tbl_time <= $toTime){
-                                                                            $class_5 .= ' ping-bg';
+                                                                            $class_5 .= ' ping-bg available-slot';
                                                                         }
 
                                                                         if(count($bookings))
@@ -757,7 +761,7 @@
                                                                         $toTime = DateTime::createFromFormat('H:i', $v->to_time);
                                                                         
                                                                         if($tbl_time >= $fromTime && $tbl_time <= $toTime){
-                                                                            $class_5 .= ' ping-bg';
+                                                                            $class_5 .= ' ping-bg available-slot';
                                                                         }
 
                                                                         if(count($bookings))
@@ -801,7 +805,7 @@
                                                                         $toTime = DateTime::createFromFormat('H:i', $v->to_time);
                                                                         
                                                                         if($tbl_time >= $fromTime && $tbl_time <= $toTime){
-                                                                            $class_6 .= ' ping-bg';
+                                                                            $class_6 .= ' ping-bg available-slot';
                                                                         }
 
                                                                         if(count($bookings))
@@ -821,7 +825,7 @@
                                                                         $toTime = DateTime::createFromFormat('H:i', $v->to_time);
                                                                         
                                                                         if($tbl_time >= $fromTime && $tbl_time <= $toTime){
-                                                                            $class_6 .= ' ping-bg';
+                                                                            $class_6 .= ' ping-bg available-slot';
                                                                         }
 
                                                                         if(count($bookings))
@@ -901,9 +905,8 @@
                                                     </div>
                                                     
                                                     <div class="form-group col-md-6 text-right">
-                                                       <button type="button" class="default-btn next-step getBookingDtTime">Next 
-                                                       <i class="fa fa-long-arrow-right" aria-hidden="true"></i>
-                                  </button>
+                                                       <button type="button" class="default-btn next-step getBookingDtTime">    Next <i class="fa fa-long-arrow-right" aria-hidden="true"></i>
+                                                        </button>
                                                     </div>
                                                   </div>  
                                             </div>
@@ -1358,6 +1361,9 @@
             <input type="hidden" name="payment_cvv" id="payment_cvv" value="" /> 
             <input type="hidden" name="payment_saveinformation" id="payment_saveinformation" value="" />
             <input type="hidden" id="payment_slot" name="booking_slots" value="{{ session('b_booking_slot') ? session('b_booking_slot') : '' }}" />
+
+            <input type="hidden" name="booking_dates" id="booking_dates" value="" />
+            <input type="hidden" name="booking_times" id="booking_times" value="" />
             
             <button type="submit" id="bookingBtn" class="btn btn-submit stripePay"> Pay Now </button> 
         </form>
@@ -1370,7 +1376,7 @@
 
 @include('include/footer')
 <script type="text/javascript">
-    
+
     $(document).on('click', '.lesson-box', function(){
 
         var lesson = $(this).data('lesson');
@@ -1386,4 +1392,417 @@
         $('#booking_amount').val(amount);
     });
 
+    // $(document).on('click', '.ping-bg', function(e){
+
+    //     var date = $(this).data('date');
+    //     var time = $(this).data('time');
+    //     var slot_name = "slot_"+date+time.replace(":","-");
+
+    //     if(localStorage.getItem("selected_slots") !== null)
+    //     {
+    //         var selected_slots = localStorage.getItem('selected_slots').split(',');
+    //         new_slots = selected_slots;
+    //         new_slots.push(slot_name);
+
+    //         $(selected_slots).each(function(key, selected_slot){
+    //             if(selected_slot != slot_name)
+    //             {
+    //                 new_slots.push(selected_slot);
+    //             }
+    //         });
+
+    //         var unique = new_slots.filter(function(itm, i, new_slots) {
+    //             return i == new_slots.indexOf(itm);
+    //         });
+
+    //         localStorage.clear('selected_slots');
+    //         localStorage.setItem('selected_slots', unique);
+    //     }
+    //     else
+    //     {
+    //         var selected_slots = [];
+    //         selected_slots.push(slot_name);
+
+    //         localStorage.clear('selected_slots');
+    //         localStorage.setItem('selected_slots', selected_slots);
+    //     }
+
+    //     e.stopPropagation();
+    // });
+
+    $(document).on('click', '.light-bg', function(){
+
+        var selected_slots = localStorage.getItem('selected_slots').split(',');
+        var date = $(this).data('date');
+        var time = $(this).data('time');
+        var slot_name = "slot_"+date+time.replace(":","-");
+        
+        var new_slots = jQuery.grep(selected_slots, function(value) {
+            return value != slot_name;
+        });
+
+        localStorage.clear('selected_slots');
+        if(new_slots.length > 0)
+        {
+            localStorage.setItem('selected_slots', new_slots);
+        }
+    });
+
+    $(document).on('click', '.btn-next-month', function(){
+
+        var week = $(this).data('week');
+        var year = $(this).data('year');
+        var id = "{{ Request::segment(2) }}";
+        var flag = "{{ $flag }}";
+        var teacherType = "{{ $teacherType }}";
+
+        var slot = $('.lesson-booking #slot').val();
+
+        $.ajaxSetup({ headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') } });
+        $.ajax({
+            url: "{{ url('get-next-month-calendar') }}",
+            type: 'GET',
+            data: { week : week, year : year, id : id, flag : flag, teacherType: teacherType, flag : flag, teacherType: teacherType },
+            success: function (data) {
+                $('#lesson-step3').html(data);
+                if(localStorage.getItem("selected_slots") !== null)
+                {
+                    var selected_slots = localStorage.getItem('selected_slots').split(',');
+                    $(selected_slots).each(function(key, selected_slot){
+
+                        $('.ping-bg').each(function(){
+                            if($(this).hasClass(selected_slot))
+                            {
+                                var time = $(this).data('time');
+                                var date = $(this).data('date');
+
+                                $(this).addClass('parent-slot');
+                                $(this).addClass('light-bg');
+                                $(this).removeClass('ping-bg');
+
+                                if(slot == 2)
+                                {
+                                    var second_slot = moment.utc(time,'hh:mm').add(30,'minutes').format('hh-mm');
+                                    var class_name = ".slot_"+date+second_slot;
+
+                                    $(class_name).addClass('light-bg');
+                                    $(class_name).addClass('parent-slot');
+                                    $(class_name).removeClass('ping-bg');
+                                }
+                                else if(slot == 3)
+                                {
+                                    var second_slot = moment.utc(time,'hh:mm').add(30,'minutes').format('hh-mm');
+                                    var class_name = ".slot_"+date+second_slot;
+
+                                    var third_slot = moment.utc(time,'hh:mm').add(60,'minutes').format('hh-mm');
+                                    var third_class_name = ".slot_"+date+third_slot;
+
+                                    $(class_name).addClass('light-bg');
+                                    $(class_name).addClass('parent-slot');
+                                    $(class_name).removeClass('ping-bg');
+
+                                    $(third_class_name).addClass('light-bg');
+                                    $(third_class_name).addClass('parent-slot');
+                                    $(third_class_name).removeClass('ping-bg');
+                                }
+                            }
+                        });
+                    });
+                }
+            }
+        });
+    });
+
+
+    $(document).on('click','.parent-slot',function(e){
+
+        var date = $(this).attr('data-date');
+        var time = $(this).attr('data-time');
+        var _this = $(this);
+        var package_lessons = $("#package_lessons").val();
+        var slot = $('.lesson-booking #slot').val();
+
+        $(this).addClass('ping-bg');
+        $(this).removeClass('parent-slot');
+        $(this).removeClass('light-bg');
+        
+        // if(slot == 1)
+        // {
+        //     var parent_class_name = ".slot_"+date+moment.utc(time,'hh:mm').format('hh-mm');
+        //     console.log(parent_class_name);
+        //     $(parent_class_name).removeClass('light-bg');
+        //     $(parent_class_name).addClass('ping-bg');
+        //     $(parent_class_name).removeClass('parent-slot');
+        // }
+
+        if(slot == 2)
+        {
+            var second_slot = moment.utc(time,'hh:mm').add(30,'minutes').format('hh-mm');
+            var class_name = ".slot_"+date+second_slot;
+
+            if($(class_name).hasClass("available-slot"))
+            {
+                $(class_name).removeClass('light-bg');
+                $(class_name).removeClass('parent-slot');
+                $(class_name).addClass('ping-bg');
+            }
+        }
+        else if(slot == 3)
+        {
+            var second_slot = moment.utc(time,'hh:mm').add(30,'minutes').format('hh-mm');
+            var class_name = ".slot_"+date+second_slot;
+
+            if($(class_name).hasClass("available-slot"))
+            {
+                $(class_name).removeClass('light-bg');
+                $(class_name).removeClass('parent-slot');
+                $(class_name).addClass('ping-bg');
+
+                var third_slot = moment.utc(time,'hh:mm').add(60,'minutes').format('hh-mm');
+                var third_class_name = ".slot_"+date+third_slot;
+
+                if($(third_class_name).hasClass("available-slot"))
+                {
+                    $(third_class_name).removeClass('light-bg');
+                    $(third_class_name).removeClass('parent-slot');
+                    $(third_class_name).addClass('ping-bg');
+                }
+            }
+        }
+    });
+
+    $(document).on('click','.ping-bg',function(e){
+
+        var date = $(this).attr('data-date');
+        var time = $(this).attr('data-time');
+        var _this = $(this);
+        var package_lessons = $("#package_lessons").val();
+        var slot = $('.lesson-booking #slot').val();
+        // var lessons_count = $('.parent-slot').length;
+        if(localStorage.getItem("selected_slots") !== null)
+        {
+            var lessons_count = localStorage.getItem('selected_slots').split(',').length;
+        }
+        else
+        {
+            var lessons_count = 0;
+        }
+
+        if(package_lessons == null || package_lessons == "Single Lesson")
+        {
+            package_lessons = 1;
+        }
+        else if(package_lessons == "5 lessons")
+        {
+            package_lessons = 5;
+        }
+        else if(package_lessons == "10 lessons")
+        {
+            package_lessons = 10;
+        }
+        else if(package_lessons == "20 lessons")
+        {
+            package_lessons = 20;
+        }
+
+        if(lessons_count >= package_lessons && package_lessons >= 1)
+        {
+            if(package_lessons <= 1)
+            {
+                $('.available-slot').removeClass('light-bg');
+                $('.available-slot').removeClass('parent-slot');
+                $('.available-slot').addClass('ping-bg');
+                // $(this).addClass("light-bg");
+                // $(this).addClass("parent-slot");
+
+                if(slot == 1)
+                {
+                    count_selected_slot(_this);
+                    $(_this).addClass("light-bg");
+                    $(_this).addClass("parent-slot");
+                }
+
+                if(slot == 2)
+                {
+                    var second_slot = moment.utc(time,'hh:mm').add(30,'minutes').format('hh-mm');
+                    var class_name = ".slot_"+date+second_slot;
+
+                    if($(class_name).hasClass("available-slot"))
+                    {
+                        $(_this).addClass("light-bg");
+                        $(_this).addClass("parent-slot");
+
+                        $(class_name).addClass("light-bg");
+                        // $(class_name).addClass("parent-slot");
+                    }
+                }
+                else if(slot == 3)
+                {
+                    var second_slot = moment.utc(time,'hh:mm').add(30,'minutes').format('hh-mm');
+                    var class_name = ".slot_"+date+second_slot;
+                    var third_slot = moment.utc(time,'hh:mm').add(60,'minutes').format('hh-mm');
+                    var third_class_name = ".slot_"+date+third_slot;
+
+                    if($(class_name).hasClass("available-slot") && $(third_class_name).hasClass("available-slot"))
+                    {
+                        $(_this).addClass("light-bg");
+                        $(_this).addClass("parent-slot");
+
+                        $(class_name).addClass("light-bg");
+                        // $(class_name).addClass("parent-slot");
+
+                        if($(third_class_name).hasClass("available-slot"))
+                        {
+                            $(third_class_name).addClass("light-bg");
+                            // $(third_class_name).addClass("parent-slot");
+                        }
+                    }
+                }
+            }
+            else
+            {
+                alert('Please select only '+ package_lessons +' lessons');
+            }
+        }
+        else
+        {
+            
+            // $('.ping-bg').removeClass('light-bg');
+            $(this).removeClass('ping-bg');
+            $(this).addClass("light-bg");
+            $(this).addClass("parent-slot");
+
+            //alert(date+' >> '+time);
+
+            $("#booking_date").val(date);
+            $("#booking_time").val(time);
+
+            var slot = $('.lesson-booking #slot').val();
+            // var time = $(this).data('time');
+            // var date = $(this).data('date');
+
+            if(slot == 1)
+            {
+                count_selected_slot(_this);
+                $(_this).addClass("light-bg");
+                $(_this).addClass("parent-slot");
+            }
+
+            if(slot == 2)
+            {
+                var second_slot = moment.utc(time,'hh:mm').add(30,'minutes').format('hh-mm');
+                var class_name = ".slot_"+date+second_slot;
+
+                if(!$(class_name).hasClass("ping-bg"))
+                {
+                    // $('.ping-bg').removeClass('light-bg');
+                    $(_this).removeClass('light-bg');
+                    $(_this).removeClass('parent-slot');
+                    $(_this).addClass("ping-bg");
+                    $('#booking_date').val("");
+                    $('#booking_time').val("");
+                    alert('Please select two available slots');
+                }
+                else
+                {
+                    count_selected_slot(_this);
+                    $(_this).addClass("light-bg");
+                    $(_this).addClass("parent-slot");
+
+                    // $('.ping-bg').removeClass('light-bg');
+                    $(_this).addClass("light-bg");
+                    $(_this).removeClass("ping-bg");
+
+                    $(class_name).addClass('light-bg');
+                    $(class_name).removeClass('ping-bg');
+                }
+            }
+            else if(slot == 3)
+            {
+                var second_slot = moment.utc(time,'hh:mm').add(30,'minutes').format('hh-mm');
+                var class_name = ".slot_"+date+second_slot;
+
+                if($(class_name).hasClass("ping-bg"))
+                {
+                    var third_slot = moment.utc(time,'hh:mm').add(60,'minutes').format('hh-mm');
+                    var third_class_name = ".slot_"+date+third_slot;
+
+                    if(!$(third_class_name).hasClass("ping-bg"))
+                    {
+                        // $('.ping-bg').removeClass('light-bg');
+                        $(_this).addClass("ping-bg");
+                        $(_this).removeClass('light-bg');
+                        $(_this).removeClass('parent-slot');
+                        $('#booking_date').val("");
+                        $('#booking_time').val("");
+                        alert('Please select three available slots');
+                    }
+                    else
+                    {
+                        count_selected_slot(_this);
+                        // $('.ping-bg').removeClass('light-bg');
+
+                        $(_this).addClass("light-bg");
+                        $(_this).addClass("parent-slot");
+
+                        $(_this).addClass("light-bg");
+                        $(_this).removeClass("ping-bg");
+
+                        $(class_name).addClass('light-bg');
+                        $(class_name).removeClass('ping-bg');
+
+                        $(third_class_name).addClass('light-bg');
+                        $(third_class_name).removeClass('ping-bg');
+                    }
+                }
+                else
+                {
+                    // $('.ping-bg').removeClass('light-bg');
+                    $(_this).addClass("ping-bg");
+                    $(_this).removeClass('parent-slot');
+                    $(_this).removeClass('light-bg');
+                    $('#booking_date').val("");
+                    $('#booking_time').val("");
+                    alert('Please select three available slots');
+                }
+            }
+        }
+    });
+
+    
+    function count_selected_slot(_this)
+    {
+        var date = $(_this).data('date');
+        var time = $(_this).data('time');
+        var slot_name = "slot_"+date+time.replace(":","-");
+
+        if(localStorage.getItem("selected_slots") !== null)
+        {
+            var selected_slots = localStorage.getItem('selected_slots').split(',');
+            new_slots = selected_slots;
+            new_slots.push(slot_name);
+
+            $(selected_slots).each(function(key, selected_slot){
+                if(selected_slot != slot_name)
+                {
+                    new_slots.push(selected_slot);
+                }
+            });
+
+            var unique = new_slots.filter(function(itm, i, new_slots) {
+                return i == new_slots.indexOf(itm);
+            });
+
+            localStorage.clear('selected_slots');
+            localStorage.setItem('selected_slots', unique);
+        }
+        else
+        {
+            var selected_slots = [];
+            selected_slots.push(slot_name);
+
+            localStorage.clear('selected_slots');
+            localStorage.setItem('selected_slots', selected_slots);
+        }
+    }
 </script>

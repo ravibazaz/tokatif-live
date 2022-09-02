@@ -2236,9 +2236,6 @@ a.log-in:hover{ color:#590770;}
 
 }
 
-
-.Language-dollar .form-control:focus { background-color: transparent;}
-
 .Language-dollar .form-control {
 
 	border: 1px solid #fff;
@@ -11531,6 +11528,20 @@ span.upcoming-text{ color:#4eac6d;}
 
 	}
 
+.incompleted-box::before { 
+
+	background-color:#e8801ef0;
+
+	}
+
+	
+
+.incompleted-box::after {
+
+    background-image: url(../images/complited.png);
+
+	}
+
 
 
 .cancelled-box::before { 
@@ -11665,13 +11676,19 @@ text-align: center;
 
 .sort-by ul li:nth-child(5) a {
 
+    background-color: #e8801ef0;
+
+}
+
+.sort-by ul li:nth-child(6) a {
+
     background-color: #f3d400;
 
 }
 
 
 
-.sort-by ul li:nth-child(6) a {
+.sort-by ul li:nth-child(7) a {
 
     background-color: #616161;
 
@@ -16001,7 +16018,7 @@ ul.bdg-icon li:hover .tool-tips {
 
     left: 0;
 
-    padding: 5px 5px;
+    padding: 5px 10px;
 
     background-color: #8d05b3;
 
@@ -16009,13 +16026,9 @@ ul.bdg-icon li:hover .tool-tips {
 
     border-radius: 0;
 
-    top: -50px;	
+    top: -40px;	
 	min-width: 130px;
 
-}
-
-ul.bdg-icon li span.tool-tips {
-  font-size: 11px;
 }
 
 .file-icon-chat{ position:relative;} 
@@ -20753,24 +20766,7 @@ overflow-y: scroll;}
 	box-shadow: 1px 1px 5px 1px #0003;
 	}
 
-span#teacher_type_error {
-  text-align: center;
-  display: block;
-  font-size: 18px;
-  font-weight: 400;
-  color: #ff0000 !important;
-  padding:5px 0;
-}
 
-span.text-danger {
-  padding-top: 5px;
-  display: block;
-  font-weight: 600;
-  text-align: left;
-  font-style:italic;
-}
-
-.alert-danger{ text-align:center; font-style:italic; color:#d72637;}
 
 
 /*-==============================

@@ -18,6 +18,7 @@
            <li><a href="#profile-v" data-toggle="tab"><img src="{{ asset('public/frontendassets/images/upcomming-icon.png') }}"/> Upcoming @if(count($upcoming)>0) <span class="white-round">{{count($upcoming)}}</span> @endif </a></li> 
            <li><a href="#messages-v" data-toggle="tab"><img src="{{ asset('public/frontendassets/images/witting.png') }}"/> Waiting @if(count($waiting)>0) <span class="white-round">{{count($waiting)}}</span> @endif </a></li>
            <li><a href="#settings-v" data-toggle="tab"><img src="{{ asset('public/frontendassets/images/complited.png') }}"/> Completed @if(count($completed)>0) <span class="white-round">{{count($completed)}}</span> @endif </a></li> 
+           <li><a href="#unscheduled-v" data-toggle="tab"><img src="{{ asset('public/frontendassets/images/complited.png') }}"/> Unscheduled @if(count($incompleted)>0) <span class="white-round">{{count($incompleted)}}</span> @endif </a></li>
            <li><a href="#Unscheduled" data-toggle="tab"><img src="{{ asset('public/frontendassets/images/unscheduled.png') }}"/> Today @if(count($today)>0) <span class="white-round">{{count($today)}}</span><i class="fa fa-check" aria-hidden="true"></i> @endif </a></li>
            <li><a href="#canceled" data-toggle="tab"><img src="{{ asset('public/frontendassets/images/cancelle.png') }}"/> Cancelled @if(count($cancelled)>0) <span class="white-round">{{count($cancelled)}}</span> @endif </a></li>         
            <!--<li><a href="#actionrequired" data-toggle="tab"><img src="{{ asset('public/frontendassets/images/ic.png') }}"/> Required 1 <span class="white-round">{{count($cancelled)}}</span> </a></li> 
@@ -352,7 +353,81 @@
         </div>
         
         
-        
+        <div class="tab-pane" id="unscheduled-v">
+            @if(count($incompleted)>0)
+                @foreach($incompleted as $val)
+                    @php
+                    $lessonData = DB::table('lessons')->where('id', $val->lesson_id)->latest('created_at')->first(); 
+                    $lessonPackageData = DB::table('lesson_packages')->where('lesson_id', $val->lesson_id)->where('id', $val->lesson_package_id)->latest('created_at')->first(); 
+                    $studentData = DB::table('registrations')->where('id', $val->student_id)->latest('created_at')->first(); 
+                    $scheduled_package = DB::table('student_lessons')->where('lesson_id', $val->lesson_id)->count();
+
+                    $total_package_count = 0;
+                    $unscheduled_package = 0;
+                    if($lessonPackageData->package ==  "5 lessons")
+                    {
+                        $total_package_count = 5;
+                    }
+                    else if($lessonPackageData->package == "10 lessons")
+                    {
+                        $total_package_count = 10;
+                    }
+                    else if($lessonPackageData->package == "20 lessons")
+                    {
+                        $total_package_count = 20;
+                    }
+
+                    $unscheduled_package = $total_package_count - $scheduled_package;
+
+                    $exists = file_exists( storage_path() . '/app/user_photo/' . $studentData->profile_photo );
+                    @endphp
+                <div class="my-lesson-list incompleted-box">
+                   <div class="row align-items-center">
+                        <div class="col-lg-8 col-md-8 col-sm-8 col-12">
+                            <ul class="lesson-list-box">
+                              <li><h4> {{date('d',strtotime($val->booking_date))}} </h4> {{date('M Y',strtotime($val->booking_date))}} </li>
+                              <li> {{date('h:i a',strtotime($val->booking_time))}} <br/> <span class="">{{number_format($val->booking_amount,2)}} USD</span></li>
+                              <li> {{$lessonData->language_taught}} <br/> Language</li>
+                              <li> {{$lessonPackageData->time}} <br/> Duration</li>
+                              <li> Scheduled : {{ $scheduled_package }} <br/> Unscheduled: {{ $unscheduled_package }} </li>
+                            </ul>
+                        </div>
+                        <div class="col-lg-4 col-md-4 col-sm-4 col-12">
+                            <div class="row align-items-center lesson-list-right">
+                                <div class="col-lg-3 col-md-3 col-sm-12 col-12">
+                                    @if($exists && $studentData->profile_photo!='') 
+                                        <img src="{{url('storage/app/user_photo/'.$studentData->profile_photo)}}" class="img-fluid">
+                                    @else
+                                        <img src={{Asset("public/assets/dist/img/transparent.png")}} class="img-fluid">   
+                                    @endif
+                                </div>
+                                <div class="col-lg-7 col-md-7 col-sm-12 col-12 pl-0">
+                                   <h4>{{$studentData->name}}</h4>
+                                   <p>{{$studentData->video_conferencing_platform}} : {{$studentData->user_account_id}}</p>
+                                </div>
+                                <div class="col-lg-2 col-md-2 col-sm-12 col-12">
+                                 <!--<a href="#" class="btn-book"><i class="fa fa-angle-right" aria-hidden="true"></i></a>-->
+                                </div>
+                            </div>
+                        </div>
+                        <div class="pull-right col-md-11">
+                            <div class="col-md-2 col-md-offset-10 pull-right">
+                                <a href="{{ url('student/book-pending-lesson', $val->booking_id) }}" class="book-btn">Book</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                @endforeach
+            @else
+            <div class="my-lesson-list completed-box">
+               <div class="row align-items-center">
+                  <div class="col-lg-12 col-md-12 col-sm-12 col-12">
+                    <p class="text-center"><b>No data Found!!</b></p> 
+                  </div>
+               </div>
+            </div>
+            @endif
+        </div>
         
         <div class="tab-pane" id="Unscheduled">
             @if(count($today_start)>0)

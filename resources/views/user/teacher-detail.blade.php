@@ -316,7 +316,7 @@ $getVisitorCountry = getVisitorCountry();
             <div class="col-12 text-center">
                 
                 @if($user->youtube_link !='')
-                    <iframe width="100%" height="315" src="{{ str_replace("https://youtu.be/", "https://www.youtube.com/embed/", $user->youtube_link) }}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen class="mb-4"></iframe>
+                    <iframe width="100%" height="315" src="{{ str_replace("https://www.youtube.com/watch?v=", "https://www.youtube.com/embed/", $user->youtube_link) }}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen class="mb-4"></iframe>
                 @elseif($user->video !='')
                     <video src="{{url('storage/app/video/'.$user->video)}}" controls width="98%" height="280px"></video>     
                 @else
@@ -326,10 +326,10 @@ $getVisitorCountry = getVisitorCountry();
               <!--<iframe width="100%" height="315" src="https://www.youtube.com/embed/DLKSVdAZDZU" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen class="mb-4"></iframe>-->
               
             <h2 class="mt-4">About Me</h2>
-            <p>{{$user->about_me}}</p>
+            <p>{!! $user->about_me !!}</p>
 
             <h2 class="mt-4">About My Lessons</h2>
-            <p>{{$user->about_my_lessons}}</p>
+            <p>{!! $user->about_my_lessons !!}</p>
             </div>
           </div>
           
@@ -379,7 +379,7 @@ $getVisitorCountry = getVisitorCountry();
                 </div>
                          
                 <div class="form-group col-md-4 text-right">
-                   <a href="javascript:void(0);" class="uploaded">USD {{number_format($val->total,2)}} </a>
+                   <a href="javascript:void(0);" class="uploaded">USD {{number_format($val->individual_lesson,2)}} </a>
                    <p class="mt-2"><small>{{$val->student_languages_level_from}} to {{$val->student_languages_level_to}}</small></p>
                    <a href="{{route('lesson-booking',['id'=>$user->id])}}" class="uploaded" > Book </a>
                 </div>     
@@ -641,7 +641,7 @@ $getVisitorCountry = getVisitorCountry();
          <div class="col-lg-10 col-md-10 col-sm-10 col-12">
           <h4>{{$val->name}}</h4>
           <small>{{$val->lesson_category}}</small>
-          <h3>USD {{number_format($val->total,2)}}</h3>
+          <h3>USD {{number_format($val->individual_lesson,2)}}</h3>
           </div>
           <div class="col-lg-2 col-md-2 col-sm-2 col-12">
             <div class="custom-control custom-checkbox">

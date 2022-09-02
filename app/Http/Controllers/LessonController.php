@@ -75,8 +75,35 @@ class LessonController extends Controller
     
     
     public function lesson_management(){
-        $data['lessons'] = $this->lessonsModel->where('deleted_at', '=', null)->where(['user_id'=>session('id')])->get(); 
         
+        // $data['lessons'] = $this->lessonsModel->where('deleted_at', '=', null)->where(['user_id'=>session('id')])->get(); 
+        
+        $lessons = $this->lessonsModel->where('deleted_at', '=', null)->where(['user_id'=>session('id')])->get();
+
+        $lesson_ids = [];
+        foreach($lessons as $lesson)
+        {
+            $lesson_ids[] = $lesson->id;
+        }
+
+        $lesson_packages = LessonPackages::select(DB::Raw('MIN(individual_lesson) as individual_lesson'),'lesson_id')->whereIn('lesson_id', $lesson_ids)
+                                            ->where('deleted_at', null)
+                                            ->groupBy('lesson_id')
+                                            ->get();
+
+        $data['lessons'] = [];
+        foreach($lessons as $lesson)
+        {
+            foreach($lesson_packages as $lesson_package)
+            {
+                if($lesson->id == $lesson_package->lesson_id)
+                {
+                    $lesson->individual_lesson = $lesson_package->individual_lesson;
+                    $data['lessons'][] = $lesson;
+                }
+            }
+        }
+
         $data['user'] = $this->registrationModel->where('deleted_at', '=', null)->where(['id'=>session('id')])->first(); 
         
         if($data['user']->role=='2'){
@@ -262,7 +289,15 @@ class LessonController extends Controller
                                                 ->where('booking.student_id', '=', session('id'))
                                                 ->where('booking.status', '=', '3')
                                                 ->orderBy('lessons.created_at', 'desc')->get(); 
-                                                
+
+            $data['incompleted'] = Booking::select(['lessons.*','lesson_packages.*','booking.*','booking.id as booking_id'])
+                                                ->leftJoin('lessons', 'booking.lesson_id', '=', 'lessons.id')
+                                                ->leftJoin('lesson_packages', 'booking.lesson_package_id', '=', 'lesson_packages.id')
+                                                ->whereNull('lessons.deleted_at')
+                                                ->where('booking.student_id', '=', session('id'))
+                                                ->where('booking.status', '=', '5')
+                                                ->orderBy('lessons.created_at', 'desc')
+                                                ->get();
                                                 
             $data['today'] = $this->bookingModel->leftJoin('lessons', 'booking.lesson_id', '=', 'lessons.id')
                                                 ->leftJoin('lesson_packages', 'booking.lesson_package_id', '=', 'lesson_packages.id')

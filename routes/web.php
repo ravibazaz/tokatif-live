@@ -48,7 +48,6 @@ Route::namespace('Admin')->prefix('admin')->group(function () {
         Route::post('/student_applied_for_teacher', 'StudentController@studentsAppliedForTeacher')->name('student_applied_for_teacher_search');
         Route::get('/student_applied_for_teacher/approve/{id}', 'StudentController@approveStudentForTeacher')->name('admin-student-applied-for-teacher-approve');
         Route::get('/student_applied_for_teacher/disapprove/{id}', 'StudentController@disapproveStudentForTeacher')->name('admin-student-applied-for-teacher-disapprove');
-        
 
         Route::get('/website-setting/{id}', 'WebsiteSettingController@edit')->name('admin-website-setting-edit');
         Route::post('/website-setting/{id}', 'WebsiteSettingController@edit')->name('admin-website-setting-update');
@@ -261,16 +260,20 @@ Route::middleware(['isStudentAuthenticated', 'cors'])->group(function(){
     Route::get('/student-settings', 'SettingsController@settings_update')->name('student-settings');
     Route::post('/student-settings-update', 'SettingsController@settings_update')->name('student-settings-update'); 
     Route::post('/password-update', 'SettingsController@password_update')->name('password-update');
-    
-    
-    Route::post('/lesson-packages', 'BookingController@ajax_lesson_packages')->name('lesson-packages'); 
+
+
+    Route::post('/lesson-packages', 'BookingController@ajax_lesson_packages')->name('lesson-packages');
     Route::get('/lesson-booking/{id}', 'BookingController@lesson_booking')->name('lesson-booking');
-    Route::get('/fetch-communication-tool-account-id/{accID}', 'BookingController@fetch_communication_tool_accountID');  
-    Route::get('/fetch-package-price/{lesson_package_id}', 'BookingController@fetch_package_price');  
+    Route::get('/get-next-month-calendar', 'BookingController@next_month_calendar')->name('next-month-calendar');
+    Route::get('/fetch-communication-tool-account-id/{accID}', 'BookingController@fetch_communication_tool_accountID');
+    Route::get('/fetch-package-price/{lesson_package_id}', 'BookingController@fetch_package_price');
+    Route::post('/get-booking-dates/{lesson_package_id}', 'BookingController@get_booking_dates');
     Route::post('/booking-data', 'BookingController@insert_booking_data')->name('booking-data');
-    Route::post('/get-booking-dates/{lesson_package_id}', 'BookingController@get_booking_dates');  
-    Route::get('/feedback/{id}', 'BookingController@give_feedback')->name('feedback');   
-    Route::post('/feedback/{id}', 'BookingController@give_feedback')->name('feedback-post');   
+    Route::get('/feedback/{id}', 'BookingController@give_feedback')->name('feedback');
+    Route::post('/feedback/{id}', 'BookingController@give_feedback')->name('feedback-post');
+
+    Route::get('student/book-pending-lesson/{booking_id}', 'BookingController@bookPendingLesson')->name('book-pending-lesson');
+    Route::post('student/book-pending-lesson/{booking_id}', 'BookingController@postBookPendingLesson');
     
     Route::get('/accept-lesson/{id}', 'LessonController@accept_lesson')->name('student-accept-lesson'); 
     Route::get('/decline-lesson/{id}', 'LessonController@decline_lesson')->name('student-decline-lesson'); 
@@ -300,7 +303,7 @@ Route::middleware(['isTeacherAuthenticated', 'cors'])->group(function(){
     Route::get('/teacher-settings', 'SettingsController@settings_update')->name('teacher-settings');
     Route::post('/teacher-settings-update', 'SettingsController@settings_update')->name('teacher-settings-update'); 
     Route::post('/teacher-password-update', 'SettingsController@password_update')->name('teacher-password-update'); 
-    Route::post('/teacher-video-update', 'SettingsController@video_update')->name('teacher-video-update'); 
+    Route::post('/teacher-video-update', 'SettingsController@video_update')->name('teacher-video-update');
     Route::post('/teacher-youtube-link-update', 'SettingsController@youtube_link_update')->name('teacher-youtube-link-update'); 
     Route::post('/teacher-availability-settings-update', 'SettingsController@teacher_availability_settings_update')->name('teacher-availability-settings-update');  
     Route::post('/teacher-booking-settings-update', 'SettingsController@teacher_booking_settings_update')->name('teacher-booking-settings-update');  

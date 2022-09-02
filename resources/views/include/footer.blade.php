@@ -429,6 +429,8 @@
 
 
 
+
+
 <?php
 
 /*$chatDefault = '';
@@ -967,7 +969,8 @@ $(document).ready(function () {
 
 
 
-    $(".next-step").click(function (e) {
+    // $(".next-step").click(function (e) {
+    $(document).on('click','.next-step', function(e){
 
 
 
@@ -1127,8 +1130,8 @@ $(document).ready(function () {
         }
     });
 
-    $(".prev-step").click(function (e) {
-
+    // $(".prev-step").click(function (e) {
+    $(document).on('click','.prev-step', function(e){
 
 
         var active = $('.wizard .nav-tabs li.active');
@@ -1393,7 +1396,7 @@ $('.teacherSearchApplyBtn').on("click", function() {
 
     //if (!$(e.target).is('.panel-body')) {
 
-    	$('.collapse').collapse('hide');	    
+        $('.collapse').collapse('hide');        
 
     //}
 
@@ -1784,7 +1787,7 @@ $('#cert-boxes-wrap').on('click', 'div.remove-cert-row', function () {
 
 #image-preview {
 
-	margin-top:20px;
+    margin-top:20px;
 
 }
 
@@ -1792,11 +1795,11 @@ $('#cert-boxes-wrap').on('click', 'div.remove-cert-row', function () {
 
     display: inline-block;
 
-	position:relative;
+    position:relative;
 
-	margin-right: 13px;
+    margin-right: 13px;
 
-	margin-bottom: 13px;
+    margin-bottom: 13px;
 
 }
 
@@ -2171,7 +2174,7 @@ $('#community_photo').change(function() {
         var lesson_name = $(this).data("lesson_name");
         //alert("selected LessonId:: "+selectedLessonId); 
 
-        
+        localStorage.clear('selected_slots');
 
         $.ajax({
 
@@ -2209,8 +2212,6 @@ $('#community_photo').change(function() {
         
 
         var accID = $("input[name='communication_tool']:checked").val();   //alert(accID);
-
-        
 
         if(accID){
 
@@ -2450,140 +2451,14 @@ $('#community_photo').change(function() {
 
     });
 
-    
-
-    
-
-    
-
-    
-
-    
-
-    // Book a Slot =============================================================
-
-    // $(document).on('click','.light-bg',function(e){
-
-    //     var slot = $(this).data('slot');
-    //     var time = $(this).data('time');
-    //     var date = $(this).data('date');
-
-    //     console.log(moment.utc(time,'hh:mm').add(30,'minutes').format('hh:mm'));
-
-    //     // $(this).closest('ping-bg').removeClass('light-bg');
-    // });    
-
-    $(document).on('click','.ping-bg',function(e){ 
-
-        
-
-        var date = $(this).attr('data-date'); 
-
-        var time = $(this).attr('data-time'); 
-
-        
-
-        $('.ping-bg').removeClass('light-bg'); 
-
-        $(this).addClass("light-bg");
-
-         
-
-        
-
-        //alert(date+' >> '+time);
-
-        
-
-        $("#booking_date").val(date);
-
-        $("#booking_time").val(time);
-
-        
-
-        var slot = $('.lesson-booking #slot').val();
-        var time = $(this).data('time');
-        var date = $(this).data('date');
-
-        if(slot == 2)
-        {
-            var second_slot = moment.utc(time,'hh:mm').add(30,'minutes').format('hh-mm');
-            var class_name = ".slot_"+date+second_slot;
-
-            if(!$(class_name).hasClass("ping-bg"))
-            {
-                $('.ping-bg').removeClass('light-bg');
-                $('#booking_date').val("");
-                $('#booking_time').val("");
-                alert('Please select two available slots');
-            }
-            else
-            {
-                $('.ping-bg').removeClass('light-bg');
-                $(this).addClass("light-bg");
-                $(class_name).addClass('light-bg');
-            }
-        }
-
-        if(slot == 3)
-        {
-            var second_slot = moment.utc(time,'hh:mm').add(30,'minutes').format('hh-mm');
-            var class_name = ".slot_"+date+second_slot;
-
-            if($(class_name).hasClass("ping-bg"))
-            {
-                var third_slot = moment.utc(time,'hh:mm').add(60,'minutes').format('hh-mm');
-                var third_class_name = ".slot_"+date+third_slot;
-
-                if(!$(third_class_name).hasClass("ping-bg"))
-                {
-                    $('.ping-bg').removeClass('light-bg');
-                    $('#booking_date').val("");
-                    $('#booking_time').val("");
-                    alert('Please select three available slots');
-                }
-                else
-                {
-                    $('.ping-bg').removeClass('light-bg');
-                    $(this).addClass("light-bg");
-                    $(class_name).addClass('light-bg');
-                    $(third_class_name).addClass('light-bg');
-                }
-            }
-            else
-            {
-                $('.ping-bg').removeClass('light-bg');
-                $('#booking_date').val("");
-                $('#booking_time').val("");
-                alert('Please select three available slots');
-            }
-        }
-
-    });
-
-    
-
-    
-
-    
-
-    
-
     // Add More Time Slot ======================================================
-
-    
 
     $(document).on('click','#timeSlotAppend',function(e){ 
 
         var timeSlot = $('#newTimeSlot');
-
         var timeSlotRow = timeSlot.children(":first");
-
         var timeSlotRowTemplate = timeSlotRow.clone();
-
         timeSlotRow.find('button.remove-time-row').remove();
-
-        
 
         var timeInputCount = 1; 
 
@@ -2632,6 +2507,7 @@ $('#community_photo').change(function() {
         var slot = $(this).data('slot');
         $('.lesson-booking #slot').val(slot);
         $('#payment_slot').val(slot);
+        $("#package_lessons").val($(this).data('lesson'));
 
         var lesson_package_id = $('input[name="lesson_package_id"]:checked').val();
         var lesson_id = $('input[name="lesson_id"]:checked').val();
@@ -2643,7 +2519,7 @@ $('#community_photo').change(function() {
 
             url: APP_URL+'/get-booking-dates/'+encodeURI(lesson_package_id),
             type: 'POST',
-            data: { teacher_id : teacher_id },
+            data: { teacher_id : teacher_id, package_lessons : $(this).data('lesson') },
             success: function (bookings) {
                 var bookings = JSON.parse(bookings);
                 $.each( bookings, function( key, booking ) {
@@ -2665,14 +2541,18 @@ $('#community_photo').change(function() {
     $(document).on('click','.getLessonPackageType',function(e){ 
 
         var lesson_id = $('input[name="lesson_id"]:checked').val();
-
         var lesson_package_id = $('input[name="lesson_package_id"]:checked').val();
 
-        $("#booking_lesson_id").val(lesson_id);
+        localStorage.clear('selected_slots');
 
+        $("#booking_lesson_id").val(lesson_id);
         $("#booking_lesson_package_id").val(lesson_package_id);
 
-        $('.ping-bg').removeClass('light-bg');
+        $('.lesson-booking #slot').val($(this).data('slot'));
+
+        $('.available-slot').addClass('ping-bg');
+        $('.available-slot').removeClass('light-bg');
+        $('.available-slot').removeClass('parent-slot');
 
         if(lesson_package_id){
 
@@ -2776,17 +2656,17 @@ if($url_segment=='student-dashboard' && $user_role=='1'){
 
     $dataPoints = array( 
 
-    	array("label"=>"Upcoming", "symbol" => "Upcoming","y"=> $chartUpcomingLessons),
+        array("label"=>"Upcoming", "symbol" => "Upcoming","y"=> $chartUpcomingLessons),
 
-    	array("label"=>"Waiting", "symbol" => "Waiting","y"=> $chartWaitingLessons),
+        array("label"=>"Waiting", "symbol" => "Waiting","y"=> $chartWaitingLessons),
 
-    	array("label"=>"Completed", "symbol" => "Completed","y"=> $chartCompletedLessons),
+        array("label"=>"Completed", "symbol" => "Completed","y"=> $chartCompletedLessons),
 
-    	array("label"=>"Cancelled", "symbol" => "Cancelled","y"=> $chartCancelledLessons),
+        array("label"=>"Cancelled", "symbol" => "Cancelled","y"=> $chartCancelledLessons),
 
-    	array("label"=>"Previous", "symbol" => "Previous","y"=> $chartPreviousLessons), 
+        array("label"=>"Previous", "symbol" => "Previous","y"=> $chartPreviousLessons), 
 
-    	array("label"=>"Today", "symbol" => "Today","y"=> $chartTodayLessons), 
+        array("label"=>"Today", "symbol" => "Today","y"=> $chartTodayLessons), 
 
     );
 
@@ -2812,17 +2692,17 @@ if($url_segment=='teacher-dashboard' && $user_role=='2'){
 
     $dataPoints = array( 
 
-    	array("label"=>"Upcoming", "symbol" => "Upcoming","y"=> $chartUpcomingLessons),
+        array("label"=>"Upcoming", "symbol" => "Upcoming","y"=> $chartUpcomingLessons),
 
-    	array("label"=>"Waiting", "symbol" => "Waiting","y"=> $chartWaitingLessons),
+        array("label"=>"Waiting", "symbol" => "Waiting","y"=> $chartWaitingLessons),
 
-    	array("label"=>"Completed", "symbol" => "Completed","y"=> $chartCompletedLessons),
+        array("label"=>"Completed", "symbol" => "Completed","y"=> $chartCompletedLessons),
 
-    	array("label"=>"Cancelled", "symbol" => "Cancelled","y"=> $chartCancelledLessons),
+        array("label"=>"Cancelled", "symbol" => "Cancelled","y"=> $chartCancelledLessons),
 
-    	array("label"=>"Previous", "symbol" => "Previous","y"=> $chartPreviousLessons), 
+        array("label"=>"Previous", "symbol" => "Previous","y"=> $chartPreviousLessons), 
 
-    	array("label"=>"Today", "symbol" => "Today","y"=> $chartTodayLessons), 
+        array("label"=>"Today", "symbol" => "Today","y"=> $chartTodayLessons), 
 
     );
 
@@ -3938,7 +3818,25 @@ $(document).on('click','.payment-data-modal',function(e){
 
     var booking_saveinformation = $('#saveinformation').val();
 
-    
+    if(localStorage.getItem("selected_slots") !== null)
+    {
+        var selected_slots = localStorage.getItem('selected_slots').split(',');
+        var dates = [];
+        var times = [];
+
+        $(selected_slots).each(function(key, selected_slot){
+            
+            var new_string = selected_slot.replace('slot_', '');
+            var time = new_string.substr(new_string.length - 5);
+            var date = new_string.replace(time, '');
+
+            dates.push(date);
+            times.push(time.replace('-', ':'));
+        });
+
+        $('#booking_dates').val(dates);
+        $('#booking_times').val(times);
+    }
 
     var userRole = '<?=$user_role?>';
 
@@ -4642,14 +4540,14 @@ $(document).on('click change','.invitationType',function(e){
         
         if(studentID!='' && invitationType=='lesson'){
             $(".OfferPriceDivClass").show(); 
-        	$("#i_inputDate").val(""); 
-        	$("#from_time").val("");
-        	$("#to_time").val("");
-        	$("#communication_tool_id").val("");
-        	//$("#old_price").val("");
-        	$("#offer_price").val(""); 
-        	$("#language_taught").val(""); 
-        	$("#i_lesson_id").val(""); 
+            $("#i_inputDate").val(""); 
+            $("#from_time").val("");
+            $("#to_time").val("");
+            $("#communication_tool_id").val("");
+            //$("#old_price").val("");
+            $("#offer_price").val(""); 
+            $("#language_taught").val(""); 
+            $("#i_lesson_id").val(""); 
         }
     }
     
@@ -5267,7 +5165,7 @@ $(document).on('click', '#15', function(){
 
                <label for="upload-photo">Click or Drage here to upload Photo</label>
 
-			   <input type="file" name="photo" id="upload-photo"/>
+               <input type="file" name="photo" id="upload-photo"/>
 
                <p><small>Scanned and in color  |  JPG or PNG format  |  Maximum 5 MB  |  Visible to italki staff only</small></p>
 

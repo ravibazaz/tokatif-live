@@ -1,9 +1,9 @@
-@include('include/head')
-@include('include/teacher-dashboard-header')
+<?php echo $__env->make('include/head', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
+<?php echo $__env->make('include/teacher-dashboard-header', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
 
-@php
+<?php
  $getLoggedIndata = getLoggedinData();
-@endphp
+?>
 
 <section class="teacher-contain student-profile-edit">
   <div class="container">
@@ -16,33 +16,33 @@
               <ul class="nav nav-pills flex-column" id="myTab" role="tablist">
                 <li class="nav-item"> 
                     <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">
-                    <img src="{{ asset('public/frontendassets/images/basic.png') }}" class="normal"> 
-                    <img src="{{ asset('public/frontendassets/images/basic-hover.png') }}" class="hover-on"> Basic Information</a> 
+                    <img src="<?php echo e(asset('public/frontendassets/images/basic.png')); ?>" class="normal"> 
+                    <img src="<?php echo e(asset('public/frontendassets/images/basic-hover.png')); ?>" class="hover-on"> Basic Information</a> 
                 </li>
                 <li class="nav-item"> 
                     <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">
-                    <img src="{{ asset('public/frontendassets/images//languages.png') }}" class="normal"/>  
-                    <img src="{{ asset('public/frontendassets/images//languages-hover.png') }}" class="hover-on"/> Languages</a> 
+                    <img src="<?php echo e(asset('public/frontendassets/images//languages.png')); ?>" class="normal"/>  
+                    <img src="<?php echo e(asset('public/frontendassets/images//languages-hover.png')); ?>" class="hover-on"/> Languages</a> 
                 </li>
                 <li class="nav-item"> 
                     <a class="nav-link" id="contact-tab" data-toggle="tab" href="#contact" role="tab" aria-controls="contact" aria-selected="false">
-                    <img src="{{ asset('public/frontendassets/images/communition.png') }}" class="normal"/> 
-                    <img src="{{ asset('public/frontendassets/images/communition-hover.png') }}" class="hover-on"/> Communication Tool</a> 
+                    <img src="<?php echo e(asset('public/frontendassets/images/communition.png')); ?>" class="normal"/> 
+                    <img src="<?php echo e(asset('public/frontendassets/images/communition-hover.png')); ?>" class="hover-on"/> Communication Tool</a> 
                 </li>
                 <li class="nav-item"> 
                     <a class="nav-link" id="Introduction-tab" data-toggle="tab" href="#Introduction" role="tab" aria-controls="Introduction" aria-selected="false">
-                    <img src="{{ asset('public/frontendassets/images/introduation.png') }}" class="normal"/> 
-                    <img src="{{ asset('public/frontendassets/images/introduation-hover.png') }}" class="hover-on"/> Introduction</a> 
+                    <img src="<?php echo e(asset('public/frontendassets/images/introduation.png')); ?>" class="normal"/> 
+                    <img src="<?php echo e(asset('public/frontendassets/images/introduation-hover.png')); ?>" class="hover-on"/> Introduction</a> 
                 </li>
                 <li class="nav-item"> 
                     <a class="nav-link" id="video-tab" data-toggle="tab" href="#video" role="tab" aria-controls="video" aria-selected="false">
-                    <img src="{{ asset('public/frontendassets/images/video-gallery1.png') }}" class="normal"/> 
-                    <img src="{{ asset('public/frontendassets/images/video-gallery2.png') }}" class="hover-on"/> Video </a> 
+                    <img src="<?php echo e(asset('public/frontendassets/images/video-gallery1.png')); ?>" class="normal"/> 
+                    <img src="<?php echo e(asset('public/frontendassets/images/video-gallery2.png')); ?>" class="hover-on"/> Video </a> 
                 </li>
                 <li class="nav-item"> 
                     <a class="nav-link" id="resume-tab" data-toggle="tab" href="#resume" role="tab" aria-controls="resume" aria-selected="false"> 
-                    <img src="{{ asset('public/frontendassets/images/introduation.png') }}" class="normal"/> 
-                    <img src="{{ asset('public/frontendassets/images/introduation-hover.png') }}" class="hover-on"/> Resume & Certificates </a> 
+                    <img src="<?php echo e(asset('public/frontendassets/images/introduation.png')); ?>" class="normal"/> 
+                    <img src="<?php echo e(asset('public/frontendassets/images/introduation-hover.png')); ?>" class="hover-on"/> Resume & Certificates </a> 
                 </li>
               </ul>
               </div>
@@ -52,48 +52,49 @@
              <div class="tab-section">
               <div class="tab-content" id="myTabContent">
                 <div class="tab-pane fade show active edit-p-tab1" id="home" role="tabpanel" aria-labelledby="home-tab">
-                  @if(Session::get('success'))
+                  <?php if(Session::get('success')): ?>
                   <div class="alert alert-success alert-dismissible fade show">
                     <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-                    <strong>Success!</strong> {{Session::get('success')}}</div>
-                  @endif
-                  @if(Session::get('error'))
+                    <strong>Success!</strong> <?php echo e(Session::get('success')); ?></div>
+                  <?php endif; ?>
+                  <?php if(Session::get('error')): ?>
                   <div class="alert alert-danger alert-dismissible fade show">
                     <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-                    <strong>Note!</strong> {{Session::get('error')}}</div>
-                  @endif
+                    <strong>Note!</strong> <?php echo e(Session::get('error')); ?></div>
+                  <?php endif; ?>
                   
-                  @if ($errors->any())
+                  <?php if($errors->any()): ?>
                   <div class="alert alert-danger">
                       <ul>
-                          @foreach ($errors->all() as $message)
-                              <li>{{ $message }}</li>
-                          @endforeach
+                          <?php $__currentLoopData = $errors->all(); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $message): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                              <li><?php echo e($message); ?></li>
+                          <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                       </ul>
                   </div>
-                  @endif
+                  <?php endif; ?>
                   
                                       
                    <h2>Basic Information</h2>
                    <div class="information-section">
-                    <form role="form" action="{{ route('teacher-basic-info-update') }}" method="POST" enctype="multipart/form-data" > 
-                    {{ csrf_field() }}
-                        <input type="hidden" class="form-control" name="id" value="{{$getLoggedIndata->id}}" />
-                        <input type="hidden" class="form-control" name="role" value="{{$getLoggedIndata->role}}" />
+                    <form role="form" action="<?php echo e(route('teacher-basic-info-update')); ?>" method="POST" enctype="multipart/form-data" > 
+                    <?php echo e(csrf_field()); ?>
+
+                        <input type="hidden" class="form-control" name="id" value="<?php echo e($getLoggedIndata->id); ?>" />
+                        <input type="hidden" class="form-control" name="role" value="<?php echo e($getLoggedIndata->role); ?>" />
                         
                      <div class="form-row"> 
                       <div class="form-group col-md-3" id="view_uploaded_photo"> 
-                        @php 
+                        <?php 
                             $exists = file_exists( storage_path() . '/app/user_photo/' . $getLoggedIndata->profile_photo );
-                        @endphp 
+                        ?> 
                         
-                        @if($exists && $getLoggedIndata->profile_photo!='') 
-                          <img src={{url('storage/app/user_photo/'.$getLoggedIndata->profile_photo)}} class="img-fluid">
-                        @else
-                          <img src={{Asset("public/assets/dist/img/transparent.png")}} class="img-fluid">   
-                        @endif
+                        <?php if($exists && $getLoggedIndata->profile_photo!=''): ?> 
+                          <img src=<?php echo e(url('storage/app/user_photo/'.$getLoggedIndata->profile_photo)); ?> class="img-fluid">
+                        <?php else: ?>
+                          <img src=<?php echo e(Asset("public/assets/dist/img/transparent.png")); ?> class="img-fluid">   
+                        <?php endif; ?>
                 
-                        <!--<img src="{{ asset('public/frontendassets/images/lady.png') }}" class="img-fluid">-->
+                        <!--<img src="<?php echo e(asset('public/frontendassets/images/lady.png')); ?>" class="img-fluid">-->
                       </div>
                       <div class="col-md-9">
                       <p> At least 500x500 pixels JPG, PNG and BMP formats only Maximum size of 2MB Complete requirements list</p>
@@ -101,7 +102,7 @@
                       <div class="upload-btn-wrapper">
                           <button class="btn">Change Photo</button>
                           <input type="file" name="my_profile_photo" id="my_profile_photo" accept="image/*" >
-                          <input type="hidden" name="earlier_img" value="{{$getLoggedIndata->profile_photo}}" />
+                          <input type="hidden" name="earlier_img" value="<?php echo e($getLoggedIndata->profile_photo); ?>" />
                         </div>
                       </div>
                       </div>
@@ -109,10 +110,10 @@
                       <div class="form-row">
                         <div class="form-group col-lg-12">
                           <label for="inputEmail4">Display Name</label>
-                          <input type="text" class="form-control" name="display_name" value="{{$getLoggedIndata->name}}" placeholder="">
-                          @if ($errors->has('display_name'))
-                            <span class="text-danger">{{ $errors->first('display_name') }}</span>
-                          @endif
+                          <input type="text" class="form-control" name="display_name" value="<?php echo e($getLoggedIndata->name); ?>" placeholder="">
+                          <?php if($errors->has('display_name')): ?>
+                            <span class="text-danger"><?php echo e($errors->first('display_name')); ?></span>
+                          <?php endif; ?>
                         </div>
                         
                       </div>
@@ -121,34 +122,34 @@
                       <div class="form-row mt-3"> 
                        <div class="form-group col-md-6 calender-icon">
                           <label for="inputEmail4">Birthday </label>
-                           <input type="date" class="form-control" name="dob" value="{{ $getLoggedIndata->dob ? date('Y-m-d', strtotime($getLoggedIndata->dob)) : '' }}">
+                           <input type="date" class="form-control" name="dob" value="<?php echo e($getLoggedIndata->dob ? date('Y-m-d', strtotime($getLoggedIndata->dob)) : ''); ?>">
                            
                            <!--<i class="fa fa-calendar" aria-hidden="true"></i>-->
-                            @if ($errors->has('dob'))
-                                <span class="text-danger">{{ $errors->first('dob') }}</span>
-                            @endif
+                            <?php if($errors->has('dob')): ?>
+                                <span class="text-danger"><?php echo e($errors->first('dob')); ?></span>
+                            <?php endif; ?>
                         </div>
                         <div class="form-group col-md-6">
                           <label for="inputEmail4">Gender</label>
                            <ul class="radio-btn">
                               <li>
-                                <input type="radio" id="f-option" name="gender" value="Male" {{ ($getLoggedIndata->gender == 'Male') ? 'checked=checked' : '' }}>
+                                <input type="radio" id="f-option" name="gender" value="Male" <?php echo e(($getLoggedIndata->gender == 'Male') ? 'checked=checked' : ''); ?>>
                                 <label for="f-option"><i class="fa fa-male" aria-hidden="true"></i> Male</label>             
                               </li>
                               
                               <li>
-                                <input type="radio" id="s-option" name="gender" value="Female" {{ ($getLoggedIndata->gender == 'Female') ? 'checked=checked' : '' }}>
+                                <input type="radio" id="s-option" name="gender" value="Female" <?php echo e(($getLoggedIndata->gender == 'Female') ? 'checked=checked' : ''); ?>>
                                 <label for="s-option"><i class="fa fa-female" aria-hidden="true"></i> Female</label>                              
                               </li>
                               
                               <li>
-                                <input type="radio" id="t-option" name="gender" value="Not Given" {{ ($getLoggedIndata->gender == 'Not Given') ? 'checked=checked' : '' }}>
-                                <label for="t-option"><img src="{{ asset('public/frontendassets/images/not-given.png') }}">Not Given</label> 
+                                <input type="radio" id="t-option" name="gender" value="Not Given" <?php echo e(($getLoggedIndata->gender == 'Not Given') ? 'checked=checked' : ''); ?>>
+                                <label for="t-option"><img src="<?php echo e(asset('public/frontendassets/images/not-given.png')); ?>">Not Given</label> 
                               </li>
                             </ul>
-                            @if ($errors->has('gender'))
-                                <span class="text-danger">{{ $errors->first('gender') }}</span>
-                            @endif
+                            <?php if($errors->has('gender')): ?>
+                                <span class="text-danger"><?php echo e($errors->first('gender')); ?></span>
+                            <?php endif; ?>
                         </div>
                       </div>
                       
@@ -157,27 +158,27 @@
                           <label for="inputEmail4">Country of Origin</label>
                           <select class="custom-select mr-sm-2" name="country_of_origin">
                             <option value="">--Please select--</option>
-                            @foreach ($countries as $val)
-                             <option value="{{$val->name}}" {{ ($getLoggedIndata->country_of_origin == $val->name) ? 'selected' : '' }}>{{ $val->name }}</option>               
-                            @endforeach 
+                            <?php $__currentLoopData = $countries; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $val): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                             <option value="<?php echo e($val->name); ?>" <?php echo e(($getLoggedIndata->country_of_origin == $val->name) ? 'selected' : ''); ?>><?php echo e($val->name); ?></option>               
+                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?> 
                           </select>
                           
-                          @if ($errors->has('country_of_origin'))
-                            <span class="text-danger">{{ $errors->first('country_of_origin') }}</span>
-                          @endif
+                          <?php if($errors->has('country_of_origin')): ?>
+                            <span class="text-danger"><?php echo e($errors->first('country_of_origin')); ?></span>
+                          <?php endif; ?>
                         </div>
                         <div class="form-group col-md-6">
                           <label for="inputEmail4">Living in</label>
                           <select class="custom-select mr-sm-2" name="country_living_in">
                             <option value="">--Please select--</option>
-                            @foreach ($countries as $val)
-                             <option value="{{$val->name}}" {{ ($getLoggedIndata->country_living_in == $val->name) ? 'selected' : '' }}>{{ $val->name }}</option>               
-                            @endforeach 
+                            <?php $__currentLoopData = $countries; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $val): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                             <option value="<?php echo e($val->name); ?>" <?php echo e(($getLoggedIndata->country_living_in == $val->name) ? 'selected' : ''); ?>><?php echo e($val->name); ?></option>               
+                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?> 
                           </select>
                           
-                          @if ($errors->has('country_living_in'))
-                            <span class="text-danger">{{ $errors->first('country_living_in') }}</span>
-                          @endif
+                          <?php if($errors->has('country_living_in')): ?>
+                            <span class="text-danger"><?php echo e($errors->first('country_living_in')); ?></span>
+                          <?php endif; ?>
                         </div>
                       </div>
                       
@@ -190,20 +191,20 @@
                           <label for="inputEmail4">Teacher Type</label>
                           <select class="custom-select mr-sm-2" name="teacher_type">
                             <option value="">--Please select--</option>
-                            <option value="community_tutor" {{ ($getLoggedIndata->teacher_type == 'community_tutor') ? 'selected' : '' }}>Community Tutor</option>               
-                            <option value="specialist_teacher" {{ ($getLoggedIndata->teacher_type == 'specialist_teacher') ? 'selected' : '' }}>Specialist Teacher</option>               
+                            <option value="community_tutor" <?php echo e(($getLoggedIndata->teacher_type == 'community_tutor') ? 'selected' : ''); ?>>Community Tutor</option>               
+                            <option value="specialist_teacher" <?php echo e(($getLoggedIndata->teacher_type == 'specialist_teacher') ? 'selected' : ''); ?>>Specialist Teacher</option>               
                           </select>
-                          @if ($errors->has('teacher_type'))
-                            <span class="text-danger">{{ $errors->first('teacher_type') }}</span>
-                          @endif
+                          <?php if($errors->has('teacher_type')): ?>
+                            <span class="text-danger"><?php echo e($errors->first('teacher_type')); ?></span>
+                          <?php endif; ?>
                         </div>
                         
                         <div class="form-group col-md-6">
                             <label for="inputEmail4"> Address </label>
-                            <input type="text" name="address" value="{{$getLoggedIndata->address}}" class="form-control" placeholder="">
-                            @if ($errors->has('address'))
-                                <span class="text-danger">{{ $errors->first('address') }}</span>
-                            @endif
+                            <input type="text" name="address" value="<?php echo e($getLoggedIndata->address); ?>" class="form-control" placeholder="">
+                            <?php if($errors->has('address')): ?>
+                                <span class="text-danger"><?php echo e($errors->first('address')); ?></span>
+                            <?php endif; ?>
                         </div>
                       </div>
                       
@@ -215,10 +216,11 @@
                 <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
                   <h2>Languages</h2>
                   <div class="information-section resume-certificate">
-                    <form role="form" action="{{ route('teacher-languages-update') }}" method="POST" enctype="multipart/form-data" > 
-                    {{ csrf_field() }}
-                        <input type="hidden" class="form-control" name="id" value="{{$getLoggedIndata->id}}" />
-                        <input type="hidden" class="form-control" name="role" value="{{$getLoggedIndata->role}}" />
+                    <form role="form" action="<?php echo e(route('teacher-languages-update')); ?>" method="POST" enctype="multipart/form-data" > 
+                    <?php echo e(csrf_field()); ?>
+
+                        <input type="hidden" class="form-control" name="id" value="<?php echo e($getLoggedIndata->id); ?>" />
+                        <input type="hidden" class="form-control" name="role" value="<?php echo e($getLoggedIndata->role); ?>" />
                         
                       <div class="education-part">
                       <div class="form-row part-title align-items-center">
@@ -226,23 +228,23 @@
                       </div>
                       
                       
-                      @if($getLoggedIndata->languages_taught!='')
+                      <?php if($getLoggedIndata->languages_taught!=''): ?>
                         
-                        @php
+                        <?php
                             $languagesTaughtArr = json_decode($getLoggedIndata->languages_taught, true);
-                        @endphp
+                        ?>
                       
                         <div class="form-row taughtLangDiv" id="taught-boxes-wrap">
                           
-                            @foreach ($languagesTaughtArr as $v)
+                            <?php $__currentLoopData = $languagesTaughtArr; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $v): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                             <div style="display:flex;width:100%; margin:0 -15px;">
                                 <div class="form-group col-md-9">
                                     <label for="inputEmail4">Languages I taught</label>
                                     <select name="taught_lang[]" class="custom-select mr-sm-2" id="">
                                         <option value="">--Please select--</option>
-                                        @foreach ($languages as $val)
-                                        <option value="{{$val->name}}" {{ ($val->name == $v['language'])  ? 'selected' : '' }}>{{ $val->name }}</option> 
-                                        @endforeach
+                                        <?php $__currentLoopData = $languages; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $val): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                        <option value="<?php echo e($val->name); ?>" <?php echo e(($val->name == $v['language'])  ? 'selected' : ''); ?>><?php echo e($val->name); ?></option> 
+                                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                     </select>
                                 </div> 
                                 <div class="form-group col-md-3">
@@ -250,20 +252,20 @@
                                     <div class="input-group-text remove-taught-lang-row form-control"><i class="fa fa-trash-o" aria-hidden="true"></i></div>
                                 </div>
                             </div>
-                            @endforeach
+                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                           
                         </div>
                       
-                      @else
+                      <?php else: ?>
                       <div class="form-row taughtLangDiv" id="taught-boxes-wrap">
                         <div style="display:flex;width:100%; margin:0 -15px;">
                             <div class="form-group col-md-9">
                                 <label for="inputEmail4">Languages I taught</label>
                                 <select name="taught_lang[]" class="custom-select mr-sm-2" id="">
                                     <option value="">--Please select--</option>
-                                    @foreach ($languages as $val)
-                                     <option value="{{$val->name}}" {{ (Request::old('language') == $val->name) ? 'selected' : '' }}>{{ $val->name }}</option>               
-                                    @endforeach 
+                                    <?php $__currentLoopData = $languages; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $val): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                     <option value="<?php echo e($val->name); ?>" <?php echo e((Request::old('language') == $val->name) ? 'selected' : ''); ?>><?php echo e($val->name); ?></option>               
+                                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?> 
                                 </select>
                             </div>
                             <div class="form-group col-md-3">
@@ -272,7 +274,7 @@
                             </div>
                         </div>
                       </div>
-                      @endif
+                      <?php endif; ?>
                       
                       
                       
@@ -294,33 +296,33 @@
                         
                         
                         
-                        @if($getLoggedIndata->languages_spoken!='')
+                        <?php if($getLoggedIndata->languages_spoken!=''): ?>
                         
-                            @php
+                            <?php
                                 $languagesSpokenArr = json_decode($getLoggedIndata->languages_spoken, true);
-                            @endphp
+                            ?>
                         <div class="form-row language-row align-items-center regLangDiv" id="reg-boxes-wrap">
-                            @foreach ($languagesSpokenArr as $v)
+                            <?php $__currentLoopData = $languagesSpokenArr; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $v): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                             <div style="display:flex;width:100%; margin:0 -15px;">
                                 
                                 <div class="form-group col-md-6">
                                   <select name="language[]" class="custom-select mr-sm-2">
                                     <option value="">--Please select--</option>
-                                    @foreach ($languages as $val)
-                                     <option value="{{$val->name}}" {{ ($val->name == $v['language'])  ? 'selected' : '' }}> {{ $val->name }} </option>               
-                                    @endforeach 
+                                    <?php $__currentLoopData = $languages; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $val): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                     <option value="<?php echo e($val->name); ?>" <?php echo e(($val->name == $v['language'])  ? 'selected' : ''); ?>> <?php echo e($val->name); ?> </option>               
+                                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?> 
                                   </select>
                                 </div>
                                 <div class="form-group col-md-4">
                                   <select name="lang_level[]" class="custom-select mr-sm-2">
                                     <option value="">--Please select--</option>
-                                    <option value="Native" {{ ($v['level']=='Native')  ? 'selected' : '' }}>Native</option>
-                                    <option value="Beginner" {{ ($v['level']=='Beginner')  ? 'selected' : '' }}>Beginner</option>
-                                    <option value="Elementary" {{ ($v['level']=='Elementary')  ? 'selected' : '' }}>Elementary</option>
-                                    <option value="Intermediate" {{ ($v['level']=='Intermediate')  ? 'selected' : '' }}>Intermediate</option>
-                                    <option value="Upper Intermediate" {{ ($v['level']=='Upper Intermediate')  ? 'selected' : '' }}>Upper Intermediate</option> 
-                                    <option value="Advanced" {{ ($v['level']=='Advanced')  ? 'selected' : '' }}>Advanced</option>
-                                    <option value="Proficient" {{ ($v['level']=='Proficient')  ? 'selected' : '' }}>Proficient</option>
+                                    <option value="Native" <?php echo e(($v['level']=='Native')  ? 'selected' : ''); ?>>Native</option>
+                                    <option value="Beginner" <?php echo e(($v['level']=='Beginner')  ? 'selected' : ''); ?>>Beginner</option>
+                                    <option value="Elementary" <?php echo e(($v['level']=='Elementary')  ? 'selected' : ''); ?>>Elementary</option>
+                                    <option value="Intermediate" <?php echo e(($v['level']=='Intermediate')  ? 'selected' : ''); ?>>Intermediate</option>
+                                    <option value="Upper Intermediate" <?php echo e(($v['level']=='Upper Intermediate')  ? 'selected' : ''); ?>>Upper Intermediate</option> 
+                                    <option value="Advanced" <?php echo e(($v['level']=='Advanced')  ? 'selected' : ''); ?>>Advanced</option>
+                                    <option value="Proficient" <?php echo e(($v['level']=='Proficient')  ? 'selected' : ''); ?>>Proficient</option>
                                   </select>
                                 </div>
                                 <div class="form-group col-md-2">
@@ -330,17 +332,17 @@
                                 </div>
                                 
                             </div>
-                            @endforeach 
+                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?> 
                         </div>
-                        @else
+                        <?php else: ?>
                         <div class="form-row language-row align-items-center regLangDiv" id="reg-boxes-wrap">
                             <div style="display:flex;width:100%; margin:0 -15px;">
                                 <div class="form-group col-md-6">
                                   <select name="language[]" class="custom-select mr-sm-2">
                                     <option value="">--Please select--</option>
-                                    @foreach ($languages as $val)
-                                     <option value="{{$val->name}}" {{ (Request::old('language') == $val->name) ? 'selected' : '' }}>{{ $val->name }}</option>               
-                                    @endforeach 
+                                    <?php $__currentLoopData = $languages; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $val): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                     <option value="<?php echo e($val->name); ?>" <?php echo e((Request::old('language') == $val->name) ? 'selected' : ''); ?>><?php echo e($val->name); ?></option>               
+                                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?> 
                                   </select>
                                 </div>
                                 
@@ -364,7 +366,7 @@
                                 </div> 
                             </div>    
                         </div>
-                        @endif
+                        <?php endif; ?>
                       
                       
                       
@@ -381,29 +383,30 @@
                 <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">
                   <h2>Communication Tool</h2>
                   <div class="information-section">
-                    <form role="form" action="{{ route('teacher-communication-tool-update') }}" method="POST" enctype="multipart/form-data" > 
-                    {{ csrf_field() }}
-                        <input type="hidden" class="form-control" name="id" value="{{$getLoggedIndata->id}}" />
-                        <input type="hidden" class="form-control" name="role" value="{{$getLoggedIndata->role}}" />
+                    <form role="form" action="<?php echo e(route('teacher-communication-tool-update')); ?>" method="POST" enctype="multipart/form-data" > 
+                    <?php echo e(csrf_field()); ?>
+
+                        <input type="hidden" class="form-control" name="id" value="<?php echo e($getLoggedIndata->id); ?>" />
+                        <input type="hidden" class="form-control" name="role" value="<?php echo e($getLoggedIndata->role); ?>" />
                       <div class="form-row">
                         <div class="form-group col-md-6">
                             <label for="inputEmail4">Preferred Video Conferencing Platform</label>
                             <select name="video_conferencing_platform" class="form-control custom-select">
                                 <option value="">--Please select--</option>
-                                <option value="skype" {{ ($getLoggedIndata->video_conferencing_platform == 'skype') ? 'selected' : '' }}>Skype ID</option> 
-                                <option value="zoom" {{ ($getLoggedIndata->video_conferencing_platform == 'zoom') ? 'selected' : '' }}>Zoom Link</option>
-                                <option value="other" {{ ($getLoggedIndata->video_conferencing_platform == 'other') ? 'selected' : '' }}>Other</option>
+                                <option value="skype" <?php echo e(($getLoggedIndata->video_conferencing_platform == 'skype') ? 'selected' : ''); ?>>Skype ID</option> 
+                                <option value="zoom" <?php echo e(($getLoggedIndata->video_conferencing_platform == 'zoom') ? 'selected' : ''); ?>>Zoom Link</option>
+                                <option value="other" <?php echo e(($getLoggedIndata->video_conferencing_platform == 'other') ? 'selected' : ''); ?>>Other</option>
                             </select>
-                            @if ($errors->has('video_conferencing_platform'))
-                                <span class="text-danger">{{ $errors->first('video_conferencing_platform') }}</span>
-                            @endif
+                            <?php if($errors->has('video_conferencing_platform')): ?>
+                                <span class="text-danger"><?php echo e($errors->first('video_conferencing_platform')); ?></span>
+                            <?php endif; ?>
                         </div>
                         <div class="form-group col-md-6">
                             <label for="inputEmail4">User Account ID</label>
-                            <input type="text" name="user_account_id" id="user_account_id" value="{{$getLoggedIndata->user_account_id}}" class="form-control" placeholder=""/>
-                            @if ($errors->has('user_account_id'))
-                                <span class="text-danger">{{ $errors->first('user_account_id') }}</span>
-                            @endif
+                            <input type="text" name="user_account_id" id="user_account_id" value="<?php echo e($getLoggedIndata->user_account_id); ?>" class="form-control" placeholder=""/>
+                            <?php if($errors->has('user_account_id')): ?>
+                                <span class="text-danger"><?php echo e($errors->first('user_account_id')); ?></span>
+                            <?php endif; ?>
                         </div>
                       </div>
                      <!--<div class="form-row mt-3"> 
@@ -419,95 +422,96 @@
                 <div class="tab-pane fade" id="Introduction" role="tabpanel" aria-labelledby="Introduction-tab">
                     <h2>Introduction</h2>
                     <div class="information-section information-basic">
-                        <form role="form" action="{{ route('teacher-introduction-update') }}" method="POST" enctype="multipart/form-data" > 
-                        {{ csrf_field() }}
-                        <input type="hidden" class="form-control" name="id" value="{{$getLoggedIndata->id}}" />
-                        <input type="hidden" class="form-control" name="role" value="{{$getLoggedIndata->role}}" />
+                        <form role="form" action="<?php echo e(route('teacher-introduction-update')); ?>" method="POST" enctype="multipart/form-data" > 
+                        <?php echo e(csrf_field()); ?>
+
+                        <input type="hidden" class="form-control" name="id" value="<?php echo e($getLoggedIndata->id); ?>" />
+                        <input type="hidden" class="form-control" name="role" value="<?php echo e($getLoggedIndata->role); ?>" />
                         
                             <div class="form-row">
                                 <div class="form-group col-md-12">
                                     <label for="inputEmail4"><h4>About Me</h4></label>
-                                    <textarea name="about_me" rows="5" class="form-control">{{$getLoggedIndata->about_me}}</textarea>
-                                    @if ($errors->has('about_me'))
-                                        <span class="text-danger">{{ $errors->first('about_me') }}</span>
-                                    @endif
+                                    <textarea name="about_me" rows="5" class="form-control"><?php echo e($getLoggedIndata->about_me); ?></textarea>
+                                    <?php if($errors->has('about_me')): ?>
+                                        <span class="text-danger"><?php echo e($errors->first('about_me')); ?></span>
+                                    <?php endif; ?>
                                 </div>
                                 <div class="form-group col-md-12">
                                     <label for="inputEmail4"><h4>About My Lessons</h4></label>
-                                    <textarea name="about_my_lessons" rows="5" class="form-control">{{$getLoggedIndata->about_my_lessons}}</textarea>
-                                    @if ($errors->has('about_my_lessons'))
-                                        <span class="text-danger">{{ $errors->first('about_my_lessons') }}</span>
-                                    @endif
+                                    <textarea name="about_my_lessons" rows="5" class="form-control"><?php echo e($getLoggedIndata->about_my_lessons); ?></textarea>
+                                    <?php if($errors->has('about_my_lessons')): ?>
+                                        <span class="text-danger"><?php echo e($errors->first('about_my_lessons')); ?></span>
+                                    <?php endif; ?>
                                 </div>
                                 
                                 
                                 <!--<div class="form-group col-md-12">
                                     <label for="inputEmail4"><h4>My Lessons & Teaching Style</h4></label>
-                                    <textarea name="" rows="5" class="form-control">{{$getLoggedIndata->about_me}}</textarea>
-                                    @if ($errors->has('about_me'))
-                                        <span class="text-danger">{{ $errors->first('about_me') }}</span>
-                                    @endif
+                                    <textarea name="" rows="5" class="form-control"><?php echo e($getLoggedIndata->about_me); ?></textarea>
+                                    <?php if($errors->has('about_me')): ?>
+                                        <span class="text-danger"><?php echo e($errors->first('about_me')); ?></span>
+                                    <?php endif; ?>
                                 </div>-->
                                 
                                 
-                                @php
+                                <?php
                                   $myTeachingMaterialArr = json_decode($getLoggedIndata->my_teaching_material, true);
-                                @endphp
+                                ?>
                                 
-                                @if($getLoggedIndata->my_teaching_material!='')
+                                <?php if($getLoggedIndata->my_teaching_material!=''): ?>
                                 <div class="form-row">
                                     <div class="form-group col-md-12"><h4>My Teaching Material (Optional)</h4></div>
                                     <div class="form-group col-md-4">
                                       <div class="form-check">
-                                        <input type="checkbox" name="my_teaching_material[]" value="PDF file" {{ in_array('PDF file',$myTeachingMaterialArr)===true ? 'checked' : '' }} class="form-check-input" id="exampleCheck1"> 
+                                        <input type="checkbox" name="my_teaching_material[]" value="PDF file" <?php echo e(in_array('PDF file',$myTeachingMaterialArr)===true ? 'checked' : ''); ?> class="form-check-input" id="exampleCheck1"> 
                                         <label class="form-check-label" for="exampleCheck1">PDF file </label>
                                       </div>
                                       <div class="form-check">
-                                        <input type="checkbox" name="my_teaching_material[]" value="Audio files" {{ in_array('Audio files',$myTeachingMaterialArr)===true ? 'checked' : '' }} class="form-check-input" id="exampleCheck2"> 
+                                        <input type="checkbox" name="my_teaching_material[]" value="Audio files" <?php echo e(in_array('Audio files',$myTeachingMaterialArr)===true ? 'checked' : ''); ?> class="form-check-input" id="exampleCheck2"> 
                                         <label class="form-check-label" for="exampleCheck2">Audio files</label>
                                       </div>
                                       <div class="form-check">
-                                        <input type="checkbox" name="my_teaching_material[]" value="Flashcards" {{ in_array('Flashcards',$myTeachingMaterialArr)===true ? 'checked' : '' }} class="form-check-input" id="exampleCheck3">
+                                        <input type="checkbox" name="my_teaching_material[]" value="Flashcards" <?php echo e(in_array('Flashcards',$myTeachingMaterialArr)===true ? 'checked' : ''); ?> class="form-check-input" id="exampleCheck3">
                                         <label class="form-check-label" for="exampleCheck3">Flashcards</label> 
                                       </div>
                                       <div class="form-check">
-                                        <input type="checkbox" name="my_teaching_material[]" value="Test templates and examples" {{ in_array('Test templates and examples',$myTeachingMaterialArr)===true ? 'checked' : '' }} class="form-check-input" id="exampleCheck4">
+                                        <input type="checkbox" name="my_teaching_material[]" value="Test templates and examples" <?php echo e(in_array('Test templates and examples',$myTeachingMaterialArr)===true ? 'checked' : ''); ?> class="form-check-input" id="exampleCheck4">
                                         <label class="form-check-label" for="exampleCheck4">Test templates and examples</label> 
                                       </div>
                                     </div>
                                     <div class="form-group col-md-4">
                                       <div class="form-check">
-                                        <input type="checkbox" class="form-check-input" name="my_teaching_material[]" value="Text documents" {{ in_array('Text documents',$myTeachingMaterialArr)===true ? 'checked' : '' }} id="exampleCheck5">
+                                        <input type="checkbox" class="form-check-input" name="my_teaching_material[]" value="Text documents" <?php echo e(in_array('Text documents',$myTeachingMaterialArr)===true ? 'checked' : ''); ?> id="exampleCheck5">
                                         <label class="form-check-label" for="exampleCheck5">Text documents</label>
                                       </div>
                                       <div class="form-check">
-                                        <input type="checkbox" class="form-check-input" name="my_teaching_material[]" value="Image files" {{ in_array('Image files',$myTeachingMaterialArr)===true ? 'checked' : '' }} id="exampleCheck6">
+                                        <input type="checkbox" class="form-check-input" name="my_teaching_material[]" value="Image files" <?php echo e(in_array('Image files',$myTeachingMaterialArr)===true ? 'checked' : ''); ?> id="exampleCheck6">
                                         <label class="form-check-label" for="exampleCheck6">Image files </label>
                                       </div>
                                       <div class="form-check">
-                                        <input type="checkbox" class="form-check-input" name="my_teaching_material[]" value="Articles and news" {{ in_array('Articles and news',$myTeachingMaterialArr)===true ? 'checked' : '' }} id="exampleCheck7">
+                                        <input type="checkbox" class="form-check-input" name="my_teaching_material[]" value="Articles and news" <?php echo e(in_array('Articles and news',$myTeachingMaterialArr)===true ? 'checked' : ''); ?> id="exampleCheck7">
                                         <label class="form-check-label" for="exampleCheck7">Articles and news </label>
                                       </div>
                                       <div class="form-check">
-                                        <input type="checkbox" class="form-check-input" name="my_teaching_material[]" value="Graphs and charts" {{ in_array('Graphs and charts',$myTeachingMaterialArr)===true ? 'checked' : '' }} id="exampleCheck8">
+                                        <input type="checkbox" class="form-check-input" name="my_teaching_material[]" value="Graphs and charts" <?php echo e(in_array('Graphs and charts',$myTeachingMaterialArr)===true ? 'checked' : ''); ?> id="exampleCheck8">
                                         <label class="form-check-label" for="exampleCheck8">Graphs and charts</label>
                                       </div>
                                     </div>
                                     <div class="form-group col-md-4">
                                      <div class="form-check">
-                                        <input type="checkbox" class="form-check-input" name="my_teaching_material[]" value="Presentation slides/PPT" {{ in_array('Presentation slides/PPT',$myTeachingMaterialArr)===true ? 'checked' : '' }} id="exampleCheck9">
+                                        <input type="checkbox" class="form-check-input" name="my_teaching_material[]" value="Presentation slides/PPT" <?php echo e(in_array('Presentation slides/PPT',$myTeachingMaterialArr)===true ? 'checked' : ''); ?> id="exampleCheck9">
                                         <label class="form-check-label" for="exampleCheck9">Presentation slides/PPT</label>
                                       </div>
                                       <div class="form-check">
-                                        <input type="checkbox" class="form-check-input" name="my_teaching_material[]" value="Video files" {{ in_array('Video files',$myTeachingMaterialArr)===true ? 'checked' : '' }} id="exampleCheck10">
+                                        <input type="checkbox" class="form-check-input" name="my_teaching_material[]" value="Video files" <?php echo e(in_array('Video files',$myTeachingMaterialArr)===true ? 'checked' : ''); ?> id="exampleCheck10">
                                         <label class="form-check-label" for="exampleCheck10">Video files </label>
                                       </div>
                                       <div class="form-check">
-                                        <input type="checkbox" class="form-check-input" name="my_teaching_material[]" value="Quizzes" {{ in_array('Quizzes',$myTeachingMaterialArr)===true ? 'checked' : '' }} id="exampleCheck11">
+                                        <input type="checkbox" class="form-check-input" name="my_teaching_material[]" value="Quizzes" <?php echo e(in_array('Quizzes',$myTeachingMaterialArr)===true ? 'checked' : ''); ?> id="exampleCheck11">
                                         <label class="form-check-label" for="exampleCheck11">Quizzes</label>
                                       </div>
                                       <div class="form-check">
-                                        <input type="checkbox" class="form-check-input" name="my_teaching_material[]" value="Homework assignments" {{ in_array('Homework assignments',$myTeachingMaterialArr)===true ? 'checked' : '' }} id="exampleCheck12">
+                                        <input type="checkbox" class="form-check-input" name="my_teaching_material[]" value="Homework assignments" <?php echo e(in_array('Homework assignments',$myTeachingMaterialArr)===true ? 'checked' : ''); ?> id="exampleCheck12">
                                         <label class="form-check-label" for="exampleCheck12">Homework assignments </label>
                                       </div>
                                       
@@ -517,7 +521,7 @@
                                         <h5><i class="fa fa-check-circle" aria-hidden="true"></i> <strong>Approved</strong></h5>
                                     </div>-->
                                 </div>
-                                @endif
+                                <?php endif; ?>
                         
                                 
                             </div>
@@ -529,10 +533,11 @@
                 <div class="tab-pane fade" id="video" role="tabpanel" aria-labelledby="video-tab">
                     
                     
-                    <form role="form" action="{{ route('teacher-youtube-link-update') }}" class="vdo" method="POST" enctype="multipart/form-data" > 
-                        {{ csrf_field() }}
-                        <input type="hidden" class="form-control" name="id" value="{{$getLoggedIndata->id}}" />
-                        <input type="hidden" class="form-control" name="role" value="{{$getLoggedIndata->role}}" />
+                    <form role="form" action="<?php echo e(route('teacher-youtube-link-update')); ?>" class="vdo" method="POST" enctype="multipart/form-data" > 
+                        <?php echo e(csrf_field()); ?>
+
+                        <input type="hidden" class="form-control" name="id" value="<?php echo e($getLoggedIndata->id); ?>" />
+                        <input type="hidden" class="form-control" name="role" value="<?php echo e($getLoggedIndata->role); ?>" />
                     <div class="AccountSettings-box">
             <div class="AccountSettings-box-header"><span>Video</span></div>
                       <div class="AccountSettings-box-body ">
@@ -543,30 +548,28 @@
                               <div class="video-box">
                                 <!--<video src="https://v.italki.cn/BE8B29D8-FE5A-4651-8E27-52D312B37762.mp4" class="local-video" loop controls></video>-->
                                 
-                                @if($getLoggedIndata->youtube_link !='')
-                                    <iframe width="100%" height="315" src="{{ str_replace("https://www.youtube.com/watch?v=", "https://www.youtube.com/embed/", $getLoggedIndata->youtube_link) }}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen class="mb-4"></iframe>
-                                {{-- @elseif($getLoggedIndata->video !='')
-                                    <video src="{{url('storage/app/video/'.$getLoggedIndata->video)}}" class="local-video" loop controls></video>     
-                                @else --}}
+                                <?php if($getLoggedIndata->youtube_link !=''): ?>
+                                    <iframe width="100%" height="315" src="<?php echo e(str_replace("https://www.youtube.com/watch?v=", "https://www.youtube.com/embed/", $getLoggedIndata->youtube_link)); ?>" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen class="mb-4"></iframe>
+                                
                                     
-                                @endif
+                                <?php endif; ?>
 
                                 <div class="form-row">
                                   <div class="form-group col-lg-12">
                                     <label for="inputEmail4">Youtube link</label>
-                                    <input type="text" class="form-control" name="youtube_link" value="{{$getLoggedIndata->youtube_link}}" placeholder="">
-                                    @if ($errors->has('display_name'))
-                                      <span class="text-danger">{{ $errors->first('display_name') }}</span>
-                                    @endif
+                                    <input type="text" class="form-control" name="youtube_link" value="<?php echo e($getLoggedIndata->youtube_link); ?>" placeholder="">
+                                    <?php if($errors->has('display_name')): ?>
+                                      <span class="text-danger"><?php echo e($errors->first('display_name')); ?></span>
+                                    <?php endif; ?>
                                   </div>
                                 </div>
                                 
                                 <!-- <div class="videobox">
-                                    @if($getLoggedIndata->video!='' || $getLoggedIndata->youtube_link !='')
+                                    <?php if($getLoggedIndata->video!='' || $getLoggedIndata->youtube_link !=''): ?>
                                     <span>Change Video</span>
-                                    @else
+                                    <?php else: ?>
                                     <span>Upload Video</span>
-                                    @endif
+                                    <?php endif; ?>
                                     
                                   
                                     <input type="file" name="video" class="videoInput" id="" accept="video/*"> 
@@ -614,20 +617,20 @@
                         </div>
                         
                       
-                          @php
+                          <?php
                             $educationArr = json_decode($getLoggedIndata->education, true);
-                          @endphp
+                          ?>
                           
-                          @if($educationArr)
-                          @if(count($educationArr)>0)
-                            @foreach ($educationArr as $val)
+                          <?php if($educationArr): ?>
+                          <?php if(count($educationArr)>0): ?>
+                            <?php $__currentLoopData = $educationArr; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $val): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                             <div class="form-row Approved-row align-items-center">
                                 <div class="form-group col-md-2">
-                                 <h4>{{$val['education_year']}}</h4>
+                                 <h4><?php echo e($val['education_year']); ?></h4>
                                  <h5>Approved</h5>
                                 </div>
                                 <div class="form-group col-md-6">
-                                    <p><strong>{{$val['education_lang']}}</strong><br/> &nbsp;&nbsp; </p>
+                                    <p><strong><?php echo e($val['education_lang']); ?></strong><br/> &nbsp;&nbsp; </p>
                                 </div>
                                 <div class="form-group col-md-2">
                                    
@@ -636,9 +639,9 @@
                                     
                                 </div>
                             </div>
-                            @endforeach
-                          @endif
-                          @endif
+                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                          <?php endif; ?>
+                          <?php endif; ?>
                         
                         
                       </div>
@@ -649,22 +652,22 @@
                             <div class="form-group col-md-6 text-right" data-toggle="modal" data-target="#addWorkExperienceModal">Add Work Experience</div>
                         </div>
                         
-                        @php
+                        <?php
                             $experienceArr = json_decode($getLoggedIndata->experience, true);
-                        @endphp
+                        ?>
                         
-                        @if($experienceArr)
-                        @if(count($experienceArr)>0)
-                            @foreach ($experienceArr as $val)
+                        <?php if($experienceArr): ?>
+                        <?php if(count($experienceArr)>0): ?>
+                            <?php $__currentLoopData = $experienceArr; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $val): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                             <div class="form-row Approved-row align-items-center">
                                 <div class="form-group col-md-2">
-                                 <h4>{{$val['experience_year']}}</h4>
+                                 <h4><?php echo e($val['experience_year']); ?></h4>
                                  <h5>Approved</h5>
                                 </div>
                                 
                                 <div class="form-group col-md-8">
-                                    <p><strong>{{$val['designation']}}</strong><br/>
-                                    {{$val['organization']}}</p>
+                                    <p><strong><?php echo e($val['designation']); ?></strong><br/>
+                                    <?php echo e($val['organization']); ?></p>
                                 </div>
                                  
                             
@@ -673,9 +676,9 @@
                                 </div>     
                                 
                             </div>
-                            @endforeach
-                        @endif
-                        @endif
+                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                        <?php endif; ?>
+                        <?php endif; ?>
                         
                         
                         
@@ -687,26 +690,26 @@
                              <div class="form-group col-md-6 text-right" data-toggle="modal" data-target="#addCertificateModal">Add Certificates</div>
                             </div>
                             
-                            @php
+                            <?php
                                 $certificateArr = json_decode($getLoggedIndata->certificate, true);
-                            @endphp
+                            ?>
                             
-                            @if($certificateArr)
-                            @if(count($certificateArr)>0)
-                                @foreach ($certificateArr as $val)
+                            <?php if($certificateArr): ?>
+                            <?php if(count($certificateArr)>0): ?>
+                                <?php $__currentLoopData = $certificateArr; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $val): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                 <div class="form-row Approved-row align-items-center">
                                     <div class="form-group col-md-2">
-                                     <h4>{{$val['certificate_year']}}</h4>
+                                     <h4><?php echo e($val['certificate_year']); ?></h4>
                                      <h5>Approved</h5>
                                     </div>
                                     
                                     <div class="form-group col-md-1">
-                                       <img src="{{asset('public/frontendassets/images/certifcat.jpg')}}" class="img-fluid"/>
+                                       <img src="<?php echo e(asset('public/frontendassets/images/certifcat.jpg')); ?>" class="img-fluid"/>
                                     </div>
                                  
                                     <div class="form-group col-md-7">
-                                        <p><strong>{{$val['certificate_designation']}}</strong><br/>
-                                        organization - {{$val['certificate_organization']}}</p>
+                                        <p><strong><?php echo e($val['certificate_designation']); ?></strong><br/>
+                                        organization - <?php echo e($val['certificate_organization']); ?></p>
                                     </div>
             
                                     <div class="form-group col-md-2">
@@ -714,9 +717,9 @@
                                     </div>     
                                     
                                 </div>
-                                @endforeach
-                            @endif
-                            @endif
+                                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                            <?php endif; ?>
+                            <?php endif; ?>
                       
                             
                         </div>
@@ -746,7 +749,7 @@
 </section>
 
 
-@include('include/footer')
+<?php echo $__env->make('include/footer', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
 
 
 
@@ -766,8 +769,9 @@
       </div>
 
       <!--Body-->
-      <form role="form" action="{{ route('teacher-education-update') }}" method="POST" enctype="multipart/form-data" > 
-        {{ csrf_field() }}
+      <form role="form" action="<?php echo e(route('teacher-education-update')); ?>" method="POST" enctype="multipart/form-data" > 
+        <?php echo e(csrf_field()); ?>
+
       <div class="modal-body">
         <div class="md-form mb-5">
             <label>Education Year</label>
@@ -813,8 +817,9 @@
       </div>
 
       <!--Body-->
-      <form role="form" action="{{ route('teacher-work-exp-update') }}" method="POST" enctype="multipart/form-data" > 
-        {{ csrf_field() }}
+      <form role="form" action="<?php echo e(route('teacher-work-exp-update')); ?>" method="POST" enctype="multipart/form-data" > 
+        <?php echo e(csrf_field()); ?>
+
       <div class="modal-body">
         <div class="md-form mb-5">
             <label>Experience Year</label>
@@ -859,8 +864,9 @@
       </div>
 
       <!--Body-->
-      <form role="form" action="{{ route('teacher-certificate-update') }}" method="POST" enctype="multipart/form-data" > 
-        {{ csrf_field() }}
+      <form role="form" action="<?php echo e(route('teacher-certificate-update')); ?>" method="POST" enctype="multipart/form-data" > 
+        <?php echo e(csrf_field()); ?>
+
       <div class="modal-body">
         <div class="md-form mb-5">
             <label>Year</label>
@@ -893,7 +899,7 @@
 <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script> 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js"></script>
 <!-- CKeditor -->
-<script type="text/javascript" src="{{url('public/ckeditor/ckeditor.js')}}"></script>
+<script type="text/javascript" src="<?php echo e(url('public/ckeditor/ckeditor.js')); ?>"></script>
 <script type="text/javascript">
     $(document).ready(function () {
         CKEDITOR.replace( 'about_me',{
@@ -901,8 +907,8 @@
             height: '200px',
             extraPlugins: 'uploadimage',
             uploadUrl: '/apps/ckfinder/3.4.5/core/connector/php/connector.php?command=QuickUpload&type=Files&responseType=json',
-            filebrowserUploadUrl: '{{url('admin/ck-editor/upload_file')}}',
-            filebrowserImageUploadUrl: '{{url('admin/ck-editor/upload_file')}}',
+            filebrowserUploadUrl: '<?php echo e(url('admin/ck-editor/upload_file')); ?>',
+            filebrowserImageUploadUrl: '<?php echo e(url('admin/ck-editor/upload_file')); ?>',
         });
     });
 
@@ -912,8 +918,8 @@
             height: '200px',
             extraPlugins: 'uploadimage',
             uploadUrl: '/apps/ckfinder/3.4.5/core/connector/php/connector.php?command=QuickUpload&type=Files&responseType=json',
-            filebrowserUploadUrl: '{{url('admin/ck-editor/upload_file')}}',
-            filebrowserImageUploadUrl: '{{url('admin/ck-editor/upload_file')}}',
+            filebrowserUploadUrl: '<?php echo e(url('admin/ck-editor/upload_file')); ?>',
+            filebrowserImageUploadUrl: '<?php echo e(url('admin/ck-editor/upload_file')); ?>',
         });
     });
-</script>
+</script><?php /**PATH /home/tokatifc/public_html/resources/views/teacher/edit-profile.blade.php ENDPATH**/ ?>
